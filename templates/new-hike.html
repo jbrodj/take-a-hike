@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<h2>Log a new hike</h2>
+<div class="content-container">
+  <form action="submit" method="post">
+    {% for field in formContent %}
+    <div class="form-content">
+      <label 
+        for="{{formContent[field]['name']}}"
+      >
+        {{formContent[field]['label']}}
+      </label>
+      <input 
+        type="{{formContent[field]['inputType']}}" 
+        name="{{formContent[field]['name']}}" 
+        id="{{formContent[field]['name']}}"
+      >
+    </div>
+    {% endfor %}
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock %}
