@@ -9,7 +9,7 @@
 #### Run development server with live reloading 
 * Use `npm run dev`
 --- This runs `export FLASK_DEBUG=1 && flask run -h localhost -p 5001`
---- Find app running at `http://localhost:5001/`
+* Find app running at `http://localhost:5001/`
 
 #### To access the sqlite3 database
 * Use `npm run db` or `sqlite3 hikes.db`
