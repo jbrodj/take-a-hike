@@ -1,5 +1,7 @@
 {
   "scripts": {
-    "dev": "export FLASK_DEBUG=1 && flask run -h localhost -p 5001"
+    "db": "sqlite3 hikes.db",
+    "dev": "export FLASK_DEBUG=1 && flask run -h localhost -p 5001",
+    "initSql": "python3 init-sql.py"
   }
 }
