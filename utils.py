@@ -13,7 +13,7 @@ def commitCloseConn(conn):
 
 def addArea(areaName):
   dbConnection = createConnection('hikes.db')
-  dbConnection['cursor'].execute('INSERT INTO areas (area_name) VALUES (?)', (areaName,))
+  dbConnection['cursor'].execute('INSERT OR IGNORE INTO areas (area_name) VALUES (?)', (areaName,))
   commitCloseConn(dbConnection['connection'])
 
 # addArea('Elora')
@@ -26,7 +26,7 @@ def addTrail(areaName, trailName):
   for row in areaId:
     arr.append(row)
   id = arr[0][0]
-  dbConnection['cursor'].execute('INSERT INTO trails (area_id, trail_name) VALUES (?, ?)', [id, trailName])
+  dbConnection['cursor'].execute('INSERT OR IGNORE INTO trails (area_id, trail_name) VALUES (?, ?)', [id, trailName])
   commitCloseConn(dbConnection['connection'])
 
 # addTrail('Elora', 'Bissell Park')
