@@ -11,11 +11,21 @@
         >
           {{formContent[field]['label']}}
         </label>
+        {% if formContent[field]['inputType'] == 'number' %}
+          <input 
+            type="{{formContent[field]['inputType']}}" 
+            name="{{formContent[field]['name']}}" 
+            id="{{formContent[field]['name']}}"
+            min="0"
+            step="any"
+          >
+        {% else %}
           <input 
             type="{{formContent[field]['inputType']}}" 
             name="{{formContent[field]['name']}}" 
             id="{{formContent[field]['name']}}"
           >
+        {% endif %}
       </div>
       {% endfor %}
       <button type="submit">Submit</button>
