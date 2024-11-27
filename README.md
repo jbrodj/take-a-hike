@@ -2,9 +2,13 @@
 
 ### Setting up for local development
 
+#### Install dependencies
+* Run `npm install`
+* Run `pip install Flask`
+
 #### Initialize sql database and generate schema 
 * Use `npm run initSql` 
----- This will run `/init-sql.py` to create the tables
+---- This will run `/init_sql.py` to create the tables
  
 #### Run development server with live reloading 
 * Use `npm run dev`
