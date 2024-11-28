@@ -25,5 +25,10 @@ def new_hike():
     if request.method == 'POST':
         hike_data = request.form
         print(hike_data)
+        required_values = ['date', 'area', 'trailhead', 'trails']
+        for value in hike_data:
+            print(hike_data.get(value))
+            if hike_data.get(value) == '' and value in required_values:
+                return render_template('/error.html')
         return redirect('/')
     return render_template('new-hike.html', formContent=formContent)

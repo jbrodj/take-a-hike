@@ -1,18 +1,33 @@
 {% extends "layout.html" %}
 
 {% block main %}
-  <h2>Recent hikes</h2>
-  <div class="content-container">
+<div class="content-container">
+  <h2 class="template-heading">Recent hikes</h2>
 
-    <div class="hike-block">
+  <div class="hike-block">
+    <hr class="hike-divider">
+    <div class="trail-heading-block content-block flex-row">
       <h3>Area name</h3>
-      <h4>Trailhead: Trailhead-name</h4>
-      <p>12km</p>
-      <ul>
-        <li>Trail1</li>
-        <li>Trail2</li>
-      </ul>
-      <a href="#" target="blank">Maps</a>
+      <span>|</span>
+      <p>Trailhead: Trailhead-name</p>
     </div>
+    <div class="trail-info-block content-block flex-row">
+      <a href="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?cs=srgb&dl=pexels-jplenio-1632790.jpg&fm=jpg">
+        <img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?cs=srgb&dl=pexels-jplenio-1632790.jpg&fm=jpg" alt="Treetime">
+      </a>
+      <div class="trail-sub-info flex-col">
+        <p class="distance">12km</p>
+        <hr class="hike-divider">
+        <ul>
+          <li>Trail Name One</li>
+          <li>Trail Name Two</li>
+          <li>One More Longer Trail Name</li>
+        </ul>
+      </div>
+    </div>
+    <div class="more-info-block content-block"></div>
+    <p>This trail was very kewl, it was so kewl that it might have been the kewlest of the kewl things I've seen since the very last thing I saw that was almost this kewl.</p>
+    <a href="#" target="blank">Maps</a>
   </div>
+</div>
 {% endblock %}
