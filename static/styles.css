@@ -89,3 +89,104 @@ input[type=number] {
 }
 
 /* === === */
+
+/* GENERAL STYLES */
+
+.wrapper {
+  margin: 0 auto;
+  max-width: 900px;
+}
+
+.content-container, header {
+  padding: 2rem;
+}
+
+.content-block {
+  margin: 1rem 0;
+}
+
+.template-heading {
+  margin: 2rem 0;
+}
+
+.flex-row {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/*  TYPE   */
+
+* {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+/*  HEADER  */
+
+header {
+  height: 350px;
+  background-color: green;
+  color: blanchedalmond;
+  position: relative;
+}
+
+header h1 {
+  text-align: center;
+}
+
+.main-nav {
+  position: absolute;
+  right: 3rem;
+  top: 50%;
+  bottom: 50%;
+  margin-top: -35px;
+}
+
+
+/*  INDEX  */
+
+.hike-divider {
+  margin: 0;
+  width: 100%;
+  color: green;
+}
+
+.trail-heading-block h3 {
+  margin-right: 1rem;
+}
+
+.trail-heading-block > p {
+  margin-left: 1rem;
+}
+
+.trail-info-block {
+  justify-content: space-between;
+}
+
+.trail-info-block img {
+  max-width: 300px;
+  display: block;
+  margin-right: 1rem;
+}
+
+.trail-sub-info {
+  align-items: flex-start;
+  margin-top: -2rem;
+  width: 200px;
+}
+
+.trail-sub-info .hike-divider {
+  width: 80%;
+  align-self: center;
+}
+
+.distance {
+  font-weight: 700;
+  font-size: 1.4rem;
+  align-self: center;
+}
