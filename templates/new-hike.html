@@ -1,34 +1,34 @@
 {% extends "layout.html" %}
 
 {% block main %}
-  <h2>Log a new hike</h2>
-  <div class="content-container">
-    <form method="post">
-      {% for field in formContent %}
-      <div class="form-content">
-        <label 
-          for="{{formContent[field]['name']}}"
+<div class="content-container">
+  <h2 class="template-heading">Log a new hike</h2>
+  <form method="post">
+    {% for field in formContent %}
+    <div class="form-content content-block">
+      <label 
+        for="{{formContent[field]['name']}}"
+      >
+        {{formContent[field]['label']}}
+      </label>
+      {% if formContent[field]['inputType'] == 'number' %}
+        <input 
+          type="{{formContent[field]['inputType']}}" 
+          name="{{formContent[field]['name']}}" 
+          id="{{formContent[field]['name']}}"
+          min="0"
+          step="any"
         >
-          {{formContent[field]['label']}}
-        </label>
-        {% if formContent[field]['inputType'] == 'number' %}
-          <input 
-            type="{{formContent[field]['inputType']}}" 
-            name="{{formContent[field]['name']}}" 
-            id="{{formContent[field]['name']}}"
-            min="0"
-            step="any"
-          >
-        {% else %}
-          <input 
-            type="{{formContent[field]['inputType']}}" 
-            name="{{formContent[field]['name']}}" 
-            id="{{formContent[field]['name']}}"
-          >
-        {% endif %}
-      </div>
-      {% endfor %}
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+      {% else %}
+        <input 
+          type="{{formContent[field]['inputType']}}" 
+          name="{{formContent[field]['name']}}" 
+          id="{{formContent[field]['name']}}"
+        >
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit">Submit</button>
+  </form>
+</div>
 {% endblock %}
