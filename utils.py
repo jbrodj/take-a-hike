@@ -16,6 +16,16 @@ def commit_close_conn(conn):
     conn.commit()
     conn.close()
 
+def get_area_id(area_name, db):
+    '''Takes area name string and db file
+        Returns area id.
+    '''
+    db_connection = create_connection(db)
+    area_id = db_connection['cursor'].execute(
+        'SELECT id FROM areas WHERE area_name = (?)', [area_name])[0]
+    db_connection['connection'].close()
+    print(area_id)
+    return area_id
 
 def add_area(area_name):
     '''Takes area name from form.
