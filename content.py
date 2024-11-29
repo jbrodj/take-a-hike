@@ -2,12 +2,12 @@
 '''
 formContent = {
     'date': {
-        'name': 'date',
+        'name': 'hike_date',
         'label': 'Hike date',
         'inputType': 'date'
     },
     'area': {
-        'name': 'area',
+        'name': 'area_name',
         'label': 'Area',
         'inputType': 'text'
     },
@@ -17,22 +17,22 @@ formContent = {
         'inputType': 'text'
     },
     'trails': {
-        'name': 'trails',
+        'name': 'trails_cs',
         'label': 'Trails (comma-separated)',
         'inputType': 'text'
     },
     'distance': {
-        'name': 'distance',
+        'name': 'distance_km',
         'label': 'Distance (KM)',
         'inputType': 'number'
     },
     'map': {
-        'name': 'map',
+        'name': 'map_link',
         'label': 'Map link',
         'inputType': 'text'
     },
     'description': {
-        'name': 'description',
+        'name': 'other_info',
         'label': 'Description',
         'inputType': 'text'
     }
