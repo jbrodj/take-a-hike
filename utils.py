@@ -21,8 +21,13 @@ def get_area_id(area_name, db):
         Returns area id.
     '''
     db_connection = create_connection(db)
-    area_id = db_connection['cursor'].execute(
-        'SELECT id FROM areas WHERE area_name = (?)', [area_name])[0]
+    area_id_data = db_connection['cursor'].execute(
+        'SELECT id FROM areas WHERE area_name = (?)', [area_name])
+    print(area_id_data)
+    arr = []
+    for row in area_id_data:
+        arr.append(row)
+    area_id = arr[0][0]
     db_connection['connection'].close()
     print(area_id)
     return area_id
