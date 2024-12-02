@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS hikes (
   id INTEGER NOT NULL,
   hike_date DATE NOT NULL,
   area_id INTEGER NOT NULL,
+  area_name TEXT NOT NULL,
   trailhead TEXT,
   trails_cs TEXT,
   distance_km FLOAT,
