@@ -1,10 +1,12 @@
 '''For rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request
-from content import formContent
+from content import form_content
+import utils
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
+DB = 'hikes.db'
 
 @app.after_request
 def after_request(response):
