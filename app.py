@@ -25,12 +25,21 @@ def index():
 def new_hike():
     '''Renders new hike form template on GET, or submits hike data to db on POST.'''
     if request.method == 'POST':
-        hike_data = request.form
-        print(hike_data)
-        required_values = ['date', 'area', 'trailhead', 'trails']
-        for value in hike_data:
-            print(hike_data.get(value))
-            if hike_data.get(value) == '' and value in required_values:
+        form_data = request.form
+        for value in form_data:
+            if form_data.get(value) == '' and form_content[value]['required'] is True:
                 return render_template('/error.html')
+            
+
+        hike_data = utils.format_form_data(form_data)
+        area_name = hike_data['area_name']
+        trail_list = hike_data['trails_cs']
+
+        utils.add_area(area_name)
+        
+        area_id = utils.get_area_id(area_name, DB)
+        utils.add_trail(area_id, trail_list)
+
+        utils.add_hike(hike_data, area_id)
         return redirect('/')
-    return render_template('new-hike.html', formContent=formContent)
+    return render_template('new-hike.html', formContent=form_content)
