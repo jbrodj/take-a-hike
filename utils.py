@@ -104,9 +104,13 @@ def get_hikes_for_ui(db):
         keys.append(key[0])
     hikes_list = []
     for entry in hikes_data:
+        # Convert each tuple in list to a dictionary by adding keys
         this_entry = {}
         for index, key in enumerate(keys):
             this_entry[key] = entry[index]
+        # Add key/value pair containing list of trail strings
+        trails_list = this_entry['trails_cs'].split(', ')
+        this_entry['trails_list'] = trails_list
         hikes_list.append(this_entry)
     commit_close_conn(db_connection['connection'])
     print(f'data returned from get_hikes_for_ui: {hikes_list}')
