@@ -1,39 +1,47 @@
 '''Input/Label info used for generating New Hike form markup
 '''
-formContent = {
+form_content = {
     'date': {
-        'name': 'date',
+        'name': 'hike_date',
         'label': 'Hike date',
-        'inputType': 'date'
+        'inputType': 'date',
+        'required': True
     },
     'area': {
-        'name': 'area',
+        'name': 'area_name',
         'label': 'Area',
-        'inputType': 'text'
+        'inputType': 'text',
+        'required': True
     },
     'trailhead': {
         'name': 'trailhead',
         'label': 'Trailhead',
-        'inputType': 'text'
+        'inputType': 'text',
+        'required': True
+
     },
     'trails': {
-        'name': 'trails',
+        'name': 'trails_cs',
         'label': 'Trails (comma-separated)',
-        'inputType': 'text'
+        'inputType': 'text',
+        'required': True
     },
     'distance': {
-        'name': 'distance',
+        'name': 'distance_km',
         'label': 'Distance (KM)',
-        'inputType': 'number'
+        'inputType': 'number',
+        'required': True
     },
     'map': {
-        'name': 'map',
+        'name': 'map_link',
         'label': 'Map link',
-        'inputType': 'text'
+        'inputType': 'text',
+        'required': False
     },
     'description': {
-        'name': 'description',
+        'name': 'other_info',
         'label': 'Description',
-        'inputType': 'text'
+        'inputType': 'text',
+        'required': False
     }
 }

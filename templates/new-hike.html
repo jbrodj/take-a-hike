@@ -4,26 +4,26 @@
 <div class="content-container">
   <h2 class="template-heading">Log a new hike</h2>
   <form method="post">
-    {% for field in formContent %}
+    {% for field in form_content %}
     <div class="form-content content-block">
       <label 
-        for="{{formContent[field]['name']}}"
+        for="{{form_content[field]['name']}}"
       >
-        {{formContent[field]['label']}}
+        {{form_content[field]['label']}}
       </label>
-      {% if formContent[field]['inputType'] == 'number' %}
+      {% if form_content[field]['inputType'] == 'number' %}
         <input 
-          type="{{formContent[field]['inputType']}}" 
-          name="{{formContent[field]['name']}}" 
-          id="{{formContent[field]['name']}}"
+          type="{{form_content[field]['inputType']}}" 
+          name="{{form_content[field]['name']}}" 
+          id="{{form_content[field]['name']}}"
           min="0"
           step="any"
         >
       {% else %}
         <input 
-          type="{{formContent[field]['inputType']}}" 
-          name="{{formContent[field]['name']}}" 
-          id="{{formContent[field]['name']}}"
+          type="{{form_content[field]['inputType']}}" 
+          name="{{form_content[field]['name']}}" 
+          id="{{form_content[field]['name']}}"
         >
       {% endif %}
     </div>
