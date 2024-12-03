@@ -89,4 +89,3 @@ def get_area_id(area_name, db):
     area_id = int(area_id)
     db_connection['connection'].close()
     return area_id
-
