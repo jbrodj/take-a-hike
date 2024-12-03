@@ -156,12 +156,16 @@ header h1 {
   color: green;
 }
 
-.trail-heading-block h3 {
-  margin-right: 1rem;
+.trail-heading-block-divider {
+  margin: 0 1rem;
 }
 
-.trail-heading-block > p {
-  margin-left: 1rem;
+.hike-date {
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  margin-bottom: 0.5rem;
 }
 
 .trail-info-block {
