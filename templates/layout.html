@@ -6,24 +6,33 @@
   <link rel="stylesheet" href="/static/styles.css">
   <title>Where's Brodj</title>
 </head>
-<body>
-  <header class="flex-col">
-    <div class="wrapper">
+<body class="flex-col">
+  <header>
+    <div class="flex-col">
       <h1>Where's Brodj</h1>
       <nav class="main-nav">
-        <ul class="nav-list">
-          <li><a href="/">Home</a></li>
-          <li><a href="/new-hike">Log a new hike</a></li>
-        </ul>
+        <div class="wrapper">
+
+          <ul class="nav-list flex-row">
+            <div class="nav-item">
+              <li><a href="/">Home</a></li>
+            </div>
+            <div class="nav-item">
+              <li><a href="/new-hike">Log a new hike</a></li>
+            </div>
+          </ul>
+        </div>
       </nav>
     </div>
   </header>
-  <nav>
   <main>
     <div class="wrapper">
       {% block main %}
       {% endblock %}
     </div>
   </main>
+  <footer class="main-footer flex-col">
+    <p>Created by J Brodie Day for CS50</p>
+  </footer>
 </body>
 </html>
