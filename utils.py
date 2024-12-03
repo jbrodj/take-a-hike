@@ -89,3 +89,25 @@ def get_area_id(area_name, db):
     area_id = int(area_id)
     db_connection['connection'].close()
     return area_id
+
+
+def get_hikes_for_ui(db):
+    ''' Takes database file
+        Returns list of past hikes to serve to UI.
+    '''
+    db_connection = create_connection(db)
+    data = db_connection['cursor'].execute(
+        'SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 10')
+    hikes_data = db_connection['cursor'].fetchall()
+    keys = []
+    for key in data.description:
+        keys.append(key[0])
+    hikes_list = []
+    for entry in hikes_data:
+        this_entry = {}
+        for index, key in enumerate(keys):
+            this_entry[key] = entry[index]
+        hikes_list.append(this_entry)
+    commit_close_conn(db_connection['connection'])
+    print(f'data returned from get_hikes_for_ui: {hikes_list}')
+    return hikes_list
