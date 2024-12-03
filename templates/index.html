@@ -3,31 +3,36 @@
 {% block main %}
 <div class="content-container">
   <h2 class="template-heading">Recent hikes</h2>
-
+  {% for hike in hikesList %}
   <div class="hike-block">
     <hr class="hike-divider">
-    <div class="trail-heading-block content-block flex-row">
-      <h3>Area name</h3>
-      <span>|</span>
-      <p>Trailhead: Trailhead-name</p>
+    <div class="trail-heading-block flex-col content-block">
+        <p class="hike-date">{{hike['hike_date']}}</p>
+        <div class="flex-row">
+          <h3>{{hike['area_name']}}</h3>
+          <span class="trail-heading-block-divider">|</span>
+          <p>Trailhead: {{hike['trailhead']}}</p>
+        </div>
     </div>
     <div class="trail-info-block content-block flex-row">
       <a href="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?cs=srgb&dl=pexels-jplenio-1632790.jpg&fm=jpg">
         <img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?cs=srgb&dl=pexels-jplenio-1632790.jpg&fm=jpg" alt="Treetime">
       </a>
       <div class="trail-sub-info flex-col">
-        <p class="distance">12km</p>
+        <p class="distance">{{hike['distance_km']}}km</p>
         <hr class="hike-divider">
         <ul>
-          <li>Trail Name One</li>
-          <li>Trail Name Two</li>
-          <li>One More Longer Trail Name</li>
+          {% for trail in hike['trails_list'] %}
+          <li>{{trail}}</li>
+          {% endfor %}
         </ul>
       </div>
     </div>
-    <div class="more-info-block content-block"></div>
-    <p>This trail was very kewl, it was so kewl that it might have been the kewlest of the kewl things I've seen since the very last thing I saw that was almost this kewl.</p>
-    <a href="#" target="blank">Maps</a>
+    <div class="more-info-block content-block">
+      <p>{{hike['other_info']}}</p>
+      <a href="#" target="blank">Maps</a>
+    </div>
   </div>
+  {% endfor %}
 </div>
 {% endblock %}
