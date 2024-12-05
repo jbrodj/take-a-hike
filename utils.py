@@ -93,7 +93,8 @@ def get_area_id(area_name, db):
 
 def get_hikes_for_ui(db):
     ''' Takes database file
-        Returns list of past hikes to serve to UI.
+        Returns formatted list of hike dictionaries to serve to UI.
+        Returns empty list if no table is found.
     '''
     db_connection = create_connection(db)
     try:
