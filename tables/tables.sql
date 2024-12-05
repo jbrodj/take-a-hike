@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS hikes (
   trailhead TEXT,
   trails_cs TEXT,
   distance_km FLOAT,
+  image_url TEXT,
+  image_alt TEXT,
   map_link TEXT,
   other_info TEXT,
   PRIMARY KEY (id)

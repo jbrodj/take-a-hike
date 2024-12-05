@@ -3,32 +3,35 @@
 {% block main %}
 <div class="content-container">
   <h2 class="template-heading">Log a new hike</h2>
-  <form method="post">
-    {% for field in form_content %}
-    <div class="form-content content-block">
-      <label 
-        for="{{form_content[field]['name']}}"
-      >
-        {{form_content[field]['label']}}
-      </label>
-      {% if form_content[field]['inputType'] == 'number' %}
-        <input 
-          type="{{form_content[field]['inputType']}}" 
-          name="{{form_content[field]['name']}}" 
-          id="{{form_content[field]['name']}}"
-          min="0"
-          step="any"
+  <div class="form-block">
+    <form method="post">
+      {% for field in form_content %}
+      <div class="form-content content-block flex-col">
+        <label 
+          for="{{form_content[field]['name']}}"
         >
-      {% else %}
-        <input 
-          type="{{form_content[field]['inputType']}}" 
-          name="{{form_content[field]['name']}}" 
-          id="{{form_content[field]['name']}}"
-        >
-      {% endif %}
-    </div>
-    {% endfor %}
-    <button type="submit">Submit</button>
-  </form>
+          {{form_content[field]['label']}}
+        </label>
+        {% if form_content[field]['inputType'] == 'number' %}
+          <input 
+            type="{{form_content[field]['inputType']}}" 
+            name="{{form_content[field]['name']}}" 
+            id="{{form_content[field]['name']}}"
+            min="0"
+            step="any"
+          >
+        {% else %}
+          <input 
+            type="{{form_content[field]['inputType']}}" 
+            name="{{form_content[field]['name']}}" 
+            id="{{form_content[field]['name']}}"
+            value=""
+          >
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

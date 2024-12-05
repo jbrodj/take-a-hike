@@ -5,22 +5,26 @@
   <h2 class="template-heading">Recent hikes</h2>
   {% for hike in hikes_list %}
   <div class="hike-block">
-    <hr class="hike-divider">
-    <div class="trail-heading-block flex-col content-block">
-        <p class="hike-date">{{hike['hike_date']}}</p>
-        <div class="flex-row">
-          <h3>{{hike['area_name']}}</h3>
-          <span class="trail-heading-block-divider">|</span>
-          <p>Trailhead: {{hike['trailhead']}}</p>
+    <div class="trail-block-top content-block flex-row">
+      <div class="trail-heading-block flex-col">
+          <p class="hike-date">{{hike['hike_date']}}</p>
+            <h3>{{hike['area_name']}}</h3>
+            <p>Trailhead: {{hike['trailhead']}}</p>
+      </div>
+      <div class="distance-block">
+        <div class="distance-diamond-element">
         </div>
+        <div class="distance-text-container flex-col">
+          <p class="distance">{{hike['distance_km']}}</p>
+          <p class="distance">km</p>
+        </div>
+      </div>
     </div>
-    <div class="trail-info-block content-block flex-row">
-      <a href="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?cs=srgb&dl=pexels-jplenio-1632790.jpg&fm=jpg">
-        <img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?cs=srgb&dl=pexels-jplenio-1632790.jpg&fm=jpg" alt="Treetime">
-      </a>
-      <div class="trail-sub-info flex-col">
-        <p class="distance">{{hike['distance_km']}}km</p>
-        <hr class="hike-divider">
+    <div class="trail-info-block content-block flex-col">
+      <div class="img-container">
+        <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}">
+      </div>
+      <div class="trail-sub-info">
         <ul>
           {% for trail in hike['trails_list'] %}
           <li>{{trail}}</li>

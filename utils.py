@@ -66,11 +66,11 @@ def add_hike(hike_data, area_id):
     '''Takes hike data from form and area id from database.
         Creates new hike in hikes table and inserts data.
     '''
-    hike_date, area_name, trailhead, trails_cs, distance_km, map_link, other_info = hike_data.values()
+    hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = hike_data.values()
     db_connection = create_connection('hikes.db')
     db_connection['cursor'].execute(
-        'INSERT INTO hikes (hike_date, area_id, area_name, trailhead, trails_cs, distance_km, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [hike_date, area_id, area_name, trailhead, trails_cs, distance_km, map_link, other_info])
+        'INSERT INTO hikes (hike_date, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [hike_date, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
     commit_close_conn(db_connection['connection'])
 
 # RETRIEVE DATA FROM DATABASE
@@ -93,11 +93,15 @@ def get_area_id(area_name, db):
 
 def get_hikes_for_ui(db):
     ''' Takes database file
-        Returns list of past hikes to serve to UI.
+        Returns formatted list of hike dictionaries to serve to UI.
+        Returns empty list if no table is found.
     '''
     db_connection = create_connection(db)
-    data = db_connection['cursor'].execute(
-        'SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 10')
+    try:
+        data = db_connection['cursor'].execute(
+            'SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 10')
+    except sqlite3.OperationalError:
+        return []
     hikes_data = db_connection['cursor'].fetchall()
     keys = []
     for key in data.description:
