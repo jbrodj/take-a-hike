@@ -20,6 +20,8 @@ def after_request(response):
 def index():
     '''Renders default template at base route.'''
     hikes_list = utils.get_hikes_for_ui(DB)
+    if not hikes_list:
+        return render_template('no-data.html')
     return render_template('index.html', hikes_list=hikes_list)
 
 @app.route('/new-hike', methods=['GET', 'POST'])
