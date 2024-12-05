@@ -106,11 +106,6 @@ input[type=number] {
 
 /* GENERAL STYLES */
 
-/* Prevent layout shift from scrollbar */
-* {
-  /* scrollbar-gutter: stable; */
-}
-
 body {
   max-width: 100%;
 }
@@ -180,8 +175,25 @@ header .wrapper {
   justify-content: center;
 }
 
+.main-header-content {
+  justify-content: center;
+  align-items: center;
+}
+
+.main-heading-container {
+  background-color: rgb(255, 230, 71);
+  width: 150px;
+  height: 150px;
+  transform: rotate(45deg);
+  border-radius: 0.25rem;
+  border: 0.25rem solid rgb(44, 44, 44);
+}
+
 header h1 {
   text-align: center;
+  font-size: 7rem;
+  width: auto;
+  transform: rotate(-45deg);
 }
 
 .main-nav {
@@ -194,8 +206,8 @@ header h1 {
 
 .nav-list {
   list-style: none;
+  padding: 0;
   margin: 0;
-  padding-left: 2rem;
 }
 
 .nav-item {
@@ -237,21 +249,25 @@ header h1 {
 }
 
 .distance-block {
-  height: 75px;
-  width: 75px;
+  height: 55px;
+  width: 55px;
   text-align: right;
   border-radius: 0.125rem;
   background-color: var(--main-background-color);
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: rotate(45deg);
+  margin-right: 0.75rem;
 }
 
 .distance {
   font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  /* margin-bottom: 0.25rem; */
   color: var(--light-accent-color);
+  transform: rotate(-45deg);
+  margin-top: 0.0125 rem;
 }
 
 .trail-info-block {
@@ -268,8 +284,6 @@ header h1 {
 }
 
 .trail-info-block img {
-  width: 95%;
-  max-width: 900px;
   height: 95%;
   max-height: 95vh;
   object-fit: contain;
