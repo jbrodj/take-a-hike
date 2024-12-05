@@ -32,6 +32,18 @@ form_content = {
         'inputType': 'number',
         'required': True
     },
+    'image_url': {
+        'name': 'image_url',
+        'label': 'Image URL',
+        'inputType': 'text',
+        'reuqired': False
+    },
+    'image_alt': {
+        'name': 'image_alt',
+        'label': 'Image description',
+        'inputType': 'text',
+        'reuqired': False
+    },
     'map': {
         'name': 'map_link',
         'label': 'Map link',
