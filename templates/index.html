@@ -12,7 +12,12 @@
             <p>Trailhead: {{hike['trailhead']}}</p>
       </div>
       <div class="distance-block">
-        <p class="distance">{{hike['distance_km']}}km</p>
+        <div class="distance-diamond-element">
+        </div>
+        <div class="distance-text-container flex-col">
+          <p class="distance">{{hike['distance_km']}}</p>
+          <p class="distance">km</p>
+        </div>
       </div>
     </div>
     <div class="trail-info-block content-block flex-col">
