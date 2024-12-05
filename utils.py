@@ -66,11 +66,11 @@ def add_hike(hike_data, area_id):
     '''Takes hike data from form and area id from database.
         Creates new hike in hikes table and inserts data.
     '''
-    hike_date, area_name, trailhead, trails_cs, distance_km, map_link, other_info = hike_data.values()
+    hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = hike_data.values()
     db_connection = create_connection('hikes.db')
     db_connection['cursor'].execute(
-        'INSERT INTO hikes (hike_date, area_id, area_name, trailhead, trails_cs, distance_km, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [hike_date, area_id, area_name, trailhead, trails_cs, distance_km, map_link, other_info])
+        'INSERT INTO hikes (hike_date, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [hike_date, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
     commit_close_conn(db_connection['connection'])
 
 # RETRIEVE DATA FROM DATABASE
