@@ -155,6 +155,22 @@ ul, ol {
   border-radius: 0.125rem;
 }
 
+/* Box shadow */
+header, .main-heading-container, .hike-block {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.distance-diamond-element, .img-container {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hike-block, .form-block {
+  background-color: var(--light-background-color);
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0.125rem;
+}
+
 /*  TYPE   */
 
 * {
@@ -185,13 +201,14 @@ header .wrapper {
   width: 150px;
   height: 150px;
   transform: rotate(45deg);
-  border-radius: 0.25rem;
-  border: 0.25rem solid rgb(44, 44, 44);
+  border-radius: 0.5rem;
+  outline: 0.125rem solid rgb(49, 49, 49);
+  outline-offset: -7px;
 }
 
 header h1 {
   text-align: center;
-  font-size: 7rem;
+  font-size: 6rem;
   width: auto;
   transform: rotate(-45deg);
 }
@@ -208,11 +225,13 @@ header h1 {
   list-style: none;
   padding: 0;
   margin: 0;
+  width: 100%;
+  justify-content: center;
 }
 
 .nav-item {
   width: auto;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
 }
 
 .nav-item:hover {
@@ -223,13 +242,6 @@ header h1 {
 .nav-item a {
   text-decoration: none;
   text-transform: uppercase;
-}
-
-.hike-block {
-  background-color: var(--light-background-color);
-  padding: 0.25rem 0.5rem;
-  margin-bottom: 1rem;
-  border-radius: 0.125rem;
 }
 
 
@@ -249,25 +261,40 @@ header h1 {
 }
 
 .distance-block {
-  height: 55px;
-  width: 55px;
-  text-align: right;
+  position: relative;
+  height: 60px;
+  width: 60px;
+  margin: 0.25rem, 0.75rem, 0.25rem, 0;
+  margin: 0.35rem 0.75rem;
+}
+
+.distance-diamond-element {
+  position: absolute;
+  height: 60px;
+  width: 60px;
   border-radius: 0.125rem;
-  background-color: var(--main-background-color);
-  display: flex;
+  background-color: var(--dark-background-color);
+  transform: rotate(45deg);
+  outline: 0.0175rem solid var(--light-accent-color);
+  outline-offset: -4px;
+  z-index: 1;
+}
+
+.distance-text-container {
+  position: relative;
+  margin-top: 0.125rem;
+  width: 100%;
   justify-content: center;
   align-items: center;
-  transform: rotate(45deg);
-  margin-right: 0.75rem;
+  z-index: 2;
 }
 
 .distance {
   font-weight: 700;
   font-size: 0.9rem;
-  /* margin-bottom: 0.25rem; */
   color: var(--light-accent-color);
-  transform: rotate(-45deg);
-  margin-top: 0.0125 rem;
+  letter-spacing: 0.75px;
+  line-height: 1.1;
 }
 
 .trail-info-block {
@@ -281,6 +308,7 @@ header h1 {
   justify-content: center;
   align-items: center;
   padding: 0.25rem;
+  margin: 0.125rem 0;
 }
 
 .trail-info-block img {
@@ -303,7 +331,9 @@ header h1 {
 /*  FORM ELEMENTS  */
 
 input {
+  accent-color: var(--dark-background-color);
   max-width: 400px;
+  width: 45%;
   padding: 0.25rem 0.5rem;
   margin-top: 0.25rem;
   background-color: var(--light-accent-color);
