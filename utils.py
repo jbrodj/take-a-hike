@@ -96,8 +96,11 @@ def get_hikes_for_ui(db):
         Returns list of past hikes to serve to UI.
     '''
     db_connection = create_connection(db)
-    data = db_connection['cursor'].execute(
-        'SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 10')
+    try:
+        data = db_connection['cursor'].execute(
+            'SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 10')
+    except sqlite3.OperationalError:
+        return []
     hikes_data = db_connection['cursor'].fetchall()
     keys = []
     for key in data.description:
