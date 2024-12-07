@@ -39,7 +39,7 @@ def sign_up():
             return utils.handle_error('Username and password are required', 403)
         if not request.form.get('password') == request.form.get('confirmation'):
             return utils.handle_error('Passwords must match', 403)
-        if username and :
+        if username:
             for existing_name in existing_usernames:
                 if username == existing_name['username']:
                     return utils.handle_error('Username is already taken', 403)
