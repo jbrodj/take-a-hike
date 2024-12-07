@@ -1,3 +1,10 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER NOT NULL,
+  username TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS areas (
   id INTEGER NOT NULL,
   area_name TEXT NOT NULL UNIQUE,
@@ -15,6 +22,7 @@ CREATE TABLE IF NOT EXISTS trails (
 CREATE TABLE IF NOT EXISTS hikes (
   id INTEGER NOT NULL,
   hike_date DATE NOT NULL,
+  user_id TEXT NOT NULL,
   area_id INTEGER NOT NULL,
   area_name TEXT NOT NULL,
   trailhead TEXT,
@@ -26,4 +34,5 @@ CREATE TABLE IF NOT EXISTS hikes (
   other_info TEXT,
   PRIMARY KEY (id)
   FOREIGN KEY (area_id) REFERENCES areas(id)
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
