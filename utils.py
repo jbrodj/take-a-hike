@@ -34,8 +34,16 @@ def format_hike_form_data(data):
         dictionary = dict(tuple_list)
         return dictionary
     formatted_data = convert_to_dict(data, {})
-    print(f'formatted_data: {formatted_data}')
+    # print(f'formatted_data: {formatted_data}')
     return formatted_data
+
+
+def add_user(username, password_hash):
+    '''Takes username string and hashed password string
+    '''
+    db_connection = create_connection('hikes.db')
+    db_connection['cursor'].execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
+    commit_close_conn(db_connection['connection'])
 
 
 def add_area(area_name):
