@@ -129,6 +129,18 @@ def get_hikes_for_ui(db):
     # print(f'data returned from get_hikes_for_ui: {hikes_list}')
     return hikes_list
 
+
+def get_all_usernames(db):
+    '''Takes database file
+        Returns list of all names in database
+    '''
+    db_connection = create_connection(db)
+    usernames = db_connection['cursor'].execute('SELECT username FROM users')
+    print(f'usernames in get_all fn: {usernames}')
+    # db_connection['connection'].close()
+    return usernames
+
+
 #  ERROR HANDLING
 
 def handle_error(message, code=400):
