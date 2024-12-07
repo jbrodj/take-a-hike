@@ -1,5 +1,6 @@
 '''Using sqlite3 to create our db'''
 import sqlite3
+from flask import render_template
 # pylint: disable=line-too-long
 
 # ===================
@@ -117,5 +118,13 @@ def get_hikes_for_ui(db):
         this_entry['trails_list'] = trails_list
         hikes_list.append(this_entry)
     commit_close_conn(db_connection['connection'])
-    print(f'data returned from get_hikes_for_ui: {hikes_list}')
+    # print(f'data returned from get_hikes_for_ui: {hikes_list}')
     return hikes_list
+
+#  ERROR HANDLING
+
+def handle_error(message, code=400):
+    '''Takes an error code number and string describing the cause of the error
+        Returns error template.
+    '''
+    return render_template('error.html', code=code, message=message)
