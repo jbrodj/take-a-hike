@@ -24,9 +24,9 @@ def commit_close_conn(conn):
 
 
 # =========
-# FORM DATA
+# INSERT AND FORMAT DATA
 
-def format_form_data(data):
+def format_hike_form_data(data):
     '''Takes multidict object from form submission
         Returns list of dictionaries containing formatted form data. 
     '''

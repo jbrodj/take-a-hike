@@ -31,9 +31,9 @@ def new_hike():
         form_data = request.form
         for value in form_data:
             if form_data.get(value) == '' and form_content[value]['required'] is True:
-                return render_template('/error.html')
+                return utils.handle_error(403, 'Date, area, trailhead, and trails are required values.')
 
-        hike_data = utils.format_form_data(form_data)
+        hike_data = utils.format_hike_form_data(form_data)
         area_name = hike_data['area_name']
         trail_list = hike_data['trails_cs']
         utils.add_area(area_name)
