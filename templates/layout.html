@@ -23,6 +23,18 @@
             <div class="nav-item">
               <li><a href="/new-hike">Log a new hike</a></li>
             </div>
+            {% if session["user_id"] %}
+            <div class="nav-item">
+              <li><a href="/logout">Log out</a></li>
+            </div>
+            {% else %}
+            <div class="nav-item">
+              <li><a href="/signup">Sign up</a></li>
+            </div>
+            <div class="nav-item">
+              <li><a href="/login">Log in</a></li>
+            </div>
+            {% endif %}
           </ul>
         </div>
       </nav>
