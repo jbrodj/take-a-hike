@@ -141,6 +141,17 @@ def get_all_usernames(db):
     return usernames
 
 
+def get_user(db, username):
+    '''Takes database file and username string
+        Returns user data from users table.
+    '''
+    db_connection = create_connection(db)
+    user = db_connection['cursor'].execute('SELECT * FROM users WHERE username = (?)', username)
+    # TODO format user object before returning it
+    db_connection['connection'].close()
+    return user
+
+
 #  ERROR HANDLING
 
 def handle_error(message, code=400):
