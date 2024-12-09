@@ -1,7 +1,7 @@
 '''For rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from content import form_content
+from content import new_hike_form_content
 import utils
 
 app = Flask(__name__)
@@ -30,7 +30,7 @@ def sign_up():
     '''Renders sign-up form template on GET, or submits new user to db on POST'''
     if request.method == 'POST':
         username = request.form.get('username')
-        # Default method for generate_password_hash (scrypt) doesn't work on macOS, 
+        # Default method for generate_password_hash (scrypt) doesn't work on macOS,
         # so switching to 'pbdkf2' for development
         password_hash = generate_password_hash(request.form.get('password'), method='pbkdf2')
         existing_usernames = utils.get_all_usernames(DB)
@@ -71,4 +71,4 @@ def new_hike():
 
         utils.add_hike(hike_data, area_id)
         return redirect('/')
-    return render_template('new-hike.html', form_content=form_content)
+    return render_template('new-hike.html', form_content=new_hike_form_content)
