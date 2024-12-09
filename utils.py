@@ -34,7 +34,6 @@ def format_hike_form_data(data):
         dictionary = dict(tuple_list)
         return dictionary
     formatted_data = convert_to_dict(data, {})
-    # print(f'formatted_data: {formatted_data}')
     return formatted_data
 
 
@@ -139,10 +138,6 @@ def get_all_usernames(db):
     usernames = []
     for row in usernames_query:
         usernames.append(row)
-
-        
-    print(f'usernames in get_all fn: {usernames}')
-    # db_connection['connection'].close()
     return usernames
 
 
