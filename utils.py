@@ -154,8 +154,8 @@ def get_user(db, username):
 
 #  ERROR HANDLING
 
-def handle_error(message, code=400):
+def handle_error(url, message, code=400):
     '''Takes an error code number and string describing the cause of the error
         Returns error template.
     '''
-    return render_template('error.html', code=code, message=message)
+    return render_template('error.html', url=url, message=message, code=code,)
