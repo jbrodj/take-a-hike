@@ -135,7 +135,12 @@ def get_all_usernames(db):
         Returns list of all names in database
     '''
     db_connection = create_connection(db)
-    usernames = db_connection['cursor'].execute('SELECT username FROM users')
+    usernames_query = db_connection['cursor'].execute('SELECT username FROM users')
+    usernames = []
+    for row in usernames_query:
+        usernames.append(row)
+
+        
     print(f'usernames in get_all fn: {usernames}')
     # db_connection['connection'].close()
     return usernames
