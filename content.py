@@ -1,13 +1,13 @@
 '''Input/Label info used for generating New Hike form markup
 '''
-form_content = {
-    'date': {
+new_hike_form_content = {
+    'hike_date': {
         'name': 'hike_date',
         'label': 'Hike date',
         'inputType': 'date',
         'required': True
     },
-    'area': {
+    'area_name': {
         'name': 'area_name',
         'label': 'Area',
         'inputType': 'text',
