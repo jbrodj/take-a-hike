@@ -347,11 +347,17 @@ header h1 {
 
 input {
   accent-color: var(--dark-background-color);
+  background-color: var(--light-accent-color);
   max-width: 400px;
-  width: 45%;
   padding: 0.25rem 0.5rem;
   margin-top: 0.25rem;
-  background-color: var(--light-accent-color);
+}
+
+.form-control {
+  accent-color: var(--dark-background-color) !important;
+  background-color: var(--light-accent-color) !important;
+  border-radius: 0.125rem !important;
+  transition: var(--dark-background-color) .15s ease-in-out,box-shadow .15s ease-in-out !important;
 }
 
 /*  FOOTER  */
