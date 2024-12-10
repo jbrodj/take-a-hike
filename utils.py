@@ -26,13 +26,18 @@ def commit_close_conn(conn):
 # =========
 # INSERT AND FORMAT DATA
 
+def convert_to_dict(tuple_list, dictionary):
+    '''Takes a list of tuples and an empty dictionary
+    Returns a dictionary.
+    '''
+    dictionary = dict(tuple_list)
+    return dictionary
+
+
 def format_hike_form_data(data):
     '''Takes multidict object from form submission
         Returns list of dictionaries containing formatted form data. 
     '''
-    def convert_to_dict(tuple_list, dictionary):
-        dictionary = dict(tuple_list)
-        return dictionary
     formatted_data = convert_to_dict(data, {})
     return formatted_data
 
