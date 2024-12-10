@@ -146,14 +146,33 @@ def get_all_usernames(db):
     return usernames
 
 
-def get_user(db, username):
+def get_user_by_username(db, username):
     '''Takes database file and username string
-        Returns user data from users table.
+        Returns dict of user data from users table, or empty dictionary if no user found.
     '''
     db_connection = create_connection(db)
-    user = db_connection['cursor'].execute('SELECT * FROM users WHERE username = (?)', username)
-    # TODO format user object before returning it
+    user_data = db_connection['cursor'].execute('SELECT * FROM users WHERE username = ?', (username,))
+    keys = ['id', 'username', 'password_hash']
+    values = []
+
+    for row in user_data:
+        print(f'row: {row}')
+        for position in row:
+            values.append(position)
     db_connection['connection'].close()
+    if len(values) == 0:
+        return {}
+    user = generate_user_data_dict(keys, values)
+    return user
+
+
+def generate_user_data_dict(keys, values):
+    '''Takes two lists with same number of indecies.
+        Returns list with left vals as keys, right vals as values.
+    '''
+    user = {}
+    for index, key in enumerate(keys):
+        user[key] = values[index]
     return user
 
 
