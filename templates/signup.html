@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block main %}
+<div class="content-container">
+  <h2 class="template-heading">Sign up</h2>
+  <div class="form-block">
+    <form action="/signup" method="post" class="flex-col">
+      <div class="form-content content-block flex-col">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username">
+      </div>
+      <div class="form-content content-block flex-col">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password">
+      </div>
+      <div class="form-content content-block flex-col">
+        <label for="confirmation">Confirm password</label>
+        <input type="password" name="confirmation" id="confirmation">
+      </div>
+        <button type="submit">Sign up</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

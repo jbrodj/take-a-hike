@@ -151,12 +151,18 @@ ul, ol {
   padding-left: 1rem;
 }
 
+form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .img-container, img {
   border-radius: 0.125rem;
 }
 
 /* Box shadow */
-header, .main-heading-container, .hike-block {
+header, .main-heading-container, .hike-block, .error-block .no-data-block {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -164,11 +170,20 @@ header, .main-heading-container, .hike-block {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.hike-block, .form-block {
+.hike-block, .form-block, .error-block, .no-data-block {
   background-color: var(--light-background-color);
   padding: 0.25rem 0.5rem;
   margin-bottom: 1rem;
   border-radius: 0.125rem;
+}
+
+.error-block a {
+  margin-bottom: 1rem;
+  align-self: center;
+}
+
+.error-block > p, .no-data-block > p {
+  margin: 1rem 0;
 }
 
 /*  TYPE   */
@@ -332,11 +347,17 @@ header h1 {
 
 input {
   accent-color: var(--dark-background-color);
+  background-color: var(--light-accent-color);
   max-width: 400px;
-  width: 45%;
   padding: 0.25rem 0.5rem;
   margin-top: 0.25rem;
-  background-color: var(--light-accent-color);
+}
+
+.form-control {
+  accent-color: var(--dark-background-color) !important;
+  background-color: var(--light-accent-color) !important;
+  border-radius: 0.125rem !important;
+  transition: var(--dark-background-color) .15s ease-in-out,box-shadow .15s ease-in-out !important;
 }
 
 /*  FOOTER  */

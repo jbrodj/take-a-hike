@@ -3,6 +3,13 @@
 {% block main %}
 <div class="content-container">
   <h2 class="template-heading">Error</h2>
-  <p>You stink</p>
+  <div class="content-block error-block flex-col">
+    <p>{{code}}: {{message}}.</p>
+    <a href="{{url}}">
+      <button>
+        Go back
+      </button>
+    </a>
+  </div>
 </div>
 {% endblock %}

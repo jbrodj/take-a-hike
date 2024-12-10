@@ -1,5 +1,6 @@
 '''Using sqlite3 to create our db'''
 import sqlite3
+from flask import render_template
 # pylint: disable=line-too-long
 
 # ===================
@@ -23,18 +24,30 @@ def commit_close_conn(conn):
 
 
 # =========
-# FORM DATA
+# INSERT AND FORMAT DATA
 
-def format_form_data(data):
+def convert_to_dict(tuple_list, dictionary):
+    '''Takes a list of tuples and an empty dictionary
+    Returns a dictionary.
+    '''
+    dictionary = dict(tuple_list)
+    return dictionary
+
+
+def format_hike_form_data(data):
     '''Takes multidict object from form submission
         Returns list of dictionaries containing formatted form data. 
     '''
-    def convert_to_dict(tuple_list, dictionary):
-        dictionary = dict(tuple_list)
-        return dictionary
     formatted_data = convert_to_dict(data, {})
-    print(f'formatted_data: {formatted_data}')
     return formatted_data
+
+
+def add_user(username, password_hash):
+    '''Takes username string and hashed password string
+    '''
+    db_connection = create_connection('hikes.db')
+    db_connection['cursor'].execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
+    commit_close_conn(db_connection['connection'])
 
 
 def add_area(area_name):
@@ -62,15 +75,15 @@ def add_trail(area_id, trail_names):
     commit_close_conn(db_connection['connection'])
 
 
-def add_hike(hike_data, area_id):
+def add_hike(user_id, area_id, hike_data):
     '''Takes hike data from form and area id from database.
         Creates new hike in hikes table and inserts data.
     '''
     hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = hike_data.values()
     db_connection = create_connection('hikes.db')
     db_connection['cursor'].execute(
-        'INSERT INTO hikes (hike_date, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [hike_date, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
+        'INSERT INTO hikes (hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
     commit_close_conn(db_connection['connection'])
 
 # RETRIEVE DATA FROM DATABASE
@@ -117,5 +130,56 @@ def get_hikes_for_ui(db):
         this_entry['trails_list'] = trails_list
         hikes_list.append(this_entry)
     commit_close_conn(db_connection['connection'])
-    print(f'data returned from get_hikes_for_ui: {hikes_list}')
+    # print(f'data returned from get_hikes_for_ui: {hikes_list}')
     return hikes_list
+
+
+def get_all_usernames(db):
+    '''Takes database file
+        Returns list of all names in database
+    '''
+    db_connection = create_connection(db)
+    usernames_query = db_connection['cursor'].execute('SELECT username FROM users')
+    usernames = []
+    for row in usernames_query:
+        usernames.append(row)
+    return usernames
+
+
+def get_user_by_username(db, username):
+    '''Takes database file and username string
+        Returns dict of user data from users table, or empty dictionary if no user found.
+    '''
+    db_connection = create_connection(db)
+    user_data = db_connection['cursor'].execute('SELECT * FROM users WHERE username = ?', (username,))
+    keys = ['id', 'username', 'password_hash']
+    values = []
+
+    for row in user_data:
+        print(f'row: {row}')
+        for position in row:
+            values.append(position)
+    db_connection['connection'].close()
+    if len(values) == 0:
+        return {}
+    user = generate_user_data_dict(keys, values)
+    return user
+
+
+def generate_user_data_dict(keys, values):
+    '''Takes two lists with same number of indecies.
+        Returns list with left vals as keys, right vals as values.
+    '''
+    user = {}
+    for index, key in enumerate(keys):
+        user[key] = values[index]
+    return user
+
+
+#  ERROR HANDLING
+
+def handle_error(url, message, code=400):
+    '''Takes an error code number and string describing the cause of the error
+        Returns error template.
+    '''
+    return render_template('error.html', url=url, message=message, code=code,)

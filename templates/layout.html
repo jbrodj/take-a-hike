@@ -7,7 +7,7 @@
   <title>Hike Logger</title>
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥾</text></svg>">
 </head>
-<body class="flex-col">
+<body class="flex-col" style="visibility: hidden;">
   <header>
     <div class="flex-col main-header-content">
       <div class="main-heading-container flex-col">
@@ -21,8 +21,20 @@
               <li><a href="/">Home</a></li>
             </div>
             <div class="nav-item">
-              <li><a href="/new-hike">Log a new hike</a></li>
+              <li><a href="/new-hike">New hike</a></li>
             </div>
+            {% if session["user_id"] %}
+            <div class="nav-item">
+              <li><a href="/logout">Log out</a></li>
+            </div>
+            {% else %}
+            <div class="nav-item">
+              <li><a href="/signup">Sign up</a></li>
+            </div>
+            <div class="nav-item">
+              <li><a href="/login">Log in</a></li>
+            </div>
+            {% endif %}
           </ul>
         </div>
       </nav>
@@ -37,5 +49,6 @@
   <footer class="main-footer flex-col">
     <p>Created by <a href="http://brodieday.com" target="_blank">J Brodie Day</a> for CS50</p>
   </footer>
+  <script src="/static/ready.js"></script>
 </body>
 </html>
