@@ -1,7 +1,7 @@
 '''For rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request, session
-from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_session import Session
 from content import new_hike_form_content
 import utils
 

@@ -3,7 +3,7 @@
     "db": "sqlite3 hikes.db",
     "dev": "export FLASK_DEBUG=1 && flask run -h localhost -p 5001",
     "initSql": "python3 init_sql.py",
-    "init": "npm install && pip install Flask && npm run initSql"
+    "init": "npm install && pip install Flask && pip install werkzeug && pip install flask_session && npm run initSql"
   },
   "dependencies": {
     "python3": "^0.0.1",
