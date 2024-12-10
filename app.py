@@ -56,6 +56,29 @@ def sign_up():
 
     return render_template('signup.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def log_in():
+    '''Renders log-in form template on GET, or validates login data on POST'''
+    session.clear()
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        # Check for valid form field values
+        if not username or not request.form.get('password'):
+            return utils.handle_error(request.url, 'Username and password are required', 403)
+        # Check for existing username
+        user = utils.get_user_by_username(DB, username)
+        if not bool(user):
+            return utils.handle_error(request.url, 'Username not found', 403)
+        # Validate password
+        if not check_password_hash(user['password_hash'], request.form.get('password')):
+            return utils.handle_error(request.url, 'Incorrect password', 403)
+
+        session['username'] = username
+        session['user_id'] = user['id']
+        return redirect('/')
+
+    return render_template('login.html')
 
 @app.route('/new-hike', methods=['GET', 'POST'])
 def new_hike():
