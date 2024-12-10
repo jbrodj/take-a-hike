@@ -100,6 +100,6 @@ def new_hike():
         area_id = utils.get_area_id(area_name, DB)
         utils.add_trail(area_id, trail_list)
 
-        utils.add_hike(hike_data, area_id)
+        utils.add_hike(session['user_id'], area_id, hike_data)
         return redirect('/')
     return render_template('new-hike.html', form_content=new_hike_form_content)
