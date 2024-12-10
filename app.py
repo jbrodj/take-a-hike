@@ -39,18 +39,21 @@ def sign_up():
         # so switching to 'pbdkf2' for development
         password_hash = generate_password_hash(request.form.get('password'), method='pbkdf2')
         existing_usernames = utils.get_all_usernames(DB)
-        print(f'existing_usernames: {existing_usernames}')
-        if not username or not request.form.get('password') or not request.form.get('confirmation'):
-            return utils.handle_error(request.url, 'Username and password are required', 403)
+        # Validate that username exists and is alphanumeric
         if not username.isalnum():
             return utils.handle_error(
-                request.url, 'Username must contain only letters and numbers', 403)
+                request.url, 'A username containing only letters and numbers is required', 403)
+        # Validate that password exists and is at least 4 characters
+        if not len(request.form.get('password')) > 3:
+            return utils.handle_error(
+                request.url, 'Password with minimum of 4 characters is required', 403)
+        # Validate that password confirmation matches
         if not request.form.get('password') == request.form.get('confirmation'):
             return utils.handle_error(request.url, 'Passwords must match', 403)
-        if username:
-            for existing_name in existing_usernames:
-                if username == existing_name[0]:
-                    return utils.handle_error(request.url, 'Username is already taken', 403)
+
+        for existing_name in existing_usernames:
+            if username == existing_name[0]:
+                return utils.handle_error(request.url, 'Username is already taken', 403)
         utils.add_user(username, password_hash)
         return redirect('/login')
 
