@@ -1,11 +1,16 @@
 '''For rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request, session
+from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from content import new_hike_form_content
 import utils
 
+
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_PERMANENT"] = False
+Session(app)
 
 DB = 'hikes.db'
 
