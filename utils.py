@@ -104,7 +104,7 @@ def get_area_id(area_name, db):
     return area_id
 
 
-def get_hikes_for_ui(db):
+def get_hikes_for_ui(db, user_id):
     ''' Takes database file
         Returns formatted list of hike dictionaries to serve to UI.
         Returns empty list if no table is found.
@@ -112,7 +112,7 @@ def get_hikes_for_ui(db):
     db_connection = create_connection(db)
     try:
         data = db_connection['cursor'].execute(
-            'SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 10')
+            'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 10', (user_id,))
     except sqlite3.OperationalError:
         return []
     hikes_data = db_connection['cursor'].fetchall()
@@ -124,13 +124,16 @@ def get_hikes_for_ui(db):
         # Convert each tuple in list to a dictionary by adding keys
         this_entry = {}
         for index, key in enumerate(keys):
-            this_entry[key] = entry[index]
+            # Ensure max of 1 decimal place for distance
+            if key == 'distance_km':
+                this_entry[key] = round(entry[index], 1)
+            else:
+                this_entry[key] = entry[index]
         # Add key/value pair containing list of trail strings
         trails_list = this_entry['trails_cs'].split(', ')
         this_entry['trails_list'] = trails_list
         hikes_list.append(this_entry)
     commit_close_conn(db_connection['connection'])
-    # print(f'data returned from get_hikes_for_ui: {hikes_list}')
     return hikes_list
 
 
