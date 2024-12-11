@@ -83,6 +83,12 @@ def log_in():
 
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    '''Clears user data from session, redirects user to login page.'''
+    session.clear()
+    return redirect('/login')
+
 @app.route('/new-hike', methods=['GET', 'POST'])
 def new_hike():
     '''Renders new hike form template on GET, or submits hike data to db on POST.'''
