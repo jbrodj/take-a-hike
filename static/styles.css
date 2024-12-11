@@ -102,6 +102,7 @@ input[type=number] {
   --dark-background-color: #1D330F;
   --deep-neutral-color: #ebdcc5;
   --light-accent-color: #fff7eb;
+  --dark-accent-color: #475043;
 }
 
 /* GENERAL STYLES */
@@ -159,6 +160,12 @@ form {
 
 .img-container, img {
   border-radius: 0.125rem;
+}
+
+.no-img-divider {
+  width: 100%;
+  border: 1px solid var(--dark-accent-color);
+  border-radius: 0.03125rem;
 }
 
 /* Box shadow */
@@ -318,7 +325,7 @@ header h1 {
 
 .img-container {
   width: 100%;
-  background-color: #475043;
+  background-color: var(--dark-accent-color);
   display: flex;
   justify-content: center;
   align-items: center;
