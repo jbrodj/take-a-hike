@@ -119,4 +119,3 @@ def new_hike():
         return redirect('/')
 
     return render_template('new-hike.html', form_content=new_hike_form_content)
-
