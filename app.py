@@ -94,18 +94,29 @@ def new_hike():
     '''Renders new hike form template on GET, or submits hike data to db on POST.'''
     if request.method == 'POST':
         form_data = request.form
-        for value in form_data:
-            if form_data.get(value) == '' and new_hike_form_content[value]['required'] is True:
+        # Validate that required fields are populated
+        for field in form_data:
+            if form_data.get(field) == '' and new_hike_form_content[field]['required'] is True:
                 return utils.handle_error(
                     request.url, 'Date, area, trailhead, and trails are required values.', 403)
-
+        # Validate that distance field is numbers and decimal chars only.
+        for char in form_data.get('distance_km'):
+            if not char.isnumeric() and not char == '.':
+                return utils.handle_error(request.url, 'Distance must contain only numbers', 403)
+        # Validate that distance value is between 0 and 100
+        distance = float(form_data.get('distance_km'))
+        if distance < 0 or distance > 99.9:
+            return utils.handle_error(request.url, 'Distance must be between 0 and 100km', 403)
+        # Format form data
         hike_data = utils.format_hike_form_data(form_data)
+        # Insert to areas, trails, and hikes tables
         area_name = hike_data['area_name']
         trail_list = hike_data['trails_cs']
         utils.add_area(area_name)
         area_id = utils.get_area_id(area_name, DB)
         utils.add_trail(area_id, trail_list)
-
         utils.add_hike(session['user_id'], area_id, hike_data)
         return redirect('/')
+
     return render_template('new-hike.html', form_content=new_hike_form_content)
+
