@@ -57,3 +57,17 @@ new_hike_form_content = {
         'required': False
     }
 }
+
+
+error_messages = {
+    'incorrect_pw': 'Incorrect password. Please try again.',
+    'invalid_number': 'Distance field must contain only numbers or decimal characters.',
+    'missing_values': 'Required values are missing. Ensure all required values are provided.', 
+    'no_username_or_pw': 'Username and password are required.',
+    'password_required': 'Password with minimum of 4 characters is required.',
+    'pw_confirm_match': 'Passwords must match.',
+    'out_of_range': 'Distance must be between 0 and 100km.',
+    'user_not_found': 'Username not found. Please try again, or sign up for an account.',
+    'username_required': 'A username containing only letters and numbers is required.',
+    'username_taken': 'Username is already taken. Please select a different username.',
+}
