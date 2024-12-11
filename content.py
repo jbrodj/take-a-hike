@@ -20,13 +20,13 @@ new_hike_form_content = {
         'required': True
 
     },
-    'trails': {
+    'trails_cs': {
         'name': 'trails_cs',
         'label': 'Trails (comma-separated)',
         'inputType': 'text',
         'required': True
     },
-    'distance': {
+    'distance_km': {
         'name': 'distance_km',
         'label': 'Distance (KM)',
         'inputType': 'number',
@@ -36,21 +36,21 @@ new_hike_form_content = {
         'name': 'image_url',
         'label': 'Image URL',
         'inputType': 'text',
-        'reuqired': False
+        'required': False
     },
     'image_alt': {
         'name': 'image_alt',
         'label': 'Image description',
         'inputType': 'text',
-        'reuqired': False
+        'required': False
     },
-    'map': {
+    'map_link': {
         'name': 'map_link',
         'label': 'Map link',
         'inputType': 'text',
         'required': False
     },
-    'description': {
+    'other_info': {
         'name': 'other_info',
         'label': 'Description',
         'inputType': 'text',
