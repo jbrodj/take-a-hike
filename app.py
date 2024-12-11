@@ -2,7 +2,7 @@
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_session import Session
-from content import new_hike_form_content
+from content import new_hike_form_content, error_messages
 import utils
 
 
@@ -42,14 +42,14 @@ def sign_up():
         # Validate that username exists and is alphanumeric
         if not username.isalnum():
             return utils.handle_error(
-                request.url, 'A username containing only letters and numbers is required', 403)
+                request.url, error_messages['username_required'], 403)
         # Validate that password exists and is at least 4 characters
         if not len(request.form.get('password')) > 3:
             return utils.handle_error(
-                request.url, 'Password with minimum of 4 characters is required', 403)
+                request.url, error_messages['password_required'], 403)
         # Validate that password confirmation matches
         if not request.form.get('password') == request.form.get('confirmation'):
-            return utils.handle_error(request.url, 'Passwords must match', 403)
+            return utils.handle_error(request.url, error_messages['pw_confirm_match'], 403)
 
         for existing_name in existing_usernames:
             if username == existing_name[0]:
@@ -68,14 +68,14 @@ def log_in():
         username = request.form.get('username')
         # Check for valid form field values
         if not username or not request.form.get('password'):
-            return utils.handle_error(request.url, 'Username and password are required', 403)
+            return utils.handle_error(request.url, error_messages['no_username_or_pw'], 403)
         # Check for existing username
         user = utils.get_user_by_username(DB, username)
         if not bool(user):
-            return utils.handle_error(request.url, 'Username not found', 403)
+            return utils.handle_error(request.url, error_messages['user_not_found'], 403)
         # Validate password
         if not check_password_hash(user['password_hash'], request.form.get('password')):
-            return utils.handle_error(request.url, 'Incorrect password', 403)
+            return utils.handle_error(request.url, error_messages['incorrect_pw'], 403)
 
         session['username'] = username
         session['user_id'] = user['id']
@@ -98,15 +98,15 @@ def new_hike():
         for field in form_data:
             if form_data.get(field) == '' and new_hike_form_content[field]['required'] is True:
                 return utils.handle_error(
-                    request.url, 'Date, area, trailhead, and trails are required values.', 403)
+                    request.url, error_messages['missing_values'], 403)
         # Validate that distance field is numbers and decimal chars only.
         for char in form_data.get('distance_km'):
             if not char.isnumeric() and not char == '.':
-                return utils.handle_error(request.url, 'Distance must contain only numbers', 403)
+                return utils.handle_error(request.url, error_messages['invalid_number'], 403)
         # Validate that distance value is between 0 and 100
         distance = float(form_data.get('distance_km'))
         if distance < 0 or distance > 99.9:
-            return utils.handle_error(request.url, 'Distance must be between 0 and 100km', 403)
+            return utils.handle_error(request.url, error_messages['out_of_range'], 403)
         # Format form data
         hike_data = utils.format_hike_form_data(form_data)
         # Insert to areas, trails, and hikes tables
