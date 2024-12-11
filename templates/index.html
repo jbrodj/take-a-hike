@@ -21,9 +21,13 @@
       </div>
     </div>
     <div class="trail-info-block content-block flex-col">
+      {% if not hike['image_url'] %}
+      <hr class="no-img-divider">
+      {% else %}
       <div class="img-container">
         <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}" loading="lazy">
       </div>
+      {% endif %}
       <div class="trail-sub-info">
         <ul>
           {% for trail in hike['trails_list'] %}
