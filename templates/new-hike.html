@@ -18,7 +18,17 @@
             name="{{form_content[field]['name']}}" 
             id="{{form_content[field]['name']}}"
             min="0"
+            max="99.9"
             step="any"
+            required
+          >
+        {% elif form_content[field]['required'] == True %}
+          <input 
+            type="{{form_content[field]['inputType']}}" 
+            name="{{form_content[field]['name']}}" 
+            id="{{form_content[field]['name']}}"
+            value=""
+            required
           >
         {% else %}
           <input 
