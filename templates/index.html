@@ -1,46 +1,45 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/styles.css">
+  <title>Take a hike</title>
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥾</text></svg>">
+</head>
+<body class="flex-col" style="visibility: hidden;">
+  <header class="splash-header flex-col">
+    <div class="splash-heading-content-block flex-col">
+      <h1 class="splash-heading">Take a hike</h1>
+    </div>
+    <div class="flex-col main-header-content splash-logo-content-block">
+      <div class="main-heading-container flex-col">
+        <h2 class="splash-logo">🥾</h2>
+      </div>
+    </div>
+    <div class="splash-nav-content-container">
+      <nav class="splash-nav">
+        <div class="wrapper">
 
-{% block main %}
-<div class="content-container">
-  <h2 class="template-heading">Recent hikes</h2>
-  {% for hike in hikes_list %}
-  <div class="hike-block">
-    <div class="trail-block-top content-block flex-row">
-      <div class="trail-heading-block flex-col">
-          <p class="hike-date">{{hike['hike_date']}}</p>
-            <h3>{{hike['area_name']}}</h3>
-            <p>Trailhead: {{hike['trailhead']}}</p>
-      </div>
-      <div class="distance-block">
-        <div class="distance-diamond-element">
+          <ul class="nav-list flex-row">
+            <div class="nav-item">
+              <li><a href="/users">Users</a></li>
+            </div>
+            <div class="nav-item">
+              <li><a href="/signup">Sign up</a></li>
+            </div>
+            <div class="nav-item">
+              <li><a href="/login">Log in</a></li>
+            </div>
+          </ul>
         </div>
-        <div class="distance-text-container flex-col">
-          <p class="distance">{{hike['distance_km']}}</p>
-          <p class="distance">km</p>
-        </div>
-      </div>
+      </nav>
     </div>
-    <div class="trail-info-block content-block flex-col">
-      {% if not hike['image_url'] %}
-      <hr class="no-img-divider">
-      {% else %}
-      <div class="img-container">
-        <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}" loading="lazy">
-      </div>
-      {% endif %}
-      <div class="trail-sub-info">
-        <ul>
-          {% for trail in hike['trails_list'] %}
-          <li>{{trail}}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-    <div class="more-info-block content-block">
-      <p>{{hike['other_info']}}</p>
-      <a href="#" target="blank">Maps</a>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-{% endblock %}
+  </header>
+
+  <footer class="main-footer flex-col">
+    <p>Created by <a href="http://brodieday.com" target="_blank">J Brodie Day</a> for CS50</p>
+  </footer>
+  <script src="/static/ready.js"></script>
+</body>
+</html>
