@@ -1,4 +1,4 @@
-'''For rendering, routing, and accessing request properties'''
+'''Flask for rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_session import Session
@@ -6,13 +6,17 @@ from content import new_hike_form_content, error_messages
 import utils
 
 
+# Configure app and instantiate Session
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 Session(app)
 
+
+# Constants
 DB = 'hikes.db'
+
 
 @app.after_request
 def after_request(response):
@@ -22,12 +26,14 @@ def after_request(response):
     response.headers['Pragma'] = 'no-cache'
     return response
 
+
 @app.route('/')
 def index():
     '''Renders default template at base route. Or redirects to user page if logged in.'''
     if session:
         return redirect(f'/users/{session["username"]}')
     return render_template('index.html')
+
 
 @app.route('/users/<username>')
 def user_route(username):
@@ -38,27 +44,37 @@ def user_route(username):
         return utils.handle_error(request.host_url, error_messages['user_not_found'], 403)
     # Get hikes for given user
     hikes_list = utils.get_hikes_for_ui(DB, user['id'])
+    # Return no data template if user's hikes list is empty
     if not hikes_list:
         return render_template('no-data.html')
+    # Render user page with list of that user's hikes
     return render_template('user.html', username=username, hikes_list=hikes_list)
+
 
 @app.route('/users', methods=['GET', 'POST'])
 def user_search():
-    '''Renders users search form, or user list template if query string is present'''
+    '''Renders users search form, or user list template if query string is present
+        Redirects to users/<username> if exact match is found.
+    '''
+    # If form has been submitted, query string will be present.
     if request.query_string:
         query_param = request.args.get("user_search")
+        # Validate that input has valid query value.
         if not query_param:
             return utils.handle_error(request.base_url, error_messages['missing_values'], 403)
+        # Check for an exact username match.
         exact_match = utils.get_user_by_username(DB, query_param)
         if exact_match:
             path = '/users/' + query_param
             return redirect(path)
+        # Get similar usernames.
         similar_usernames = utils.get_similar_usernames(DB, query_param)
         if not similar_usernames:
             return render_template('user_search.html', query=query_param, results='no_match')
         return render_template('user_search.html', query=query_param, results=similar_usernames)
-
+    # Route directly to blank users search page.
     return render_template('user_search.html')
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
@@ -80,14 +96,15 @@ def sign_up():
         # Validate that password confirmation matches
         if not request.form.get('password') == request.form.get('confirmation'):
             return utils.handle_error(request.url, error_messages['pw_confirm_match'], 403)
-
+        # Check if submitted username is already taken.
         for existing_name in existing_usernames:
             if username == existing_name[0]:
-                return utils.handle_error(request.url, 'Username is already taken', 403)
+                return utils.handle_error(request.url, error_messages['username_taken'], 403)
         utils.add_user(username, password_hash)
         return redirect('/login')
-
+    # Render signup form
     return render_template('signup.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def log_in():
@@ -106,18 +123,20 @@ def log_in():
         # Validate password
         if not check_password_hash(user['password_hash'], request.form.get('password')):
             return utils.handle_error(request.url, error_messages['incorrect_pw'], 403)
-
+        # If values are valid, log in and redirect to home
         session['username'] = username
         session['user_id'] = user['id']
         return redirect('/')
-
+    # Route to login form
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
-    '''Clears user data from session, redirects user to login page.'''
+    '''Clears user data from session, redirects user to home page.'''
     session.clear()
-    return redirect('/login')
+    return redirect('/')
+
 
 @app.route('/new-hike', methods=['GET', 'POST'])
 def new_hike():
@@ -129,7 +148,7 @@ def new_hike():
             if form_data.get(field) == '' and new_hike_form_content[field]['required'] is True:
                 return utils.handle_error(
                     request.url, error_messages['missing_values'], 403)
-        # Validate that distance field is numbers and decimal chars only.
+        # Validate that distance field is numbers and decimal chars only
         for char in form_data.get('distance_km'):
             if not char.isnumeric() and not char == '.':
                 return utils.handle_error(request.url, error_messages['invalid_number'], 403)
@@ -147,5 +166,5 @@ def new_hike():
         utils.add_trail(area_id, trail_list)
         utils.add_hike(session['user_id'], area_id, hike_data)
         return redirect('/')
-
+    # Route to new hike form
     return render_template('new-hike.html', form_content=new_hike_form_content)
