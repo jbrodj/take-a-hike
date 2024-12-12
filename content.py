@@ -20,13 +20,13 @@ new_hike_form_content = {
         'required': True
 
     },
-    'trails': {
+    'trails_cs': {
         'name': 'trails_cs',
         'label': 'Trails (comma-separated)',
         'inputType': 'text',
         'required': True
     },
-    'distance': {
+    'distance_km': {
         'name': 'distance_km',
         'label': 'Distance (KM)',
         'inputType': 'number',
@@ -36,24 +36,38 @@ new_hike_form_content = {
         'name': 'image_url',
         'label': 'Image URL',
         'inputType': 'text',
-        'reuqired': False
+        'required': False
     },
     'image_alt': {
         'name': 'image_alt',
         'label': 'Image description',
         'inputType': 'text',
-        'reuqired': False
+        'required': False
     },
-    'map': {
+    'map_link': {
         'name': 'map_link',
         'label': 'Map link',
         'inputType': 'text',
         'required': False
     },
-    'description': {
+    'other_info': {
         'name': 'other_info',
         'label': 'Description',
         'inputType': 'text',
         'required': False
     }
+}
+
+
+error_messages = {
+    'incorrect_pw': 'Incorrect password. Please try again.',
+    'invalid_number': 'Distance field must contain only numbers or decimal characters.',
+    'missing_values': 'Required values are missing. Ensure all required values are provided.', 
+    'no_username_or_pw': 'Username and password are required.',
+    'password_required': 'Password with minimum of 4 characters is required.',
+    'pw_confirm_match': 'Passwords must match.',
+    'out_of_range': 'Distance must be between 0 and 100km.',
+    'user_not_found': 'Username not found. Please check the username provided and try again.',
+    'username_required': 'A username containing only letters and numbers is required.',
+    'username_taken': 'Username is already taken. Please select a different username.',
 }

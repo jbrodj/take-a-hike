@@ -1,0 +1,16 @@
+<div class="search-results-container content-block">
+  {% if results == 'no_match' %}
+  <div class="search-results-list">
+    <p>There are no usernames similar to {{query}}</p>
+  </div>
+  {% else %}
+  <p>Did you mean:</p>
+  <ul class="search-results-list">
+    {% for user in results %}
+    <li>
+      <a href="/users/{{user}}">{{user}}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>

@@ -104,7 +104,7 @@ def get_area_id(area_name, db):
     return area_id
 
 
-def get_hikes_for_ui(db):
+def get_hikes_for_ui(db, user_id):
     ''' Takes database file
         Returns formatted list of hike dictionaries to serve to UI.
         Returns empty list if no table is found.
@@ -112,7 +112,7 @@ def get_hikes_for_ui(db):
     db_connection = create_connection(db)
     try:
         data = db_connection['cursor'].execute(
-            'SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 10')
+            'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 10', (user_id,))
     except sqlite3.OperationalError:
         return []
     hikes_data = db_connection['cursor'].fetchall()
@@ -124,13 +124,16 @@ def get_hikes_for_ui(db):
         # Convert each tuple in list to a dictionary by adding keys
         this_entry = {}
         for index, key in enumerate(keys):
-            this_entry[key] = entry[index]
+            # Ensure max of 1 decimal place for distance
+            if key == 'distance_km':
+                this_entry[key] = round(entry[index], 1)
+            else:
+                this_entry[key] = entry[index]
         # Add key/value pair containing list of trail strings
         trails_list = this_entry['trails_cs'].split(', ')
         this_entry['trails_list'] = trails_list
         hikes_list.append(this_entry)
     commit_close_conn(db_connection['connection'])
-    # print(f'data returned from get_hikes_for_ui: {hikes_list}')
     return hikes_list
 
 
@@ -164,6 +167,28 @@ def get_user_by_username(db, username):
         return {}
     user = generate_user_data_dict(keys, values)
     return user
+
+
+def get_similar_usernames(db, query):
+    '''Takes database file and query string.
+        Returns sorted dict of usernames with >2 character matches with query, 
+        or empty dict.
+    '''
+    db_connection = create_connection(db)
+    users_list = []
+    for char in query:
+        like_query = f'%{char}%'
+        username_data = db_connection['cursor'].execute('SELECT username FROM users WHERE username LIKE ?', (like_query,))
+        for row in username_data:
+            users_list.append(row[0])
+    user_frequency = {}
+    for user in users_list:
+        frequency = users_list.count(user)
+        if frequency > 2:
+            user_frequency.update({user: frequency})
+    # Source: https://www.datacamp.com/tutorial/sort-a-dictionary-by-value-python
+    sorted_dictionary = dict(sorted(user_frequency.items(), key=lambda item: item[1], reverse=True))
+    return sorted_dictionary
 
 
 def generate_user_data_dict(keys, values):

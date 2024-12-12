@@ -15,6 +15,7 @@ html {
   text-size-adjust: none;
   background-color: var(--main-background-color);
   color: var(--main-font-color);
+  font-size: 16px;
 }
 
 /* Remove default margin in favour of better control in authored CSS */
@@ -102,6 +103,7 @@ input[type=number] {
   --dark-background-color: #1D330F;
   --deep-neutral-color: #ebdcc5;
   --light-accent-color: #fff7eb;
+  --dark-accent-color: #475043;
 }
 
 /* GENERAL STYLES */
@@ -161,8 +163,14 @@ form {
   border-radius: 0.125rem;
 }
 
+.no-img-divider {
+  width: 100%;
+  border: 1px solid var(--dark-accent-color);
+  border-radius: 0.03125rem;
+}
+
 /* Box shadow */
-header, .main-heading-container, .hike-block, .error-block .no-data-block {
+.main-header, .main-heading-container, .hike-block, .error-block .no-data-block, .splash-block {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -170,7 +178,7 @@ header, .main-heading-container, .hike-block, .error-block .no-data-block {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.hike-block, .form-block, .error-block, .no-data-block {
+.hike-block, .form-block, .error-block, .no-data-block, .splash-block {
   background-color: var(--light-background-color);
   padding: 0.25rem 0.5rem;
   margin-bottom: 1rem;
@@ -196,10 +204,10 @@ header, .main-heading-container, .hike-block, .error-block .no-data-block {
 /*  HEADER  */
 
 header {
-  height: 350px;
   background-color: var(--dark-background-color);
   color: var(--deep-neutral-color);
   position: relative;
+  padding: 3rem 0;
 }
 
 header .wrapper {
@@ -212,16 +220,22 @@ header .wrapper {
 }
 
 .main-heading-container {
-  background-color: rgb(255, 230, 71);
+  background-color: rgb(255, 237, 123);
   width: 150px;
   height: 150px;
   transform: rotate(45deg);
   border-radius: 0.5rem;
   outline: 0.125rem solid rgb(49, 49, 49);
   outline-offset: -7px;
+  margin-bottom: 2rem;
 }
 
-header h1 {
+.hidden-heading {
+  visibility: hidden;
+  position: absolute;
+}
+
+.main-logo {
   text-align: center;
   font-size: 6rem;
   width: auto;
@@ -257,10 +271,43 @@ header h1 {
 .nav-item a {
   text-decoration: none;
   text-transform: uppercase;
+  font-size: 1.1rem;
 }
 
 
-/*  INDEX  /  HIKES LIST  */
+/*  SPLASH HEADER */
+
+.splash-header {
+  height: calc(100vh - 4rem);
+  padding-top: 2rem;
+  background-color: var(--dark-background-color);
+  background-color: var(--main-font-color);
+}
+
+.splash-heading-content-block {
+  height: auto;
+  align-items: center;
+}
+
+h1 {
+  font-size: 1.4rem;
+}
+
+.splash-logo-content-block {
+  height: auto;
+  margin: 6rem 0;
+}
+
+.splash-heading {
+  font-size: 2.4rem;
+}
+
+.splash-nav {
+  bottom: 2rem;
+}
+
+
+/*  USERS /  HIKES LIST  */
 
 .trail-block-top {
   justify-content: space-between;
@@ -318,7 +365,7 @@ header h1 {
 
 .img-container {
   width: 100%;
-  background-color: #475043;
+  background-color: var(--dark-accent-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -360,6 +407,15 @@ input {
   transition: var(--dark-background-color) .15s ease-in-out,box-shadow .15s ease-in-out !important;
 }
 
+
+/*  USER SEARCH  */
+
+.search-results-container {
+  margin-top: 1rem;
+}
+
+
+
 /*  FOOTER  */
 
 .main-footer {
@@ -369,4 +425,5 @@ input {
   align-items: center;
   background-color: var(--dark-background-color);
   color: var(--deep-neutral-color);
+  font-size: 0.8rem;
 }

@@ -4,26 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/styles.css">
-  <title>Hike Logger</title>
+  <title>Take a hike</title>
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥾</text></svg>">
 </head>
 <body class="flex-col" style="visibility: hidden;">
-  <header>
+  <header class="main-header">
+    <h1 aria-hidden="false" class="hidden-heading">Take a hike</h1>
     <div class="flex-col main-header-content">
       <div class="main-heading-container flex-col">
-        <h1>🥾</h1>
+        <h2 class="main-logo" aria-hidden="true">🥾</h2>
       </div>
       <nav class="main-nav">
         <div class="wrapper">
 
           <ul class="nav-list flex-row">
             <div class="nav-item">
-              <li><a href="/">Home</a></li>
+              <li><a href="/users">Users</a></li>
+            </div>
+            {% if session["user_id"] %}
+            <div class="nav-item">
+              <li><a href="/users/{{session['username']}}">My hikes</a></li>
             </div>
             <div class="nav-item">
               <li><a href="/new-hike">New hike</a></li>
             </div>
-            {% if session["user_id"] %}
             <div class="nav-item">
               <li><a href="/logout">Log out</a></li>
             </div>
@@ -49,6 +53,6 @@
   <footer class="main-footer flex-col">
     <p>Created by <a href="http://brodieday.com" target="_blank">J Brodie Day</a> for CS50</p>
   </footer>
-  <script src="/static/ready.js"></script>
+  <script src="/static/scripts/ready.js"></script>
 </body>
 </html>
