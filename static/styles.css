@@ -15,6 +15,7 @@ html {
   text-size-adjust: none;
   background-color: var(--main-background-color);
   color: var(--main-font-color);
+  font-size: 16px;
 }
 
 /* Remove default margin in favour of better control in authored CSS */
@@ -203,10 +204,10 @@ form {
 /*  HEADER  */
 
 header {
-  height: 350px;
   background-color: var(--dark-background-color);
   color: var(--deep-neutral-color);
   position: relative;
+  padding: 3rem 0;
 }
 
 header .wrapper {
@@ -226,6 +227,7 @@ header .wrapper {
   border-radius: 0.5rem;
   outline: 0.125rem solid rgb(49, 49, 49);
   outline-offset: -7px;
+  margin-bottom: 2rem;
 }
 
 .hidden-heading {
@@ -269,6 +271,7 @@ header .wrapper {
 .nav-item a {
   text-decoration: none;
   text-transform: uppercase;
+  font-size: 1.1rem;
 }
 
 
@@ -404,6 +407,15 @@ input {
   transition: var(--dark-background-color) .15s ease-in-out,box-shadow .15s ease-in-out !important;
 }
 
+
+/*  USER SEARCH  */
+
+.search-results-container {
+  margin-top: 1rem;
+}
+
+
+
 /*  FOOTER  */
 
 .main-footer {
@@ -413,4 +425,5 @@ input {
   align-items: center;
   background-color: var(--dark-background-color);
   color: var(--deep-neutral-color);
+  font-size: 0.8rem;
 }
