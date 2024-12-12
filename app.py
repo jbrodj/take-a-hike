@@ -24,11 +24,23 @@ def after_request(response):
 
 @app.route('/')
 def index():
-    '''Renders default template at base route.'''
-    hikes_list = utils.get_hikes_for_ui(DB, session['user_id'])
+    '''Renders default template at base route. Or redirects to user page if logged in.'''
+    if session:
+        return redirect(f'/users/{session["username"]}')
+    return render_template('index.html')
+
+@app.route('/users/<username>')
+def user_route(username):
+    '''Renders hikes for a given user'''
+    # Check if user is valid
+    user = utils.get_user_by_username(DB, username)
+    if not bool(user):
+        return utils.handle_error(request.host_url, error_messages['user_not_found'], 403)
+    # Get hikes for given user
+    hikes_list = utils.get_hikes_for_ui(DB, user['id'])
     if not hikes_list:
         return render_template('no-data.html')
-    return render_template('index.html', hikes_list=hikes_list)
+    return render_template('user.html', username=username, hikes_list=hikes_list)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
