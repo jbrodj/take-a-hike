@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="content-container">
+  <h2 class="template-heading">{{username}}'s recent hikes</h2>
+  {% for hike in hikes_list %}
+  <div class="hike-block">
+    <div class="trail-block-top content-block flex-row">
+      <div class="trail-heading-block flex-col">
+          <p class="hike-date">{{hike['hike_date']}}</p>
+            <h3>{{hike['area_name']}}</h3>
+            <p>Trailhead: {{hike['trailhead']}}</p>
+      </div>
+      <div class="distance-block">
+        <div class="distance-diamond-element">
+        </div>
+        <div class="distance-text-container flex-col">
+          <p class="distance">{{hike['distance_km']}}</p>
+          <p class="distance">km</p>
+        </div>
+      </div>
+    </div>
+    <div class="trail-info-block content-block flex-col">
+      {% if not hike['image_url'] %}
+      <hr class="no-img-divider">
+      {% else %}
+      <div class="img-container">
+        <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}" loading="lazy">
+      </div>
+      {% endif %}
+      <div class="trail-sub-info">
+        <ul>
+          {% for trail in hike['trails_list'] %}
+          <li>{{trail}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="more-info-block content-block">
+      <p>{{hike['other_info']}}</p>
+      <a href="#" target="blank">Maps</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
