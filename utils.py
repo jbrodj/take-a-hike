@@ -169,6 +169,28 @@ def get_user_by_username(db, username):
     return user
 
 
+def get_similar_usernames(db, query):
+    '''Takes database file and query string.
+        Returns sorted dict of usernames with >2 character matches with query, 
+        or empty dict.
+    '''
+    db_connection = create_connection(db)
+    users_list = []
+    for char in query:
+        like_query = f'%{char}%'
+        username_data = db_connection['cursor'].execute('SELECT username FROM users WHERE username LIKE ?', (like_query,))
+        for row in username_data:
+            users_list.append(row[0])
+    user_frequency = {}
+    for user in users_list:
+        frequency = users_list.count(user)
+        if frequency > 2:
+            user_frequency.update({user: frequency})
+    # Source: https://www.datacamp.com/tutorial/sort-a-dictionary-by-value-python
+    sorted_dictionary = dict(sorted(user_frequency.items(), key=lambda item: item[1], reverse=True))
+    return sorted_dictionary
+
+
 def generate_user_data_dict(keys, values):
     '''Takes two lists with same number of indecies.
         Returns list with left vals as keys, right vals as values.
