@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block main %}
+<div class="content-container">
+  <h2 class="template-heading">Find a user</h2>
+  <div class="form-block">
+    <form action="/users" method="get" class="flex-col">
+      <div class="form-content content-block flex-col">
+        <label for="user_search">Search by username</label>
+        <input autofocus required type="search" name="user_search" id="user_search" value="{{query}}">
+      </div>
+      <button type="submit">Search</button>
+    </form>
+    {% if results %}
+      {% include 'user_search_results.html' %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
