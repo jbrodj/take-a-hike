@@ -139,6 +139,7 @@ def logout():
 
 
 @app.route('/new-hike', methods=['GET', 'POST'])
+@utils.login_required
 def new_hike():
     '''Renders new hike form template on GET, or submits hike data to db on POST.'''
     if request.method == 'POST':
