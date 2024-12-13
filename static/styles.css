@@ -150,7 +150,8 @@ h3 {
 
 ul, ol {
   margin: 0;
-  padding-left: 1rem;
+  padding-left: 0;
+  list-style: none;
 }
 
 form {
@@ -379,15 +380,25 @@ h1 {
   object-fit: contain;
 }
 
-.trail-sub-info {
+.hike-sub-info--trail {
+  width: 100%;
   margin-top: 0.5rem;
 }
 
-.trail-sub-info .hike-divider {
-  width: 80%;
-  align-self: center;
+.more-info-block {
+  justify-content: space-between;
 }
 
+.hike-sub-info--details {
+  /* width: 100%; */
+  flex-grow: 10;
+}
+
+.hike-context-nav-container {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
 
 
 /*  FORM ELEMENTS  */
