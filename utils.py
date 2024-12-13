@@ -105,18 +105,41 @@ def get_area_id(area_name, db):
     return area_id
 
 
-def get_hikes_for_ui(db, user_id):
+def get_hikes(db, user_id, hike_id=None):
     ''' Takes database file
         Returns formatted list of hike dictionaries to serve to UI.
         Returns empty list if no table is found.
     '''
     db_connection = create_connection(db)
-    try:
-        data = db_connection['cursor'].execute(
-            'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 10', (user_id,))
-    except sqlite3.OperationalError:
-        return []
-    hikes_data = db_connection['cursor'].fetchall()
+    # If hike_id is passed, we wish to fetch a single hike
+    if hike_id:
+        try:
+            data = db_connection['cursor'].execute(
+                'SELECT * FROM hikes WHERE id = ? AND user_id = ?', (hike_id, user_id,))
+            hikes_data = db_connection['cursor'].fetchall()
+            hikes_list = format_hikes(data, hikes_data)
+            commit_close_conn(db_connection['connection'])
+            return hikes_list
+        except sqlite3.OperationalError:
+            print('error')
+            return []
+    # Otherwise get all records for specified user
+    else:
+        try:
+            data = db_connection['cursor'].execute(
+                'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 10', (user_id,))
+            hikes_data = db_connection['cursor'].fetchall()
+        except sqlite3.OperationalError:
+            return []
+    hikes_list = format_hikes(data, hikes_data)
+    commit_close_conn(db_connection['connection'])
+    return hikes_list
+
+
+def format_hikes(data, hikes_data):
+    # TODO: add docstring
+    ''''''
+    # TODO: rename these args
     keys = []
     for key in data.description:
         keys.append(key[0])
@@ -134,7 +157,6 @@ def get_hikes_for_ui(db, user_id):
         trails_list = this_entry['trails_cs'].split(', ')
         this_entry['trails_list'] = trails_list
         hikes_list.append(this_entry)
-    commit_close_conn(db_connection['connection'])
     return hikes_list
 
 
