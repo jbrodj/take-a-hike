@@ -35,20 +35,49 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/users/<username>')
+@app.route('/users/<username>', methods=['GET', 'POST'])
 def user_route(username):
     '''Renders hikes for a given user'''
     # Check if user is valid
     user = utils.get_user_by_username(DB, username)
+    is_authorized_to_edit = False
     if not bool(user):
         return utils.handle_error(request.host_url, error_messages['user_not_found'], 403)
     # Get hikes for given user
-    hikes_list = utils.get_hikes_for_ui(DB, user['id'])
+    hikes_list = utils.get_hikes(DB, user['id'])
     # Return no data template if user's hikes list is empty
     if not hikes_list:
         return render_template('no-data.html')
+    # Check if authenticated user is same as user page (for edit/delete context menu)
+    if session.get('username') == username:
+        is_authorized_to_edit = True
+        # If user clicks edit or delete button, get hike id from button value
+        if request.method == 'POST':
+            action = request.form.get('edit_hike').split('_')[0]
+            hike_id = request.form.get('edit_hike').split('_')[1]
+            path = '/edit-hike/' + action + '/' + hike_id
+            return redirect(path)
     # Render user page with list of that user's hikes
-    return render_template('user.html', username=username, hikes_list=hikes_list)
+    return render_template('user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
+
+
+@app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
+@utils.login_required
+def edit_hike(action, hike_id):
+    '''Sends update to database to edit or delete hike data'''
+    username = session.get('username')
+    if request.method == 'POST':
+        # Insert updated data into database
+
+        # Redirect to user page
+        path = '/users/' + username
+        return redirect(path)
+
+    print(f'edit hike route: {action}, {hike_id}')
+    user_id = session.get('user_id')
+    selected_hike_data = utils.get_hikes(DB, user_id, hike_id)
+    username = session.get('username')
+    return render_template('/edit-hike.html', form_content=new_hike_form_content, selected_hike_data=selected_hike_data)
 
 
 @app.route('/users', methods=['GET', 'POST'])
