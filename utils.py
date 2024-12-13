@@ -1,6 +1,7 @@
-'''Using sqlite3 to create our db'''
+''' wraps copies original function's data to decorated function '''
+from functools import wraps
 import sqlite3
-from flask import render_template
+from flask import render_template, session, redirect
 # pylint: disable=line-too-long
 
 # ===================
@@ -208,3 +209,18 @@ def handle_error(url, message, code=400):
         Returns error template.
     '''
     return render_template('error.html', url=url, message=message, code=code,)
+
+
+#  DECORATORS
+
+# Source: https://flask.palletsprojects.com/en/latest/patterns/viewdecorators/
+def login_required(function):
+    '''Takes view function.
+        Returns decorated view function with /login redirect.
+    '''
+    @wraps(function)
+    def decorated_function(*args, **kwargs):
+        if session.get('user_id') is None:
+            return redirect('/login')
+        return function(*args, **kwargs)
+    return decorated_function
