@@ -61,25 +61,6 @@ def user_route(username):
     return render_template('user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
 
 
-@app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
-@utils.login_required
-def edit_hike(action, hike_id):
-    '''Sends update to database to edit or delete hike data'''
-    username = session.get('username')
-    if request.method == 'POST':
-        # Insert updated data into database
-
-        # Redirect to user page
-        path = '/users/' + username
-        return redirect(path)
-
-    print(f'edit hike route: {action}, {hike_id}')
-    user_id = session.get('user_id')
-    selected_hike_data = utils.get_hikes(DB, user_id, hike_id)
-    username = session.get('username')
-    return render_template('/edit-hike.html', form_content=new_hike_form_content, selected_hike_data=selected_hike_data)
-
-
 @app.route('/users', methods=['GET', 'POST'])
 def user_search():
     '''Renders users search form, or user list template if query string is present
@@ -197,4 +178,35 @@ def new_hike():
         utils.add_hike(session['user_id'], area_id, hike_data)
         return redirect('/')
     # Route to new hike form
-    return render_template('new-hike.html', form_content=new_hike_form_content)
+    return render_template('new-hike.html', form_content=hike_form_content)
+
+
+@app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
+@utils.login_required
+def edit_hike(action, hike_id):
+    '''Sends update to database to edit or delete hike data'''
+    username = session.get('username')
+    if request.method == 'POST':
+        # Check action for cancel and break out
+        if action == 'cancel':
+            path = '/users/' + username
+            return redirect(path)
+        # Format and check form data
+        # TODO validate form
+        existing_hike_data = utils.get_hikes(DB, session.get('user_id'), hike_id)[0]
+        updated_hike_data = utils.format_hike_form_data(request.form)
+        del updated_hike_data['action']
+        # Insert updated data into database
+        utils.update_hike(existing_hike_data, updated_hike_data)
+        # Redirect to user page
+        path = '/users/' + username
+        return redirect(path)
+    user_id = session.get('user_id')
+    selected_hike_data = utils.get_hikes(DB, user_id, hike_id)[0]
+    # Ensure user is authorized to edit this hike:
+    # -- If hike user_id doesn't match current user id, get_hikes() will return []
+    if not selected_hike_data:
+        path = request.host_url + 'users/' + username
+        return utils.handle_error(path, error_messages['unauthorized'], 401)
+    return render_template(
+        '/edit-hike.html', form_content=hike_form_content, selected_hike_data=selected_hike_data)
