@@ -2,7 +2,7 @@
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_session import Session
-from content import new_hike_form_content, error_messages
+from content import hike_form_content, error_messages
 import utils
 
 
@@ -175,7 +175,7 @@ def new_hike():
         form_data = request.form
         # Validate that required fields are populated
         for field in form_data:
-            if form_data.get(field) == '' and new_hike_form_content[field]['required'] is True:
+            if form_data.get(field) == '' and hike_form_content[field]['required'] is True:
                 return utils.handle_error(
                     request.url, error_messages['missing_values'], 403)
         # Validate that distance field is numbers and decimal chars only
