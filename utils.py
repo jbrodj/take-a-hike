@@ -87,6 +87,19 @@ def add_hike(user_id, area_id, hike_data):
             [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
     commit_close_conn(db_connection['connection'])
 
+
+def update_hike(existing_hike_data, updated_hike_data):
+    '''Takes preexisting hike data, and data from updade hike form'''
+    hike_id = existing_hike_data['id']
+    hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = updated_hike_data.values()
+    db_connection = create_connection('hikes.db')
+    db_connection['cursor'].execute(
+        'UPDATE hikes SET hike_date = (?), area_name = (?), trailhead = (?), trails_cs = (?), distance_km = (?), image_url = (?), image_alt = (?), map_link = (?), other_info = (?) WHERE id = (?)',
+        (hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info, hike_id,)
+    )
+    commit_close_conn(db_connection['connection'])
+
+
 # RETRIEVE DATA FROM DATABASE
 
 def get_area_id(area_name, db):
