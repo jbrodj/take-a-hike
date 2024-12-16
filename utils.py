@@ -134,7 +134,7 @@ def get_hikes(db, user_id, hike_id=None):
             commit_close_conn(db_connection['connection'])
             return hikes_list
         except sqlite3.OperationalError:
-            print('error')
+            print('Error: No hike found matching user id and hike id')
             return []
     # Otherwise get all records for specified user
     else:
@@ -143,6 +143,7 @@ def get_hikes(db, user_id, hike_id=None):
                 'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 10', (user_id,))
             hikes_data = db_connection['cursor'].fetchall()
         except sqlite3.OperationalError:
+            print('Error: No hikes found matching user id')
             return []
     hikes_list = format_hikes(data, hikes_data)
     commit_close_conn(db_connection['connection'])
