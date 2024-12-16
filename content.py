@@ -1,6 +1,6 @@
 '''Input/Label info used for generating New Hike form markup
 '''
-new_hike_form_content = {
+hike_form_content = {
     'hike_date': {
         'name': 'hike_date',
         'label': 'Hike date',
@@ -67,6 +67,7 @@ error_messages = {
     'password_required': 'Password with minimum of 4 characters is required.',
     'pw_confirm_match': 'Passwords must match.',
     'out_of_range': 'Distance must be between 0 and 100km.',
+    'unauthorized': 'You are not authorized to view this page.',
     'user_not_found': 'Username not found. Please check the username provided and try again.',
     'username_required': 'A username containing only letters and numbers is required.',
     'username_taken': 'Username is already taken. Please select a different username.',
