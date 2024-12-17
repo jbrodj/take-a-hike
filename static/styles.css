@@ -127,6 +127,7 @@ header {
 
 .content-block {
   margin: 0.5rem 0;
+  padding: 0.5rem;
 }
 
 .template-heading {
@@ -318,7 +319,7 @@ h1 {
   margin-left: -0.5rem;
   padding: 0.5rem 0;
   padding-left: 1rem;
-  padding-right: 0.5rem;
+  padding-right: 0.25rem;
 }
 
 .hike-date {
@@ -377,7 +378,7 @@ h1 {
   justify-content: center;
   align-items: center;
   padding: 0.25rem;
-  margin: 0.25rem 0;
+  margin: 0.75rem 0 0 0;
 }
 
 .trail-info-block img {
@@ -386,13 +387,10 @@ h1 {
   object-fit: contain;
 }
 
-.hike-sub-info {
-  padding-left: 0.5rem;
-}
-
 .hike-sub-info--trails {
   width: 100%;
   margin-top: 0.5rem;
+  margin-bottom: 0;
 }
 
 .hike-sub-info--trails ul {
@@ -406,8 +404,8 @@ h1 {
 
 .more-info-block {
   justify-content: space-between;
+  margin-top: 0;
 }
-
 
 .hike-context-nav-container {
   justify-content: flex-end;
@@ -425,12 +423,20 @@ h1 {
 
 /*  FORM ELEMENTS  */
 
+.form-content {
+  margin-bottom: 0.75rem;
+}
+
 input {
   accent-color: var(--dark-background-color);
   background-color: var(--light-accent-color);
   max-width: 400px;
   padding: 0.25rem 0.5rem;
   margin-top: 0.25rem;
+}
+
+.form-button {
+  margin: 0.75rem 0 0.5rem 0;
 }
 
 .form-control {
@@ -444,7 +450,6 @@ input {
 /*  USER SEARCH  */
 
 .search-results-container {
-  margin-top: 1rem;
 }
 
 
