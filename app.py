@@ -101,12 +101,12 @@ def sign_up():
         # so switching to 'pbdkf2' for development
         password_hash = generate_password_hash(request.form.get('password'), method='pbkdf2')
         existing_usernames = utils.get_all_usernames(DB)
-        # Validate that username exists and is alphanumeric
-        if not username.isalnum():
+        # Validate that username exists and is alphanumeric amd has correct length
+        if not username.isalnum() or not len(username) >3 or not len(username) <15:
             return utils.handle_error(
                 request.url, error_messages['username_required'], 403)
         # Validate that password exists and is at least 4 characters
-        if not len(request.form.get('password')) > 3:
+        if not len(request.form.get('password')) > 3 or not len(request.form.get('password')) <65:
             return utils.handle_error(
                 request.url, error_messages['password_required'], 403)
         # Validate that password confirmation matches
