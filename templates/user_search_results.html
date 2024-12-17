@@ -4,13 +4,16 @@
     <p>There are no usernames similar to {{query}}</p>
   </div>
   {% else %}
-  <p>Did you mean:</p>
-  <ul class="search-results-list">
-    {% for user in results %}
-    <li>
-      <a href="/users/{{user}}">{{user}}</a>
-    </li>
-    {% endfor %}
-  </ul>
+    {% if exact_match %}
+      <p>Found an exact match: <a href="/users/{{exact_match['username']}}">{{exact_match}}</a></p>
+    {% endif %}
+    <p>Did you mean:</p>
+    <ul class="search-results-list">
+      {% for user in results %}
+      <li>
+        <a href="/users/{{user}}">{{user}}</a>
+      </li>
+      {% endfor %}
+    </ul>
   {% endif %}
 </div>
