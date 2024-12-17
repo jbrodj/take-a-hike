@@ -2,7 +2,7 @@
 
 {% block main %}
 <div class="content-container">
-  <h2 class="template-heading">{{username}}'s recent hikes</h2>
+  <h2 class="template-heading">{{username.upper()}}'s recent hikes</h2>
   {% if not hikes_list %}
   {% include '/no-data.html' %}
   {% endif %}
@@ -23,16 +23,16 @@
         </div>
       </div>
     </div>
-    <div class="trail-info-block content-block flex-col">
-      {% if not hike['image_url'] %}
-      <hr class="no-img-divider">
-      {% else %}
-      <div class="img-container">
-        <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}" loading="lazy">
-      </div>
+    {% if not hike['image_url'] %}
+    <hr class="no-img-divider">
+    {% else %}
+    <div class="img-container">
+      <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}" loading="lazy">
+    </div>
+    <div class="trail-info-block flex-col">
       {% endif %}
       <div class="hike-sub-info">
-        <div class="hike-sub-info--trails">
+        <div class="hike-sub-info--trails content-block">
           <h4>Trails:</h4>
           <ul>
             {% for trail in hike['trails_list'] %}

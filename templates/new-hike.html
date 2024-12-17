@@ -4,9 +4,9 @@
 <div class="content-container">
   <h2 class="template-heading">Log a new hike</h2>
   <div class="form-block">
-    <form method="post" class="flex-col" id="new-hike-form">
+    <form method="post" class="content-block flex-col" id="new-hike-form">
       {% for field in form_content %}
-      <div class="form-content content-block flex-col">
+      <div class="form-content flex-col">
         <label 
           for="{{form_content[field]['name']}}"
         >
@@ -40,7 +40,7 @@
         {% endif %}
       </div>
       {% endfor %}
-      <button type="submit">Submit</button>
+      <button type="submit" class="form-button">Submit</button>
     </form>
   </div>
 </div>
