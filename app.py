@@ -56,6 +56,11 @@ def user_route(username):
         if request.method == 'POST':
             action = request.form.get('edit_hike').split('_')[0]
             hike_id = request.form.get('edit_hike').split('_')[1]
+            # Check if it is a delete action
+            if action == 'del':
+                utils.delete_hike(hike_id, session.get('user_id'))
+                return redirect(username)
+            # Otherwise it is an edit action
             path = '/edit-hike/' + action + '/' + hike_id
             return redirect(path)
     # Render user page with list of that user's hikes
