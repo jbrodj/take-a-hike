@@ -23,7 +23,7 @@
             </div>
             {% if session["user_id"] %}
             <div class="nav-item">
-              <li><a href="/users/{{session['username']}}">My hikes</a></li>
+              <li><a href="/users/{{session.get('username')}}">My hikes</a></li>
             </div>
             <div class="nav-item">
               <li><a href="/new-hike">New hike</a></li>

@@ -44,7 +44,7 @@ def user_route(username):
     if not bool(user):
         return utils.handle_error(request.host_url, error_messages['user_not_found'], 403)
     # Get hikes for given user
-    hikes_list = utils.get_hikes(DB, user['id'])
+    hikes_list = utils.get_hikes(DB, user.get('id'))
     # Return no data template if user's hikes list is empty
     if not hikes_list:
         # return render_template('no-data.html')
@@ -137,11 +137,11 @@ def log_in():
         if not bool(user):
             return utils.handle_error(request.url, error_messages['user_not_found'], 403)
         # Validate password
-        if not check_password_hash(user['password_hash'], request.form.get('password')):
+        if not check_password_hash(user.get('password_hash'), request.form.get('password')):
             return utils.handle_error(request.url, error_messages['incorrect_pw'], 403)
         # If values are valid, log in and redirect to home
         session['username'] = username
-        session['user_id'] = user['id']
+        session['user_id'] = user.get('id')
         return redirect('/')
     # Route to login form
     return render_template('login.html')
@@ -176,12 +176,12 @@ def new_hike():
         # Format form data
         hike_data = utils.format_hike_form_data(form_data)
         # Insert to areas, trails, and hikes tables
-        area_name = hike_data['area_name']
-        trail_list = hike_data['trails_cs']
+        area_name = hike_data.get('area_name')
+        trail_list = hike_data.get('trails_cs')
         utils.add_area(area_name)
         area_id = utils.get_area_id(area_name, DB)
         utils.add_trail(area_id, trail_list)
-        utils.add_hike(session['user_id'], area_id, hike_data)
+        utils.add_hike(session.get('user_id'), area_id, hike_data)
         return redirect('/')
     # Route to new hike form
     return render_template('new-hike.html', form_content=hike_form_content)

@@ -47,7 +47,10 @@ def add_user(username, password_hash):
     '''Takes username string and hashed password string
     '''
     db_connection = create_connection('hikes.db')
-    db_connection['cursor'].execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
+    try:
+        db_connection['cursor'].execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
+    except sqlite3.Error as error:
+        print(error)
     commit_close_conn(db_connection['connection'])
 
 
@@ -90,7 +93,7 @@ def add_hike(user_id, area_id, form_data):
 
 def update_hike(existing_hike_data, updated_hike_data):
     '''Takes preexisting hike data, and data from updade hike form'''
-    hike_id = existing_hike_data['id']
+    hike_id = existing_hike_data.get('id')
     hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = updated_hike_data.values()
     db_connection = create_connection('hikes.db')
     db_connection['cursor'].execute(
@@ -181,7 +184,7 @@ def format_hikes(data, hikes_data):
             else:
                 this_entry[key] = entry[index]
         # Add key/value pair containing list of trail strings
-        trails_list = this_entry['trails_cs'].split(', ')
+        trails_list = this_entry.get('trails_cs').split(', ')
         this_entry['trails_list'] = trails_list
         hikes_list.append(this_entry)
     return hikes_list

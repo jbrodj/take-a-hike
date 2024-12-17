@@ -10,24 +10,24 @@
   <div class="hike-block">
     <div class="trail-block-top content-block flex-row">
       <div class="trail-heading-block flex-col">
-          <p class="hike-date">{{hike['hike_date']}}</p>
-            <h3>{{hike['area_name']}}</h3>
-            <p>Trailhead: {{hike['trailhead']}}</p>
+          <p class="hike-date">{{hike.get('hike_date')}}</p>
+          <h3>{{hike.get('area_name')}}</h3>
+          <p>Trailhead: {{hike.get('trailhead')}}</p>
       </div>
       <div class="distance-block">
         <div class="distance-diamond-element">
         </div>
         <div class="distance-text-container flex-col">
-          <p class="distance">{{hike['distance_km']}}</p>
+          <p class="distance">{{hike.get('distance_km')}}</p>
           <p class="distance">km</p>
         </div>
       </div>
     </div>
-    {% if not hike['image_url'] %}
+    {% if not hike.get('image_url') %}
     <hr class="no-img-divider">
     {% else %}
     <div class="img-container">
-      <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}" loading="lazy">
+      <img src="{{hike.get('image_url')}}" alt="{{hike.get('image_alt')}}" loading="lazy">
     </div>
     <div class="trail-info-block flex-col">
       {% endif %}
@@ -35,14 +35,14 @@
         <div class="hike-sub-info--trails content-block">
           <h4>Trails:</h4>
           <ul>
-            {% for trail in hike['trails_list'] %}
+            {% for trail in hike.get('trails_list') %}
             <li><i class="list-icon">- </i>{{trail}}</li>
             {% endfor %}
           </ul>
         </div>
         <div class="more-info-block content-block flex-col">
           <div class="hike-sub-info--details">
-            <p>{{hike['other_info']}}</p>
+            <p>{{hike.get('other_info')}}</p>
           </div>
           <div class="hike-sub-info--footer flex-row">
             <a href="#" target="blank">Maps</a>
