@@ -31,22 +31,27 @@
         <img src="{{hike['image_url']}}" alt="{{hike['image_alt']}}" loading="lazy">
       </div>
       {% endif %}
-      <div class="hike-sub-info--trails">
-        <ul>
-          {% for trail in hike['trails_list'] %}
-          <li>{{trail}}</li>
-          {% endfor %}
-        </ul>
+      <div class="hike-sub-info">
+        <div class="hike-sub-info--trails">
+          <h4>Trails:</h4>
+          <ul>
+            {% for trail in hike['trails_list'] %}
+            <li><i class="list-icon">- </i>{{trail}}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="more-info-block content-block flex-col">
+          <div class="hike-sub-info--details">
+            <p>{{hike['other_info']}}</p>
+          </div>
+          <div class="hike-sub-info--footer flex-row">
+            <a href="#" target="blank">Maps</a>
+            {% if auth %}
+              {% include 'hike-context-menu.html' %}
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="more-info-block content-block flex-row">
-      <div class="hike-sub-info--details">
-        <p>{{hike['other_info']}}</p>
-        <a href="#" target="blank">Maps</a>
-      </div>
-      {% if auth %}
-        {% include 'hike-context-menu.html' %}
-      {% endif %}
     </div>
   </div>
   {% endfor %}
