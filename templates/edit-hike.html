@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block main %}
+<div class="content-container">
+  <h2 class="template-heading">Edit hike</h2>
+  <div class="form-block">
+    <form method="post" class="flex-col" id="new-hike-form">
+      {% for field in form_content %}
+      <div class="form-content content-block flex-col">
+        <label 
+          for="{{form_content[field]['name']}}"
+        >
+          {{form_content[field]['label']}}
+        </label>
+        {% if form_content[field]['inputType'] == 'number' %}
+          <input 
+            autocomplete="off"
+            type="{{form_content[field]['inputType']}}" 
+            name="{{form_content[field]['name']}}" 
+            id="{{form_content[field]['name']}}"
+            min="0"
+            max="99.9"
+            step="any"
+            required
+            value="{{selected_hike_data[form_content[field]['name']]}}"
+          >
+        {% elif form_content[field]['required'] == True %}
+          <input 
+            type="{{form_content[field]['inputType']}}" 
+            name="{{form_content[field]['name']}}" 
+            id="{{form_content[field]['name']}}"
+            value="{{selected_hike_data[form_content[field]['name']]}}"
+            required
+          >
+        {% else %}
+          <input 
+            type="{{form_content[field]['inputType']}}" 
+            name="{{form_content[field]['name']}}" 
+            id="{{form_content[field]['name']}}"
+            value="{{selected_hike_data[form_content[field]['name']]}}"
+          >
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" name="action" value="save">Save</button>
+      <button type="submit" name="action" value="cancel">Cancel</button>
+    </form>
+  </div>
+</div>
+<script src="/static/js/autofocus.js"></script>
+{% endblock %}
