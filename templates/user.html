@@ -3,6 +3,9 @@
 {% block main %}
 <div class="content-container">
   <h2 class="template-heading">{{username}}'s recent hikes</h2>
+  {% if not hikes_list %}
+  {% include '/no-data.html' %}
+  {% endif %}
   {% for hike in hikes_list %}
   <div class="hike-block">
     <div class="trail-block-top content-block flex-row">
