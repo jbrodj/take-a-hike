@@ -74,7 +74,7 @@ def user_search():
     '''
     # If form has been submitted, query string will be present.
     if request.query_string:
-        query_param = request.args.get("user_search")
+        query_param = request.args.get("user_search").lower()
         # Validate that input has valid query value.
         if not query_param:
             return utils.handle_error(request.base_url, error_messages['missing_values'], 403)
@@ -96,7 +96,7 @@ def user_search():
 def sign_up():
     '''Renders sign-up form template on GET, or submits new user to db on POST'''
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').lower()
         # Default method for generate_password_hash (scrypt) doesn't work on macOS,
         # so switching to 'pbdkf2' for development
         password_hash = generate_password_hash(request.form.get('password'), method='pbkdf2')
@@ -128,7 +128,7 @@ def log_in():
     session.clear()
 
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username').lower()
         # Check for valid form field values
         if not username or not request.form.get('password'):
             return utils.handle_error(request.url, error_messages['no_username_or_pw'], 403)
