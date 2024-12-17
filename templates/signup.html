@@ -7,11 +7,11 @@
     <form action="/signup" method="post" class="flex-col">
       <div class="form-content content-block flex-col">
         <label for="username">Username</label>
-        <input autofocus type="text" name="username" id="username">
+        <input autofocus type="text" name="username" id="username" minlength="4" maxlength="14">
       </div>
       <div class="form-content content-block flex-col">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" minlength="4" maxlength="64">
       </div>
       <div class="form-content content-block flex-col">
         <label for="confirmation">Confirm password</label>
