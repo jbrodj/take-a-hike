@@ -100,6 +100,19 @@ def update_hike(existing_hike_data, updated_hike_data):
     commit_close_conn(db_connection['connection'])
 
 
+def delete_hike(hike_id, user_id):
+    '''Takes the id of selected hike and id of logged in user'''
+    db_connection = create_connection('hikes.db')
+    try:
+        db_connection['cursor'].execute(
+            'DELETE FROM hikes WHERE id = (?) AND user_id = (?)',
+            (hike_id, user_id,)
+        )
+        commit_close_conn(db_connection['connection'])
+    except sqlite3.OperationalError:
+        print('Error: No hike found matching user id and hike id')
+
+
 # RETRIEVE DATA FROM DATABASE
 
 def get_area_id(area_name, db):
