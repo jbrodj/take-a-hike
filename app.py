@@ -79,15 +79,15 @@ def user_search():
         if not query_param:
             return utils.handle_error(request.base_url, error_messages['missing_values'], 403)
         # Check for an exact username match.
-        exact_match = utils.get_user_by_username(DB, query_param)
-        if exact_match:
-            path = '/users/' + query_param
-            return redirect(path)
+        exact_match = utils.get_user_by_username(DB, query_param).get('username')
         # Get similar usernames.
         similar_usernames = utils.get_similar_usernames(DB, query_param)
-        if not similar_usernames:
+        # Remove exact matched username from list if present
+        if exact_match in similar_usernames:
+            similar_usernames.pop(exact_match)
+        if not similar_usernames and not exact_match:
             return render_template('user_search.html', query=query_param, results='no_match')
-        return render_template('user_search.html', query=query_param, results=similar_usernames)
+        return render_template('user_search.html', query=query_param, results=similar_usernames, exact_match=exact_match)
     # Route directly to blank users search page.
     return render_template('user_search.html')
 
