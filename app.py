@@ -6,7 +6,7 @@ from content import hike_form_content, error_messages
 from constants import DB
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
     get_all_usernames, get_area_id, get_hikes, get_similar_usernames, get_user_by_username,
-    handle_error, login_required, update_hike)
+    handle_error, login_required, update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
@@ -161,18 +161,9 @@ def new_hike():
     if request.method == 'POST':
         form_data = request.form
         # Validate that required fields are populated
-        for field in form_data:
-            if form_data.get(field) == '' and hike_form_content[field]['required'] is True:
-                return handle_error(
-                    request.url, error_messages['missing_values'], 403)
-        # Validate that distance field is numbers and decimal chars only
-        for char in form_data.get('distance_km'):
-            if not char.isnumeric() and not char == '.':
-                return handle_error(request.url, error_messages['invalid_number'], 403)
-        # Validate that distance value is between 0 and 100
-        distance = float(form_data.get('distance_km'))
-        if distance < 0 or distance > 99.9:
-            return handle_error(request.url, error_messages['out_of_range'], 403)
+        form_error = validate_hike_form(form_data)
+        if form_error:
+            return handle_error(request.url, error_messages[form_error], 403)
         # Format form data
         hike_data = format_hike_form_data(form_data)
         # Insert to areas, trails, and hikes tables
@@ -198,9 +189,11 @@ def edit_hike(action, hike_id):
             path = '/users/' + username
             return redirect(path)
         # Format and check form data
-        # TODO validate form
         existing_hike_data = get_hikes(DB, session.get('user_id'), hike_id)[0]
         updated_hike_data = format_hike_form_data(request.form)
+        form_error = validate_hike_form(updated_hike_data)
+        if form_error:
+            return handle_error(request.url, error_messages[form_error], 403)
         del updated_hike_data['action']
         # Insert updated data into database
         update_hike(existing_hike_data, updated_hike_data)
