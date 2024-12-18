@@ -11,7 +11,7 @@
       </div>
       <button type="submit">Search</button>
     </form>
-    {% if results %}
+    {% if results or exact_match %}
       {% include 'user_search_results.html' %}
     {% endif %}
   </div>

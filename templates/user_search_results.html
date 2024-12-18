@@ -7,6 +7,7 @@
     {% if exact_match %}
       <p>Found an exact match: <a href="/users/{{exact_match}}">{{exact_match}}</a></p>
     {% endif %}
+    {% if results %}
     <p>Did you mean:</p>
     <ul class="search-results-list">
       {% for user in results %}
@@ -15,5 +16,6 @@
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
   {% endif %}
 </div>
