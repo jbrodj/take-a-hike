@@ -1,12 +1,12 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block main %}
 <div class="content-container">
-  <h2 class="template-heading">Edit hike</h2>
+  <h2 class="template-heading">Log a new hike</h2>
   <div class="form-block">
-    <form method="post" class="flex-col" id="new-hike-form">
+    <form method="post" class="content-block flex-col" id="new-hike-form">
       {% for field in form_content %}
-      <div class="form-content content-block flex-col">
+      <div class="form-content flex-col">
         <label 
           for="{{form_content[field].get('name')}}"
         >
@@ -14,7 +14,6 @@
         </label>
         {% if form_content[field].get('inputType') == 'number' %}
           <input 
-            autocomplete="off"
             type="{{form_content[field].get('inputType')}}" 
             name="{{form_content[field].get('name')}}" 
             id="{{form_content[field].get('name')}}"
@@ -22,28 +21,32 @@
             max="99.9"
             step="any"
             required
-            value="{{selected_hike_data.get(form_content[field].get('name'))}}"
+            value="{{selected_hike_data.get(form_content[field].get('name'), '')}}"
           >
         {% elif form_content[field].get('required') == True %}
           <input 
             type="{{form_content[field].get('inputType')}}" 
             name="{{form_content[field].get('name')}}" 
             id="{{form_content[field].get('name')}}"
-            value="{{selected_hike_data.get(form_content[field].get('name'))}}"
             required
+            value="{{selected_hike_data.get(form_content[field].get('name'), '')}}"
           >
         {% else %}
           <input 
             type="{{form_content[field].get('inputType')}}" 
             name="{{form_content[field].get('name')}}" 
             id="{{form_content[field].get('name')}}"
-            value="{{selected_hike_data.get(form_content[field].get('name'))}}"
+            value="{{selected_hike_data.get(form_content[field].get('name'), '')}}"
           >
         {% endif %}
       </div>
       {% endfor %}
-      <button type="submit" name="action" value="save">Save</button>
-      <button type="submit" name="action" value="cancel">Cancel</button>
+      {% if selected_hike_data %}
+        <button type="submit" name="action" value="save">Save</button>
+        <button type="submit" name="action" value="cancel">Cancel</button>
+      {% else %}
+        <button type="submit" class="form-button">Submit</button>
+      {% endif %}
     </form>
   </div>
 </div>

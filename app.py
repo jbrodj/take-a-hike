@@ -181,7 +181,7 @@ def new_hike():
         add_hike(session.get('user_id'), area_id, hike_data)
         return redirect('/')
     # Route to new hike form
-    return render_template('new-hike.html', form_content=hike_form_content)
+    return render_template('hike-form.html', form_content=hike_form_content, selected_hike_data={})
 
 
 @app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
@@ -214,4 +214,4 @@ def edit_hike(action, hike_id):
         path = request.host_url + 'users/' + username
         return handle_error(path, error_messages['unauthorized'], 401)
     return render_template(
-        '/edit-hike.html', form_content=hike_form_content, selected_hike_data=selected_hike_data)
+        '/hike-form.html', form_content=hike_form_content, selected_hike_data=selected_hike_data)
