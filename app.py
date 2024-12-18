@@ -3,6 +3,7 @@ from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_session import Session
 from content import hike_form_content, error_messages
+from constants import DB
 import utils
 
 
@@ -12,10 +13,6 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 Session(app)
-
-
-# Constants
-DB = 'hikes.db'
 
 
 @app.after_request
@@ -76,8 +73,8 @@ def user_search():
     if request.query_string:
         query_param = request.args.get("user_search").lower()
         # Validate that input has valid query value.
-        if not query_param:
-            return utils.handle_error(request.base_url, error_messages['missing_values'], 403)
+        if not query_param or not len(query_param) <15:
+            return utils.handle_error(request.base_url, error_messages['user_query_invalid'], 403)
         # Check for an exact username match.
         exact_match = utils.get_user_by_username(DB, query_param).get('username')
         # Get similar usernames.
@@ -105,11 +102,11 @@ def sign_up():
         # Validate that username exists and is alphanumeric amd has correct length
         if not username.isalnum() or not len(username) >3 or not len(username) <15:
             return utils.handle_error(
-                request.url, error_messages['username_required'], 403)
+                request.url, error_messages['username_invalid'], 403)
         # Validate that password exists and is at least 4 characters
         if not len(request.form.get('password')) > 3 or not len(request.form.get('password')) <65:
             return utils.handle_error(
-                request.url, error_messages['password_required'], 403)
+                request.url, error_messages['password_invalid'], 403)
         # Validate that password confirmation matches
         if not request.form.get('password') == request.form.get('confirmation'):
             return utils.handle_error(request.url, error_messages['pw_confirm_match'], 403)
