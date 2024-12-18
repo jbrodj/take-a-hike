@@ -179,7 +179,7 @@ def format_hikes(sql_data_object, fetched_hikes_values):
         # Convert each tuple in list to a dictionary by adding keys
         this_entry = {}
         for index, key in enumerate(keys):
-            # Ensure max of 1 decimal place for distance
+            # Ensure max of 1 decimal place for distance (UI spacing only supports 1 dp)
             if key == 'distance_km':
                 this_entry[key] = round(entry[index], 1)
             else:
