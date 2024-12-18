@@ -26,6 +26,8 @@ def after_request(response):
     return response
 
 
+# == SPLASH PAGE ==
+
 @app.route('/')
 def index():
     '''Renders default template at base route. Or redirects to user page if logged in.'''
@@ -33,6 +35,8 @@ def index():
         return redirect(f'/users/{session["username"]}')
     return render_template('index.html')
 
+
+#  == USERS  == 
 
 @app.route('/users/<username>', methods=['GET', 'POST'])
 def user_route(username):
@@ -68,6 +72,8 @@ def user_route(username):
         'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
 
 
+#  == USER SEARCH ==
+
 @app.route('/users', methods=['GET', 'POST'])
 def user_search():
     '''Renders users search form, or user list template if query string is present
@@ -97,6 +103,8 @@ def user_search():
     # Route directly to blank users search page.
     return render_template('user_search.html')
 
+
+# == SIGN UP ==
 
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
@@ -128,6 +136,8 @@ def sign_up():
     return render_template('signup.html')
 
 
+# == LOG IN ==
+
 @app.route('/login', methods=['GET', 'POST'])
 def log_in():
     '''Renders log-in form template on GET, or validates login data on POST'''
@@ -153,12 +163,16 @@ def log_in():
     return render_template('login.html')
 
 
+# == LOG OUT ==
+
 @app.route('/logout')
 def logout():
     '''Clears user data from session, redirects user to home page.'''
     session.clear()
     return redirect('/')
 
+
+# == NEW HIKE FORM ==
 
 @app.route('/new-hike', methods=['GET', 'POST'])
 @login_required
@@ -183,6 +197,8 @@ def new_hike():
     # Route to new hike form
     return render_template('hike-form.html', form_content=hike_form_content, selected_hike_data={})
 
+
+#  == EDIT HIKE FORM ==
 
 @app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
 @login_required
