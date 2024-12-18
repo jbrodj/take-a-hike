@@ -224,7 +224,7 @@ def get_user_by_username(db, username):
 
 def get_similar_usernames(db, query):
     '''Takes database file and query string.
-        Returns sorted dict of usernames with >2 character matches with query, 
+        Returns dict of usernames
         or empty dict.
     '''
     db_connection = create_connection(db)
@@ -234,14 +234,18 @@ def get_similar_usernames(db, query):
         username_data = db_connection['cursor'].execute('SELECT username FROM users WHERE username LIKE ?', (like_query,))
         for row in username_data:
             users_list.append(row[0])
-    user_frequency = {}
+    similar_users = {}
     for user in users_list:
+        # Frequency is the number of occurrences where a char in the query matched a char in the username
         frequency = users_list.count(user)
-        if frequency > 2:
-            user_frequency.update({user: frequency})
+        # Accuracy is the proportion of matching chars relative to the length of the username
+        accuracy = frequency / len(user)
+        match = frequency * accuracy
+        if frequency > 3 or accuracy > 0.5:
+            similar_users.update({user: match})
     # Source: https://www.datacamp.com/tutorial/sort-a-dictionary-by-value-python
-    sorted_dictionary = dict(sorted(user_frequency.items(), key=lambda item: item[1], reverse=True))
-    return sorted_dictionary
+    sorted_similar_users = dict(sorted(similar_users.items(), key=lambda item: item[1], reverse=True))
+    return sorted_similar_users
 
 
 def generate_user_data_dict(keys, values):
