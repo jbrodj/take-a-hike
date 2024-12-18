@@ -166,15 +166,16 @@ def get_hikes(db, user_id, hike_id=None):
     return hikes_list
 
 
-def format_hikes(data, hikes_data):
-    # TODO: add docstring
-    ''''''
-    # TODO: rename these args
+def format_hikes(sql_data_object, fetched_hikes_values):
+    '''Takes sql response object (to get keys) and fetched hike data (values).
+        Returns list of hikes as dictionaries.
+    '''
+    # Create list of keys from data object
     keys = []
-    for key in data.description:
+    for key in sql_data_object.description:
         keys.append(key[0])
     hikes_list = []
-    for entry in hikes_data:
+    for entry in fetched_hikes_values:
         # Convert each tuple in list to a dictionary by adding keys
         this_entry = {}
         for index, key in enumerate(keys):
@@ -212,7 +213,6 @@ def get_user_by_username(db, username):
     values = []
 
     for row in user_data:
-        print(f'row: {row}')
         for position in row:
             values.append(position)
     db_connection['connection'].close()
