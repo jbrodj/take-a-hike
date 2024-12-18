@@ -2,6 +2,7 @@
 from functools import wraps
 import sqlite3
 from flask import render_template, session, redirect
+from content import hike_form_content
 # pylint: disable=line-too-long
 
 # ===================
@@ -256,6 +257,26 @@ def generate_user_data_dict(keys, values):
     for index, key in enumerate(keys):
         user[key] = values[index]
     return user
+
+
+#  FORM VALIDATION
+
+def validate_hike_form(form_data):
+    '''Takes form data
+        Returns error type (string) or None
+    '''
+    for field in form_data:
+        if form_data.get(field) == '' and hike_form_content[field]['required'] is True:
+            return 'missing_values'
+    # Validate that distance field is numbers and decimal chars only
+    for char in form_data.get('distance_km'):
+        if not char.isnumeric() and not char == '.':
+            return 'invalid_number'
+    # Validate that distance value is between 0 and 100
+    distance = float(form_data.get('distance_km'))
+    if distance < 0 or distance > 99.9:
+        return 'out_of_range'
+    return None
 
 
 #  ERROR HANDLING
