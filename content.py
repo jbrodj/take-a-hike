@@ -1,6 +1,7 @@
 '''Input/Label info used for generating New Hike form markup
 '''
-new_hike_form_content = {
+# pylint: disable=line-too-long
+hike_form_content = {
     'hike_date': {
         'name': 'hike_date',
         'label': 'Hike date',
@@ -64,10 +65,12 @@ error_messages = {
     'invalid_number': 'Distance field must contain only numbers or decimal characters.',
     'missing_values': 'Required values are missing. Ensure all required values are provided.', 
     'no_username_or_pw': 'Username and password are required.',
-    'password_required': 'Password with minimum of 4 characters is required.',
+    'password_invalid': 'Password with four to sixty-four characters is required.',
     'pw_confirm_match': 'Passwords must match.',
     'out_of_range': 'Distance must be between 0 and 100km.',
+    'user_query_invalid': 'Usernames are between four and sixteen characters.',
+    'unauthorized': 'You are not authorized to view this page.',
     'user_not_found': 'Username not found. Please check the username provided and try again.',
-    'username_required': 'A username containing only letters and numbers is required.',
+    'username_invalid': 'A username between four and sixteen characters containing only letters and/or numbers is required.',
     'username_taken': 'Username is already taken. Please select a different username.',
 }

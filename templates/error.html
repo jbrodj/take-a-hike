@@ -3,8 +3,10 @@
 {% block main %}
 <div class="content-container">
   <h2 class="template-heading">Error</h2>
-  <div class="content-block error-block flex-col">
-    <p>{{code}}: {{message}}</p>
+  <div class="error-block flex-col">
+    <div class="content-block">
+      <p>{{code}}: {{message}}</p>
+    </div>
     <a href="{{url}}">
       <button>
         Go back
