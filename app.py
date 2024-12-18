@@ -36,7 +36,7 @@ def index():
     return render_template('index.html')
 
 
-#  == USERS  == 
+#  == USERS  ==
 
 @app.route('/users/<username>', methods=['GET', 'POST'])
 def user_route(username):
