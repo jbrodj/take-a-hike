@@ -50,7 +50,6 @@ def user_route(username):
     hikes_list = get_hikes(DB, user.get('id'))
     # Return no data template if user's hikes list is empty
     if not hikes_list:
-        # return render_template('no-data.html')
         return render_template(
             'user.html', username=username, hikes_list=[], auth=is_authorized_to_edit)
     # Check if authenticated user is same as user page (for edit/delete context menu)
