@@ -70,7 +70,6 @@ def add_trail(area_id, trail_names):
         Retrieves area ID from db, and inserts trail data into db.
     '''
     trail_list = trail_names.split(', ')
-    # area_id = get_area_id(area_name, 'hikes.db')
     db_connection = create_connection('hikes.db')
     for trail_name in trail_list:
         db_connection['cursor'].execute(
