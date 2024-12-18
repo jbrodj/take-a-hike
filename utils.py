@@ -60,8 +60,11 @@ def add_area(area_name):
         Inserts area data into areas table.
     '''
     db_connection = create_connection('hikes.db')
-    db_connection['cursor'].execute(
-        'INSERT OR IGNORE INTO areas (area_name) VALUES (?)', (area_name, ))
+    try:
+        db_connection['cursor'].execute(
+            'INSERT OR IGNORE INTO areas (area_name) VALUES (?)', (area_name, ))
+    except sqlite3.Error as error:
+        print(error)
     commit_close_conn(db_connection['connection'])
 
 
@@ -72,10 +75,12 @@ def add_trail(area_id, trail_names):
     trail_list = trail_names.split(', ')
     db_connection = create_connection('hikes.db')
     for trail_name in trail_list:
-        db_connection['cursor'].execute(
-            'INSERT OR IGNORE INTO trails (area_id, trail_name) VALUES (?, ?)',
-            [area_id, trail_name])
-
+        try:
+            db_connection['cursor'].execute(
+                'INSERT OR IGNORE INTO trails (area_id, trail_name) VALUES (?, ?)',
+                [area_id, trail_name])
+        except sqlite3.Error as error:
+            print(error)
     commit_close_conn(db_connection['connection'])
 
 
@@ -85,9 +90,12 @@ def add_hike(user_id, area_id, form_data):
     '''
     hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = form_data.values()
     db_connection = create_connection('hikes.db')
-    db_connection['cursor'].execute(
-        'INSERT INTO hikes (hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
+    try:
+        db_connection['cursor'].execute(
+            'INSERT INTO hikes (hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
+    except sqlite3.Error as error:
+        print(error)
     commit_close_conn(db_connection['connection'])
 
 
@@ -96,10 +104,12 @@ def update_hike(existing_hike_data, updated_hike_data):
     hike_id = existing_hike_data.get('id')
     hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = updated_hike_data.values()
     db_connection = create_connection('hikes.db')
-    db_connection['cursor'].execute(
-        'UPDATE hikes SET hike_date = (?), area_name = (?), trailhead = (?), trails_cs = (?), distance_km = (?), image_url = (?), image_alt = (?), map_link = (?), other_info = (?) WHERE id = (?)',
-        (hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info, hike_id,)
-    )
+    try:
+        db_connection['cursor'].execute(
+            'UPDATE hikes SET hike_date = (?), area_name = (?), trailhead = (?), trails_cs = (?), distance_km = (?), image_url = (?), image_alt = (?), map_link = (?), other_info = (?) WHERE id = (?)',
+            (hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info, hike_id,))
+    except sqlite3.Error as error:
+        print(error)
     commit_close_conn(db_connection['connection'])
 
 
@@ -112,8 +122,8 @@ def delete_hike(hike_id, user_id):
             (hike_id, user_id,)
         )
         commit_close_conn(db_connection['connection'])
-    except sqlite3.OperationalError:
-        print('Error: No hike found matching user id and hike id')
+    except sqlite3.Error as error:
+        print(error)
 
 
 # RETRIEVE DATA FROM DATABASE
@@ -123,8 +133,12 @@ def get_area_id(area_name, db):
         Returns area id.
     '''
     db_connection = create_connection(db)
-    area_id_data = db_connection['cursor'].execute(
-        'SELECT id FROM areas WHERE area_name = (?)', (area_name, ))
+    try:
+        area_id_data = db_connection['cursor'].execute(
+            'SELECT id FROM areas WHERE area_name = (?)', (area_name, ))
+    except sqlite3.Error as error:
+        print(error)
+        return ''
     arr = []
     for row in area_id_data:
         arr.append(row)
@@ -149,8 +163,8 @@ def get_hikes(db, user_id, hike_id=None):
             hikes_list = format_hikes(data, hikes_data)
             commit_close_conn(db_connection['connection'])
             return hikes_list
-        except sqlite3.OperationalError:
-            print('Error: No hike found matching user id and hike id')
+        except sqlite3.Error as error:
+            print(error)
             return []
     # Otherwise get all records for specified user
     else:
@@ -158,8 +172,8 @@ def get_hikes(db, user_id, hike_id=None):
             data = db_connection['cursor'].execute(
                 'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 10', (user_id,))
             hikes_data = db_connection['cursor'].fetchall()
-        except sqlite3.OperationalError:
-            print('Error: No hikes found matching user id')
+        except sqlite3.Error as error:
+            print(error)
             return []
     hikes_list = format_hikes(data, hikes_data)
     commit_close_conn(db_connection['connection'])
@@ -196,7 +210,11 @@ def get_all_usernames(db):
         Returns list of all names in database
     '''
     db_connection = create_connection(db)
-    usernames_query = db_connection['cursor'].execute('SELECT username FROM users')
+    try:
+        usernames_query = db_connection['cursor'].execute('SELECT username FROM users')
+    except sqlite3.Error as error:
+        print(error)
+        return []
     usernames = []
     for row in usernames_query:
         usernames.append(row)
@@ -208,7 +226,11 @@ def get_user_by_username(db, username):
         Returns dict of user data from users table, or empty dictionary if no user found.
     '''
     db_connection = create_connection(db)
-    user_data = db_connection['cursor'].execute('SELECT * FROM users WHERE username = ?', (username,))
+    try:
+        user_data = db_connection['cursor'].execute('SELECT * FROM users WHERE username = ?', (username,))
+    except sqlite3.Error as error:
+        print(error)
+        return {}
     keys = ['id', 'username', 'password_hash']
     values = []
 
@@ -231,7 +253,11 @@ def get_similar_usernames(db, query):
     users_list = []
     for char in query:
         like_query = f'%{char}%'
-        username_data = db_connection['cursor'].execute('SELECT username FROM users WHERE username LIKE ?', (like_query,))
+        try:
+            username_data = db_connection['cursor'].execute('SELECT username FROM users WHERE username LIKE ?', (like_query,))
+        except sqlite3.Error as error:
+            print(error)
+            return {}
         for row in username_data:
             users_list.append(row[0])
     similar_users = {}
