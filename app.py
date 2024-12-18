@@ -47,7 +47,8 @@ def user_route(username):
     # Return no data template if user's hikes list is empty
     if not hikes_list:
         # return render_template('no-data.html')
-        return render_template('user.html', username=username, hikes_list=[], auth=is_authorized_to_edit)
+        return render_template(
+            'user.html', username=username, hikes_list=[], auth=is_authorized_to_edit)
     # Check if authenticated user is same as user page (for edit/delete context menu)
     if session.get('username') == username:
         is_authorized_to_edit = True
@@ -63,7 +64,8 @@ def user_route(username):
             path = '/edit-hike/' + action + '/' + hike_id
             return redirect(path)
     # Render user page with list of that user's hikes
-    return render_template('user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
+    return render_template(
+        'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
 
 
 @app.route('/users', methods=['GET', 'POST'])
@@ -87,7 +89,11 @@ def user_search():
         if exact_match in similar_usernames:
             similar_usernames.pop(exact_match)
         return render_template(
-            'user_search.html', query=query_param, results=similar_usernames, exact_match=exact_match)
+            'user_search.html',
+            query=query_param,
+            results=similar_usernames,
+            exact_match=exact_match
+            )
     # Route directly to blank users search page.
     return render_template('user_search.html')
 
