@@ -25,8 +25,7 @@ def commit_close_conn(conn):
     conn.close()
 
 
-# =========
-# INSERT AND FORMAT DATA
+# ==== INSERT DATA ====
 
 def convert_to_dict(tuple_list, dictionary):
     '''Takes a list of tuples and an empty dictionary
@@ -34,14 +33,6 @@ def convert_to_dict(tuple_list, dictionary):
     '''
     dictionary = dict(tuple_list)
     return dictionary
-
-
-def format_hike_form_data(data):
-    '''Takes multidict object from form submission
-        Returns list of dictionaries containing formatted form data. 
-    '''
-    formatted_data = convert_to_dict(data, {})
-    return formatted_data
 
 
 def add_user(username, password_hash):
@@ -126,7 +117,7 @@ def delete_hike(hike_id, user_id):
         print(error)
 
 
-# RETRIEVE DATA FROM DATABASE
+# ==== RETRIEVE DATA FROM DATABASE ====
 
 def get_area_id(area_name, db):
     '''Takes area name string and db file
@@ -312,7 +303,15 @@ def generate_user_data_dict(keys, values):
     return user
 
 
-#  FORM VALIDATION
+def format_hike_form_data(data):
+    '''Takes multidict object from form submission
+        Returns list of dictionaries containing formatted form data. 
+    '''
+    formatted_data = convert_to_dict(data, {})
+    return formatted_data
+
+
+#  ==== FORM VALIDATION ====
 
 def validate_hike_form(form_data):
     '''Takes form data
@@ -332,7 +331,7 @@ def validate_hike_form(form_data):
     return None
 
 
-#  ERROR HANDLING
+#  ==== ERROR HANDLING ====
 
 def handle_error(url, message, code=400):
     '''Takes an error code number and string describing the cause of the error
@@ -341,7 +340,7 @@ def handle_error(url, message, code=400):
     return render_template('error.html', url=url, message=message, code=code,)
 
 
-#  DECORATORS
+#  ==== DECORATORS ====
 
 # Source: https://flask.palletsprojects.com/en/latest/patterns/viewdecorators/
 def login_required(function):
