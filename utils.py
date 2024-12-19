@@ -250,25 +250,29 @@ def get_similar_usernames(db, query):
         or empty dict.
     '''
     db_connection = create_connection(db)
+    try:
+        username_data = db_connection['cursor'].execute('SELECT username FROM users')
+    except sqlite3.Error as error:
+        print(error)
+        return {}
+
     users_list = []
-    for char in query:
-        like_query = f'%{char}%'
-        try:
-            username_data = db_connection['cursor'].execute('SELECT username FROM users WHERE username LIKE ?', (like_query,))
-        except sqlite3.Error as error:
-            print(error)
-            return {}
-        for row in username_data:
-            users_list.append(row[0])
+    for row in username_data:
+        users_list.append(row[0])
+
     similar_users = {}
-    for user in users_list:
+    for username in users_list:
         # Frequency is the number of occurrences where a char in the query matched a char in the username
-        frequency = users_list.count(user)
+        frequency = 0
+        for char in query:
+            if char in username:
+                frequency +=1
         # Accuracy is the proportion of matching chars relative to the length of the username
-        accuracy = frequency / len(user)
-        match = frequency * accuracy
-        if frequency > 3 or accuracy > 0.5:
-            similar_users.update({user: match})
+        accuracy = frequency / len(username)
+        match_factor = frequency * accuracy
+        if frequency > 2 or accuracy >= 0.5:
+            similar_users.update({username: match_factor})
+
     # Source: https://www.datacamp.com/tutorial/sort-a-dictionary-by-value-python
     sorted_similar_users = dict(sorted(similar_users.items(), key=lambda item: item[1], reverse=True))
     return sorted_similar_users
