@@ -177,8 +177,8 @@ def format_hikes(sql_data_object, fetched_hikes_values):
     '''
     # Create list of keys from data object
     keys = []
-    for key in sql_data_object.description:
-        keys.append(key[0])
+    for column in sql_data_object.description:
+        keys.append(column[0])
     hikes_list = []
     for entry in fetched_hikes_values:
         # Convert each tuple in list to a dictionary by adding keys
