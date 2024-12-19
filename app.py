@@ -26,6 +26,8 @@ def after_request(response):
     return response
 
 
+# == SPLASH PAGE ==
+
 @app.route('/')
 def index():
     '''Renders default template at base route. Or redirects to user page if logged in.'''
@@ -33,6 +35,8 @@ def index():
         return redirect(f'/users/{session["username"]}')
     return render_template('index.html')
 
+
+#  == USERS  ==
 
 @app.route('/users/<username>', methods=['GET', 'POST'])
 def user_route(username):
@@ -46,7 +50,6 @@ def user_route(username):
     hikes_list = get_hikes(DB, user.get('id'))
     # Return no data template if user's hikes list is empty
     if not hikes_list:
-        # return render_template('no-data.html')
         return render_template(
             'user.html', username=username, hikes_list=[], auth=is_authorized_to_edit)
     # Check if authenticated user is same as user page (for edit/delete context menu)
@@ -67,6 +70,8 @@ def user_route(username):
     return render_template(
         'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
 
+
+#  == USER SEARCH ==
 
 @app.route('/users', methods=['GET', 'POST'])
 def user_search():
@@ -98,6 +103,8 @@ def user_search():
     return render_template('user_search.html')
 
 
+# == SIGN UP ==
+
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
     '''Renders sign-up form template on GET, or submits new user to db on POST'''
@@ -128,6 +135,8 @@ def sign_up():
     return render_template('signup.html')
 
 
+# == LOG IN ==
+
 @app.route('/login', methods=['GET', 'POST'])
 def log_in():
     '''Renders log-in form template on GET, or validates login data on POST'''
@@ -153,12 +162,16 @@ def log_in():
     return render_template('login.html')
 
 
+# == LOG OUT ==
+
 @app.route('/logout')
 def logout():
     '''Clears user data from session, redirects user to home page.'''
     session.clear()
     return redirect('/')
 
+
+# == NEW HIKE FORM ==
 
 @app.route('/new-hike', methods=['GET', 'POST'])
 @login_required
@@ -181,8 +194,10 @@ def new_hike():
         add_hike(session.get('user_id'), area_id, hike_data)
         return redirect('/')
     # Route to new hike form
-    return render_template('new-hike.html', form_content=hike_form_content)
+    return render_template('hike-form.html', form_content=hike_form_content, selected_hike_data={})
 
+
+#  == EDIT HIKE FORM ==
 
 @app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
 @login_required
@@ -214,4 +229,4 @@ def edit_hike(action, hike_id):
         path = request.host_url + 'users/' + username
         return handle_error(path, error_messages['unauthorized'], 401)
     return render_template(
-        '/edit-hike.html', form_content=hike_form_content, selected_hike_data=selected_hike_data)
+        '/hike-form.html', form_content=hike_form_content, selected_hike_data=selected_hike_data)
