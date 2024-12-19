@@ -225,15 +225,14 @@ def get_user_by_username(db, username):
     '''Takes database file and username string
         Returns dict of user data from users table, or empty dictionary if no user found.
     '''
+    keys = get_table_columns(db, 'users')
     db_connection = create_connection(db)
     try:
         user_data = db_connection['cursor'].execute('SELECT * FROM users WHERE username = ?', (username,))
     except sqlite3.Error as error:
         print(error)
         return {}
-    keys = ['id', 'username', 'password_hash']
     values = []
-
     for row in user_data:
         for position in row:
             values.append(position)
