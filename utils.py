@@ -278,6 +278,31 @@ def get_similar_usernames(db, query):
     return sorted_similar_users
 
 
+def get_table_columns(db, table):
+    '''Takes db file and table name as string
+        Returns a list of provided table's column names
+    '''
+    db_connection = create_connection(db)
+    query = f'PRAGMA table_info({table})'
+    # This query returns a sqlite object containing rows of tuples, each representing a column in the table
+        # The column heading is at the [1]th index of each tuple
+
+    try:
+
+        table_info = db_connection['cursor'].execute(query)
+    except sqlite3.Error as error:
+        print(error)
+        return []
+
+    keys = []
+    for column in table_info:
+        keys.append(column[1])
+
+    commit_close_conn(db_connection['connection'])
+
+    return keys
+
+
 def generate_user_data_dict(keys, values):
     '''Takes two lists with same number of indecies.
         Returns list with left vals as keys, right vals as values.
