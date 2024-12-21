@@ -4,16 +4,18 @@
 <div class="content-container">
   <h2 class="template-heading">Find a user</h2>
   <div class="form-block">
-    <form action="/users" method="get" class="content-block flex-col">
-      <div class="form-content flex-col">
-        <label for="user_search">Search by username</label>
-        <input autofocus required type="search" name="user_search" id="user_search" maxlength="14" value="{{query}}">
-      </div>
-      <button type="submit">Search</button>
-    </form>
-    {% if results or exact_match %}
-      {% include 'user_search_results.html' %}
-    {% endif %}
+    <div class="content-block">
+      <form action="/users" method="get" class="flex-col">
+        <div class="form-content flex-col">
+          <label for="user_search" class="form-label">Search by username</label>
+          <input autofocus required type="search" name="user_search" id="user_search" class="form-control" maxlength="14" value="{{query}}">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
   </div>
 </div>
+{% if user_list %}
+  {% include 'user_search_results.html' %}
+{% endif %}
 {% endblock %}

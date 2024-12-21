@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="content-container">
+  <h2 class="template-heading">Log a new hike</h2>
+  <div class="form-block">
+      <div class="content-block">
+      <form method="post" class="flex-col" id="new-hike-form">
+        {% for field in form_content %}
+        <div class="form-content flex-col">
+          <label 
+            for="{{form_content[field].get('name')}}"
+            class="form-label"
+          >
+            {{form_content[field].get('label')}}
+          </label>
+          {% if form_content[field].get('inputType') == 'number' %}
+            <input 
+              type="{{form_content[field].get('inputType')}}" 
+              name="{{form_content[field].get('name')}}" 
+              id="{{form_content[field].get('name')}}"
+              min="0"
+              max="99.9"
+              step="any"
+              required
+              value="{{selected_hike_data.get(form_content[field].get('name'), '')}}"
+              class="form-control"
+            >
+          {% elif form_content[field].get('required') == True %}
+            <input 
+              type="{{form_content[field].get('inputType')}}" 
+              name="{{form_content[field].get('name')}}" 
+              id="{{form_content[field].get('name')}}"
+              required
+              value="{{selected_hike_data.get(form_content[field].get('name'), '')}}"
+              class="form-control"
+            >
+          {% else %}
+            <input 
+              type="{{form_content[field].get('inputType')}}" 
+              name="{{form_content[field].get('name')}}" 
+              id="{{form_content[field].get('name')}}"
+              value="{{selected_hike_data.get(form_content[field].get('name'), '')}}"
+              class="form-control"
+            >
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% if selected_hike_data %}
+          <button type="submit" name="action" value="save" class="btn btn-primary">Save</button>
+          <button type="submit" name="action" value="cancel" class="btn btn-primary">Cancel</button>
+        {% else %}
+          <button type="submit" class="btn btn-primary">Submit</button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/static/js/autofocus.js"></script>
+{% endblock %}

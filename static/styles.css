@@ -104,7 +104,9 @@ input[type=number] {
   --deep-neutral-color: #ebdcc5;
   --light-accent-color: #fff7eb;
   --dark-accent-color: #475043;
+  --bold-accent-color: #ffed7b;
 }
+
 
 /* GENERAL STYLES */
 
@@ -114,6 +116,7 @@ body {
 
 main {
   flex-grow: 1;
+  background-color: var(--main-background-color);
 }
 
 .wrapper {
@@ -146,11 +149,33 @@ header {
 }
 
 h2{
-  font-size: 1.25rem;
+  text-align: center;
 }
 
 h3, h4 {
   margin-bottom: 0.25rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+a, button {
+  transition: all 0.2s ease-in;
+}
+
+.underline-link {
+  text-decoration: underline;
+  padding: 0.5rem;
+  color: currentColor;
+}
+
+.underline-link:hover {
+  color: var(--dark-accent-color);
 }
 
 ul, ol {
@@ -169,14 +194,14 @@ form {
   border-radius: 0.125rem;
 }
 
-.no-img-divider {
+.divider {
   width: 100%;
   border: 1px solid var(--dark-accent-color);
   border-radius: 0.03125rem;
 }
 
 /* Box shadow */
-.main-header, .main-heading-container, .hike-block, .error-block .no-data-block, .splash-block {
+.main-header, .main-heading-container, .form-block, .hike-block, .error-block .no-data-block, .splash-block, .user-card-block {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -184,15 +209,18 @@ form {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.hike-block, .form-block, .error-block, .no-data-block, .splash-block {
+.hike-block, .form-block, .error-block, .no-data-block, .splash-block, .user-card-block {
   background-color: var(--light-background-color);
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem;
   margin-bottom: 1rem;
   border-radius: 0.125rem;
 }
 
+.form-block {
+  padding: 1.5rem 0.5rem;
+}
+
 .error-block a {
-  margin-bottom: 1rem;
   align-self: center;
 }
 
@@ -227,7 +255,7 @@ header .wrapper {
 }
 
 .main-heading-container {
-  background-color: rgb(255, 237, 123);
+  background-color: var(--bold-accent-color);
   width: 150px;
   height: 150px;
   transform: rotate(45deg);
@@ -266,18 +294,29 @@ header .wrapper {
 
 .nav-item {
   width: auto;
-  padding: 0.5rem;
-}
-
-.nav-item:hover {
-  background-color: var(--deep-neutral-color);
-  color: var(--dark-background-color);
+  border-radius: 0.125rem;
 }
 
 .nav-item a {
+  height: 100%;
+  display: block;
+  padding: 0.25rem 0.5rem;
   text-decoration: none;
   text-transform: uppercase;
-  font-size: 1.1rem;
+  font-size: calc(0.9rem + .25vw);
+  /* Override the general `transition all` so the calc fz doesn't transition on vw change */
+  transition: background-color 0.2s ease-in;
+  border: 1px solid transparent;
+}
+
+.nav-item a:active {
+  background-color: var(--light-accent-color);
+  color: var(--dark-accent-color);
+}
+
+.nav-item a:hover {
+  background-color: var(--deep-neutral-color);
+  color: var(--dark-accent-color);
 }
 
 
@@ -375,26 +414,25 @@ h1 {
   justify-content: space-between;
 }
 
-.img-container {
+.hike-img-container {
   width: 100%;
   background-color: var(--dark-accent-color);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0.25rem;
   margin: 0.75rem 0 0 0;
+  color: var(--light-accent-color);
 }
 
-.trail-info-block img {
-  height: 95%;
-  max-height: 95vh;
-  object-fit: contain;
+.hike-sub-info--details {
+  padding: 0.25rem 0;
+  margin-top: 0.125rem;
 }
 
 .hike-sub-info--trails {
-  width: 100%;
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+  margin: 0.25rem 0 0 0;
 }
 
 .hike-sub-info--trails ul {
@@ -406,53 +444,230 @@ h1 {
   line-height: 0px;
 }
 
-.more-info-block {
-  justify-content: space-between;
-  margin-top: 0;
-}
-
 .hike-context-nav-container {
   justify-content: flex-end;
 }
 
 .hike-sub-info--footer {
   justify-content: space-between;
-  margin-top: 0.5rem;
+  margin: 0;
 }
 
-.update-hike-button {
-  margin-left: 0.5rem;
-}
 
 
 /*  FORM ELEMENTS  */
 
+form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 .form-content {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 input {
   accent-color: var(--dark-background-color);
   background-color: var(--light-accent-color);
-  max-width: 400px;
-  padding: 0.25rem 0.5rem;
   margin-top: 0.25rem;
-}
-
-.form-button {
-  margin: 0.75rem 0 0.5rem 0;
 }
 
 .form-control {
   accent-color: var(--dark-background-color) !important;
   background-color: var(--light-accent-color) !important;
   border-radius: 0.125rem !important;
-  transition: var(--dark-background-color) .15s ease-in-out,box-shadow .15s ease-in-out !important;
+  border: 1px solid var(--main-background-color);  
+}
+
+.form-control:focus, .btn:focus, .nav-item a:focus {
+  border: 1px solid var(--dark-accent-color);
+  outline: 1px solid var(--dark-accent-color);
+  box-shadow: none !important;
+  background-color: var(--deep-neutral-color);
+  color: var(--main-font-color);
+  transition: outline 0.1s ease-in;
+}
+
+.btn {
+  background-color: var(--dark-background-color);
+  border: 1px solid transparent;
+  color: var(--light-accent-color);
+  outline: 0.0175rem solid var(--main-background-color);
+  outline-offset: -4px;
+  border-radius: 0.125rem;
+  margin: 0.5rem auto 0.25rem auto;
+  min-width: 12rem;
+  transition: all 0.2s ease-in;
+}
+
+.update-hike-button-container, .maps-button-container {
+  justify-content: flex-end;
+  margin: 0;
+}
+
+.update-hike-button, .maps-button {
+  background-color: var(--light-accent-color);
+  color: var(--main-font-color);
+  outline: 0.0175rem solid var(--dark-accent-color);
+  margin: 0;
+  padding: 0;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1;
+  min-width: 0;
+}
+
+.maps-button {
+  padding: 0;
+  font-size: 1rem;
+  aspect-ratio: 2.5;
+}
+
+.maps-button i {
+  margin-left: 0.5rem;
+}
+
+.update-hike-button {
+  margin-left: 0.75rem;
+}
+
+.update-hike-button i {
+  font-size: 1.25rem;
+}
+
+/* Edit icon looks a bit off centre as-is */
+.edit-button {
+  padding-left: 3px;
+}
+
+/* Button focus states  */
+
+.btn:focus {
+  outline: 0.1250rem solid var(--dark-accent-color);
+  border: 1px solid var(--dark-accent-color) !important;
+  background-color: var(--light-accent-color);
+  outline-offset: -5px;
+}
+
+.del-button:focus {
+  color: tomato;
+  outline: 2px solid tomato;
+
+}
+
+/* Button hover states */
+
+.btn:hover {
+  background-color: var(--light-accent-color);
+  border: 1px solid transparent;
+  color: var(--main-font-color);
+  outline: 0.0175rem solid var(--dark-background-color);
+}
+
+.maps-button:hover, .edit-button:hover {
+  background-color: var(--dark-accent-color);
+  color: var(--light-accent-color);
+  outline: 0.0175rem solid var(--light-accent-color);
+}
+
+.del-button:hover {
+  background-color: tomato;
+  color: var(--light-accent-color);
+  outline-color: var(--light-accent-color);
+}
+
+/* Button active states */
+
+.btn:active {
+  background-color: var(--main-background-color) !important;
+  outline: 0.0175rem solid var(--light-accent-color) !important;
+}
+
+.del-button:active {
+  /* not sure this is doing anything */
+  border-color: var(--dark-accent-color) !important;
 }
 
 
 /*  USER SEARCH  */
 
+.search-results-container {
+margin-right: -1rem;
+}
+
+.search-results-list {
+  flex-wrap: wrap;
+}
+
+.search-results-list li {
+  flex-basis: auto;
+  flex-grow: 1;
+}
+
+.user-card-block {
+  margin-right: 1rem;
+  padding: 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-card-button-link {
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem;
+  background-color: var(--light-background-color);
+  color: var(--main-font-color);
+}
+
+.user-card-content {
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+}
+
+.user-card-exact-match {
+  position: absolute;
+  top: 0;
+  font-size: 0.8rem;
+}
+
+.user-card-username-container {
+  align-items: center;
+}
+
+.user-card-icon {
+  margin: 0 0.5rem;
+  display: block;
+}
+
+.user-card-img-container {
+  align-items: center;
+  padding: 0.25rem;
+  background-color: var(--dark-accent-color);
+  height: 4rem;
+  font-size: 2.5rem;
+  aspect-ratio: 1;
+}
+
+.user-card-img-container img {
+  height: 100%;
+  /* width: 100%; */
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.user-img-placeholder-background {
+  height: 100%;
+  background-color: var(--dark-background-color);
+  aspect-ratio: 1;
+}
+
+.user-card-img-placeholder {
+  margin: 0 auto;
+  color: var(--deep-neutral-color);
+}
 
 
 /*  FOOTER  */
@@ -462,8 +677,22 @@ input {
   height: 4rem;
   display: flex;
   align-items: center;
-  /* background-color: var(--dark-background-color); */
   background-color: var(--main-font-color);
   color: var(--deep-neutral-color);
   font-size: 0.8rem;
+}
+
+.main-footer a {
+  padding: 0.5rem 0;
+}
+
+.main-footer a:hover {
+  color: var(--light-accent-color);
+  box-shadow: none;
+}
+
+.main-footer a:focus {
+  outline: 1px solid var(--light-accent-color);
+  border: none;
+  box-shadow: none;
 }

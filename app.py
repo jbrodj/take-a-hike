@@ -5,8 +5,8 @@ from flask_session import Session
 from content import hike_form_content, error_messages
 from constants import DB
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
-    get_all_usernames, get_area_id, get_hikes, get_similar_usernames, get_user_by_username,
-    handle_error, login_required, update_hike, validate_hike_form)
+    get_all_usernames, get_area_id, get_hikes, get_hike_img_src, get_similar_usernames,
+    get_user_by_username, handle_error, login_required, update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
@@ -26,6 +26,8 @@ def after_request(response):
     return response
 
 
+# == SPLASH PAGE ==
+
 @app.route('/')
 def index():
     '''Renders default template at base route. Or redirects to user page if logged in.'''
@@ -33,6 +35,8 @@ def index():
         return redirect(f'/users/{session["username"]}')
     return render_template('index.html')
 
+
+#  == USERS  ==
 
 @app.route('/users/<username>', methods=['GET', 'POST'])
 def user_route(username):
@@ -46,7 +50,6 @@ def user_route(username):
     hikes_list = get_hikes(DB, user.get('id'))
     # Return no data template if user's hikes list is empty
     if not hikes_list:
-        # return render_template('no-data.html')
         return render_template(
             'user.html', username=username, hikes_list=[], auth=is_authorized_to_edit)
     # Check if authenticated user is same as user page (for edit/delete context menu)
@@ -68,6 +71,8 @@ def user_route(username):
         'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
 
 
+#  == USER SEARCH ==
+
 @app.route('/users', methods=['GET', 'POST'])
 def user_search():
     '''Renders users search form, or user list template if query string is present
@@ -84,19 +89,27 @@ def user_search():
         # Get similar usernames.
         similar_usernames = get_similar_usernames(DB, query_param)
         if not similar_usernames and not exact_match:
-            return render_template('user_search.html', query=query_param, results='no_match')
-        # Remove exact matched username from list if present
-        if exact_match in similar_usernames:
-            similar_usernames.pop(exact_match)
+            return render_template('user_search.html', query=query_param, user_list='no_match')
+        user_list = []
+        for user in similar_usernames:
+            is_exact_match = False
+            if user == exact_match:
+                is_exact_match = True
+            user_id = get_user_by_username(DB, user).get('id')
+            most_recent_hike_img = get_hike_img_src(DB, user_id)
+        # Then create a list of dictionaries:
+            user_list.append(
+                {'username': user, 'img_src': most_recent_hike_img, 'exact_match': is_exact_match})
         return render_template(
             'user_search.html',
             query=query_param,
-            results=similar_usernames,
-            exact_match=exact_match
+            user_list=user_list
             )
     # Route directly to blank users search page.
     return render_template('user_search.html')
 
+
+# == SIGN UP ==
 
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
@@ -128,6 +141,8 @@ def sign_up():
     return render_template('signup.html')
 
 
+# == LOG IN ==
+
 @app.route('/login', methods=['GET', 'POST'])
 def log_in():
     '''Renders log-in form template on GET, or validates login data on POST'''
@@ -153,12 +168,16 @@ def log_in():
     return render_template('login.html')
 
 
+# == LOG OUT ==
+
 @app.route('/logout')
 def logout():
     '''Clears user data from session, redirects user to home page.'''
     session.clear()
     return redirect('/')
 
+
+# == NEW HIKE FORM ==
 
 @app.route('/new-hike', methods=['GET', 'POST'])
 @login_required
@@ -181,8 +200,10 @@ def new_hike():
         add_hike(session.get('user_id'), area_id, hike_data)
         return redirect('/')
     # Route to new hike form
-    return render_template('new-hike.html', form_content=hike_form_content)
+    return render_template('hike-form.html', form_content=hike_form_content, selected_hike_data={})
 
+
+#  == EDIT HIKE FORM ==
 
 @app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
 @login_required
@@ -214,4 +235,4 @@ def edit_hike(action, hike_id):
         path = request.host_url + 'users/' + username
         return handle_error(path, error_messages['unauthorized'], 401)
     return render_template(
-        '/edit-hike.html', form_content=hike_form_content, selected_hike_data=selected_hike_data)
+        '/hike-form.html', form_content=hike_form_content, selected_hike_data=selected_hike_data)
