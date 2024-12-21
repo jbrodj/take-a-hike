@@ -1,21 +1,19 @@
+{% if user_list == 'no_match' %}
 <div class="search-results-container content-block">
-  {% if results == 'no_match' %}
   <div class="search-results-list">
     <p>There are no usernames similar to {{query}}</p>
   </div>
-  {% else %}
-    {% if exact_match %}
-      <p>Found an exact match: <a href="/users/{{exact_match}}">{{exact_match}}</a></p>
-    {% endif %}
-    {% if results %}
-    <p>Did you mean:</p>
-    <ul class="search-results-list">
-      {% for user in results %}
-      <li>
-        <a href="/users/{{user}}">{{user}}</a>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-  {% endif %}
 </div>
+{% else %}
+<div class="search-results-container">
+  {% if user_list %}
+  <ul class="search-results-list flex-row">
+    {% for user in user_list %}
+    <li class="user-card-block">
+      {% include 'user-card.html' %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+  {% endif %}
+{% endif %}

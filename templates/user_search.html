@@ -12,10 +12,10 @@
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
-      {% if results or exact_match %}
-        {% include 'user_search_results.html' %}
-      {% endif %}
     </div>
   </div>
 </div>
+{% if user_list %}
+  {% include 'user_search_results.html' %}
+{% endif %}
 {% endblock %}

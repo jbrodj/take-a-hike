@@ -24,34 +24,33 @@
       </div>
     </div>
     {% if not hike.get('image_url') %}
-    <hr class="no-img-divider">
+    <hr class="divider no-img-divider">
     {% else %}
-    <div class="img-container">
+    <div class="img-container hike-img-container">
       <img src="{{hike.get('image_url')}}" alt="{{hike.get('image_alt')}}" loading="lazy">
-    </div>
-    <div class="trail-info-block flex-col">
-      {% endif %}
-      <div class="hike-sub-info">
-        <div class="hike-sub-info--trails content-block">
-          <h4>Trails:</h4>
-          <ul>
-            {% for trail in hike.get('trails_list') %}
-            <li><i class="list-icon">- </i>{{trail}}</li>
-            {% endfor %}
-          </ul>
-        </div>
-        <div class="more-info-block content-block flex-col">
-          <div class="hike-sub-info--details">
-            <p>{{hike.get('other_info')}}</p>
-          </div>
-          <div class="hike-sub-info--footer flex-row">
-            <a href="#" target="blank">Maps</a>
-            {% if auth %}
-              {% include 'hike-context-menu.html' %}
-            {% endif %}
-          </div>
-        </div>
+      <div class="hike-sub-info--details">
+        <p>{{hike.get('other_info')}}</p>
       </div>
+    </div>
+    {% endif %}
+    <div class="hike-sub-info--trails content-block">
+      <h4>Trails:</h4>
+      <ul>
+        {% for trail in hike.get('trails_list') %}
+        <li><i class="list-icon">- </i>{{trail}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="content-block hike-sub-info--footer flex-row">
+      <div class="maps-button-container">
+        <a href="{{hike.get('map_link')}}" class="btn btn-primary maps-button" target="blank" aria-label="View location in maps">
+            Maps
+            <i class="fas fa-external-link-square-alt"></i>
+        </a>
+      </div>
+      {% if auth %}
+        {% include 'hike-context-menu.html' %}
+      {% endif %}
     </div>
   </div>
   {% endfor %}
