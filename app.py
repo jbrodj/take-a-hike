@@ -5,8 +5,8 @@ from flask_session import Session
 from content import hike_form_content, error_messages
 from constants import DB
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
-    get_all_usernames, get_area_id, get_hikes, get_similar_usernames, get_user_by_username,
-    handle_error, login_required, update_hike, validate_hike_form)
+    get_all_usernames, get_area_id, get_hikes, get_hike_img_src, get_similar_usernames,
+    get_user_by_username, handle_error, login_required, update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
@@ -89,15 +89,21 @@ def user_search():
         # Get similar usernames.
         similar_usernames = get_similar_usernames(DB, query_param)
         if not similar_usernames and not exact_match:
-            return render_template('user_search.html', query=query_param, results='no_match')
-        # Remove exact matched username from list if present
-        if exact_match in similar_usernames:
-            similar_usernames.pop(exact_match)
+            return render_template('user_search.html', query=query_param, user_list='no_match')
+        user_list = []
+        for user in similar_usernames:
+            is_exact_match = False
+            if user == exact_match:
+                is_exact_match = True
+            user_id = get_user_by_username(DB, user).get('id')
+            most_recent_hike_img = get_hike_img_src(DB, user_id)
+        # Then create a list of dictionaries:
+            user_list.append(
+                {'username': user, 'img_src': most_recent_hike_img, 'exact_match': is_exact_match})
         return render_template(
             'user_search.html',
             query=query_param,
-            results=similar_usernames,
-            exact_match=exact_match
+            user_list=user_list
             )
     # Route directly to blank users search page.
     return render_template('user_search.html')
