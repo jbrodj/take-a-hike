@@ -1,0 +1,22 @@
+
+<a href="/users/{{user.get('username')}}" class="btn user-card-button-link">
+  <div class="user-card-content flex-row">
+    {% if user.get('exact_match') %}
+    <p class="user-card-exact-match">✨Exact match✨</p>
+    {% endif %}
+    <div class="user-card-username-container flex-row">
+      <i class="fas fa-hiking user-card-icon"></i>
+      <p>{{user.get('username')}}</p>
+
+    </div>
+    <div class="user-card-img-container">
+      {% if not user.get('img_src') %}
+      <div class="user-img-placeholder-background flex-col">
+        <i class="fas fa-tree user-card-img-placeholder"></i>
+      </div>
+      {% else %}
+      <img src="{{user.get('img_src')}}" alt="{{img_alt}}" loading="lazy">
+      {% endif %}
+    </div>
+  </div>
+</a>
