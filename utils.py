@@ -139,21 +139,38 @@ def get_area_id(area_name, db):
     return area_id
 
 
-def get_hikes(db, user_id, hike_id=None):
-    ''' Takes database file
+def get_hike_img_src(db, user_id):
+    '''Takes database file and user id
+        Returns string
+    '''
+    most_recent_hike = get_hikes(db, user_id, most_recent=True)
+    if not most_recent_hike:
+        return ''
+    img_src = most_recent_hike[0].get('image_url')
+    return img_src
+
+
+def get_hikes(db, user_id, hike_id=None, most_recent=False):
+    ''' Takes database file and user id
+        Optionally a hike id, and boolean
         Returns formatted list of hike dictionaries to serve to UI.
         Returns empty list if no table is found.
     '''
     db_connection = create_connection(db)
+    # If most_recent is passed, we wish to fetch the single most recent hike
+    if most_recent:
+        try:
+            data = db_connection['cursor'].execute(
+                'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 1', (user_id,))
+        except sqlite3.Error as error:
+            print(error)
+            return []
     # If hike_id is passed, we wish to fetch a single hike
     if hike_id:
         try:
             data = db_connection['cursor'].execute(
                 'SELECT * FROM hikes WHERE id = ? AND user_id = ?', (hike_id, user_id,))
             hikes_data = db_connection['cursor'].fetchall()
-            hikes_list = format_hikes(data, hikes_data)
-            commit_close_conn(db_connection['connection'])
-            return hikes_list
         except sqlite3.Error as error:
             print(error)
             return []
