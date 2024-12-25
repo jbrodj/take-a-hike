@@ -210,15 +210,15 @@ def new_hike():
 
 #  == EDIT HIKE FORM ==
 
-@app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
+@app.route('/edit-hike/<hike_id>', methods=['GET', 'POST'])
 @login_required
-def edit_hike(action, hike_id):
+def edit_hike(hike_id):
     '''Sends update to database to edit or delete hike data'''
     username = session.get('username')
     if request.method == 'POST':
-        # Check action for cancel and break out
-        if action == 'cancel':
-            path = '/users/' + username
+        # Check form for cancel action and break out
+        if request.form.get('action') == 'cancel':
+            path = '/users/' + username + '?cancel'
             return redirect(path)
         # Format and check form data
         existing_hike_data = get_hikes(DB, session.get('user_id'), hike_id)[0]
