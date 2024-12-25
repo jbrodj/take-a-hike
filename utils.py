@@ -381,7 +381,7 @@ def get_context_string_from_referrer(referrer, current_path, username):
     # If 'my-hikes' in query string, user was routed from main nav
     if 'my-hikes' in str(current_path):
         return None
-    if 'del' in str(current_path):
+    if 'delete' in str(current_path):
         return 'Hike deleted.'
     if 'cancel' in str(current_path):
         return 'Edits discarded.'
