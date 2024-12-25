@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 
 {% block main %}
+{% if context_string %}
+  {% include 'context-msg.html' %}
+{% endif %}
 <div class="content-container">
   <h2 class="template-heading">{{username.upper()}}'s recent hikes</h2>
   {% if not hikes_list %}
