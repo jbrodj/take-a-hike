@@ -228,6 +228,11 @@ form {
   margin: 1rem 0;
 }
 
+.hidden {
+  visibility: hidden;
+  position: absolute;
+}
+
 /*  TYPE   */
 
 * {
@@ -349,108 +354,6 @@ h1 {
 
 .splash-nav {
   bottom: 2rem;
-}
-
-
-/*  USERS /  HIKES LIST  */
-
-.trail-block-top {
-  justify-content: space-between;
-  align-items: center;
-  background: #47504383 ;
-  background: linear-gradient( to right, #47504344, #47504300);
-  margin-left: -0.5rem;
-  padding: 0.5rem 0;
-  padding-left: 1rem;
-  padding-right: 0.25rem;
-}
-
-.hike-date {
-  font-weight: 600;
-  letter-spacing: 1px;
-  font-size: 0.85rem;
-  font-family: 'Courier New', Courier, monospace;
-  line-height: 1.6;
-}
-
-.distance-block {
-  position: relative;
-  height: 60px;
-  width: 60px;
-  margin: 0.25rem, 0.75rem, 0.25rem, 0;
-  margin: 0.35rem 0.75rem;
-}
-
-.distance-diamond-element {
-  position: absolute;
-  height: 60px;
-  width: 60px;
-  border-radius: 0.125rem;
-  background-color: var(--dark-background-color);
-  transform: rotate(45deg);
-  outline: 0.0175rem solid var(--light-accent-color);
-  outline-offset: -4px;
-  z-index: 1;
-}
-
-.distance-text-container {
-  position: relative;
-  margin-top: 0.125rem;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-}
-
-.distance {
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--light-accent-color);
-  letter-spacing: 0.75px;
-  line-height: 1.1;
-}
-
-.trail-info-block {
-  justify-content: space-between;
-}
-
-.hike-img-container {
-  width: 100%;
-  background-color: var(--dark-accent-color);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0.25rem;
-  margin: 0.75rem 0 0 0;
-  color: var(--light-accent-color);
-}
-
-.hike-sub-info--details {
-  padding: 0.25rem 0;
-  margin-top: 0.125rem;
-}
-
-.hike-sub-info--trails {
-  margin: 0.25rem 0 0 0;
-}
-
-.hike-sub-info--trails ul {
-  margin-left: 1rem;
-}
-
-.list-icon {
-  font-size: 1.4rem;
-  line-height: 0px;
-}
-
-.hike-context-nav-container {
-  justify-content: flex-end;
-}
-
-.hike-sub-info--footer {
-  justify-content: space-between;
-  margin: 0;
 }
 
 
@@ -591,13 +494,135 @@ input {
 }
 
 
+/*  USERS /  HIKES LIST  */
+
+.context-message-container {
+  background-color: var(--bold-accent-color);
+  color: var(--main-font-color);
+  padding: 0.5rem 1rem;
+  justify-content: space-between;
+  align-items: center;
+  transition: height 0.5s ease-in;
+}
+
+.context-close-button {
+  margin: 0;
+  /* height: 100%; */
+  min-width: auto;
+  width: auto;
+  aspect-ratio: 1;
+  padding: 0 0.5rem;
+}
+
+.trail-block-top {
+  justify-content: space-between;
+  align-items: center;
+  background: #47504383 ;
+  background: linear-gradient( to right, #47504344, #47504300);
+  margin-left: -0.5rem;
+  padding: 0.5rem 0;
+  padding-left: 1rem;
+  padding-right: 0.25rem;
+}
+
+.hike-date {
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.6;
+}
+
+.distance-block {
+  position: relative;
+  height: 60px;
+  width: 60px;
+  margin: 0.25rem, 0.75rem, 0.25rem, 0;
+  margin: 0.35rem 0.75rem;
+}
+
+.distance-diamond-element {
+  position: absolute;
+  height: 60px;
+  width: 60px;
+  border-radius: 0.125rem;
+  background-color: var(--dark-background-color);
+  transform: rotate(45deg);
+  outline: 0.0175rem solid var(--light-accent-color);
+  outline-offset: -4px;
+  z-index: 1;
+}
+
+.distance-text-container {
+  position: relative;
+  margin-top: 0.125rem;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.distance {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--light-accent-color);
+  letter-spacing: 0.75px;
+  line-height: 1.1;
+}
+
+.trail-info-block {
+  justify-content: space-between;
+}
+
+.hike-img-container {
+  width: 100%;
+  background-color: var(--dark-accent-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  margin: 0.75rem 0 0 0;
+  color: var(--light-accent-color);
+}
+
+.hike-sub-info--details {
+  padding: 0.25rem 0;
+  margin-top: 0.125rem;
+}
+
+.hike-sub-info--trails {
+  margin: 0.25rem 0 0 0;
+}
+
+.hike-sub-info--trails ul {
+  margin-left: 1rem;
+}
+
+.list-icon {
+  font-size: 1.4rem;
+  line-height: 0px;
+}
+
+.hike-context-nav-container {
+  justify-content: flex-end;
+}
+
+.hike-sub-info--footer {
+  justify-content: space-between;
+  margin: 0;
+}
+
+
 /*  USER SEARCH  */
 
 .search-results-container {
-margin-right: -1rem;
+  margin: 0 1rem;
+  overflow: hidden;
 }
 
 .search-results-list {
+  margin-right: -1rem;
   flex-wrap: wrap;
 }
 
