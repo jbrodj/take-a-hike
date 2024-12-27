@@ -366,8 +366,8 @@ h1 {
   font-size: 2.4rem;
 }
 
-.splash-nav {
-  bottom: 2rem;
+.splash-nav-content-container {
+  margin-top: -2rem;
 }
 
 
