@@ -55,15 +55,24 @@ def user_route(username):
     '''Renders hikes for a given user'''
     # Check if user is valid
     user = get_user_by_username(DB, username)
-    is_authorized_to_edit = False
     if not bool(user):
         return handle_error(request.host_url, error_messages['user_not_found'], 403)
+    # Default params
+    is_authorized_to_edit = False
+    follow_status = False
+    context_string = ''
     # Get hikes for given user
     hikes_list = get_hikes(DB, user.get('id'))
+    # Set follow_status if auth user is not same as current user page
+    if not session.get('username') == username:
+        user_id = get_user_by_username(DB, username).get('id')
+        followees_list = get_followees(DB, session.get('username'))
+        if user_id in followees_list:
+            follow_status = True
     # Return no data template if user's hikes list is empty
     if not hikes_list:
         return render_template(
-            'user.html', username=username, hikes_list=[], auth=is_authorized_to_edit)
+            'user.html', username=username, hikes_list=[], following=follow_status)
     # Check if authenticated user is same as user page (for edit/delete context menu)
     if session.get('username') == username:
         is_authorized_to_edit = True
