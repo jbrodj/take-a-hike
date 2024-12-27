@@ -6,7 +6,8 @@ from content import hike_form_content, error_messages
 from constants import DB
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
     get_all_usernames, get_area_id, get_hikes, get_hike_img_src, get_similar_usernames,
-    get_user_by_username, handle_error, login_required, update_hike, validate_hike_form)
+    get_context_string_from_referrer, get_user_by_username, handle_error, login_required,
+    update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
@@ -62,13 +63,17 @@ def user_route(username):
             # Check if it is a delete action
             if action == 'del':
                 delete_hike(hike_id, session.get('user_id'))
-                return redirect(username)
+                path = username + '?delete' + hike_id
+                return redirect(path)
             # Otherwise it is an edit action
-            path = '/edit-hike/' + action + '/' + hike_id
+            path = '/edit-hike/' + hike_id
             return redirect(path)
     # Render user page with list of that user's hikes
+    context_string = get_context_string_from_referrer(
+        request.referrer, request.query_string, session['username'])
     return render_template(
-        'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit)
+        'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit,
+        context_string=context_string)
 
 
 #  == USER SEARCH ==
@@ -205,15 +210,15 @@ def new_hike():
 
 #  == EDIT HIKE FORM ==
 
-@app.route('/edit-hike/<action>/<hike_id>', methods=['GET', 'POST'])
+@app.route('/edit-hike/<hike_id>', methods=['GET', 'POST'])
 @login_required
-def edit_hike(action, hike_id):
+def edit_hike(hike_id):
     '''Sends update to database to edit or delete hike data'''
     username = session.get('username')
     if request.method == 'POST':
-        # Check action for cancel and break out
-        if action == 'cancel':
-            path = '/users/' + username
+        # Check form for cancel action and break out
+        if request.form.get('action') == 'cancel':
+            path = '/users/' + username + '?cancel'
             return redirect(path)
         # Format and check form data
         existing_hike_data = get_hikes(DB, session.get('user_id'), hike_id)[0]
