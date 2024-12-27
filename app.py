@@ -5,9 +5,9 @@ from flask_session import Session
 from content import hike_form_content, error_messages
 from constants import DB
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
-    get_all_usernames, get_area_id, get_hikes, get_hike_img_src, get_similar_usernames,
-    get_context_string_from_referrer, get_user_by_username, handle_error, login_required,
-    update_hike, validate_hike_form)
+    follow, get_all_usernames, get_area_id, get_feed, get_followees, get_hikes, get_hike_img_src,
+    get_similar_usernames, get_context_string_from_referrer, get_user_by_username, handle_error,
+    login_required, update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
