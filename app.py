@@ -37,6 +37,17 @@ def index():
     return render_template('index.html')
 
 
+#  == FEED ==
+
+@app.route('/users/<username>/feed')
+@login_required
+def feed(username):
+    '''Renders feed template'''
+    hikes_list = get_feed(DB, username)
+    return render_template(
+        'user.html', username=username, hikes_list=hikes_list, is_feed=True)
+
+
 #  == USERS  ==
 
 @app.route('/users/<username>', methods=['GET', 'POST'])
