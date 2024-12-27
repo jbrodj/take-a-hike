@@ -303,6 +303,24 @@ def get_similar_usernames(db, query):
     return sorted_similar_users
 
 
+def follow(db, username, followee, action):
+    '''Takes db file, username of auth user, username of user to follow and action (follow/unfollow)'''
+    db_connection = create_connection(db)
+    follower_id = get_user_by_username(db, username)['id']
+    followee_id = get_user_by_username(db, followee)['id']
+    if action == 'follow':
+        try:
+            db_connection['cursor'].execute('INSERT OR IGNORE INTO follows (follower_id, followee_id) VALUES (?, ?)', (follower_id, followee_id,))
+        except sqlite3.Error as error:
+            print(error)
+    else:
+        try:
+            db_connection['cursor'].execute('DELETE FROM follows WHERE follower_id = (?) AND followee_id = (?)', (follower_id, followee_id,))
+        except sqlite3.Error as error:
+            print(error)
+    commit_close_conn(db_connection['connection'])
+
+
 def get_table_columns(db, table):
     '''Takes db file and table name as string
         Returns a list of provided table's column names
