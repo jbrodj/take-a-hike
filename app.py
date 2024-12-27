@@ -88,12 +88,40 @@ def user_route(username):
             # Otherwise it is an edit action
             path = '/edit-hike/' + hike_id
             return redirect(path)
+        # Otherwise check for context string
+        context_string = get_context_string_from_referrer(
+            request.referrer, request.query_string, session.get('username'))
     # Render user page with list of that user's hikes
-    context_string = get_context_string_from_referrer(
-        request.referrer, request.query_string, session['username'])
     return render_template(
         'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit,
-        context_string=context_string)
+        context_string=context_string, following=follow_status)
+
+
+#  == FOLLOW ==
+@app.route('/follow/<username>')
+@login_required
+def follow_user(username):
+    '''Performs follow operation
+        Re-renders user page
+    '''
+    # Perform follow operation
+    follow(DB, session['username'], username, 'follow')
+    path = '/users/' + username
+    return redirect(path)
+
+
+#  == UNFOLLOW ==
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow_user(username):
+    '''Performs follow operation
+        Re-renders user page
+    '''
+    # Perform unfollow operation
+    follow(DB, session['username'], username, 'unfollow')
+    path = '/users/' + username
+    return redirect(path)
 
 
 #  == USER SEARCH ==
