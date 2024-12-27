@@ -338,6 +338,28 @@ def get_followees(db, username):
     return followees_list
 
 
+def get_feed(db, username):
+    '''Takes db file and username.
+        Returns list of hikes.
+    '''
+    db_connection = create_connection(db)
+    followees_list = get_followees(db, username)
+    try:
+        data = db_connection['cursor'].execute('SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 1000')
+        hikes_data = db_connection['cursor'].fetchall()
+    except sqlite3.Error as error:
+        print(error)
+        return []
+    hikes_list = format_hikes(data, hikes_data)
+    feed_list = []
+    for hike in hikes_list:
+        if int(hike['user_id']) in followees_list:
+            username = get_username_from_user_id(db, hike.get('user_id')).get('username')
+            hike['username'] = username
+            feed_list.append(hike)
+    return feed_list
+
+
 def get_table_columns(db, table):
     '''Takes db file and table name as string
         Returns a list of provided table's column names
