@@ -5,17 +5,39 @@
   {% include 'context-msg.html' %}
 {% endif %}
 <div class="content-container">
-  <h2 class="template-heading">{{username.upper()}}'s recent hikes</h2>
+  <div class="user-heading-container flex-row">
+    {% if is_feed %}
+    <h2 class="template-heading">Recent hikes</h2>
+    {% else %}
+    <h2 class="template-heading">{{username.upper()}}'s recent hikes</h2>
+    {% endif %}
+    {% if username != session.get('username') %}
+    <div class="btn follow-btn flex-col">
+      {% if not following %}
+      <a href="/follow/{{username}}">Follow</a>
+      {%  else %}
+      <a href="/unfollow/{{username}}">Unfollow</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
   {% if not hikes_list %}
   {% include '/no-data.html' %}
   {% endif %}
   {% for hike in hikes_list %}
   <div class="hike-block">
+    {% if hike.get('username') %}
+    <h5 class="feed-user-heading">
+      <a href="{{request.baseurl}}/users/{{hike.get('username')}}">
+        {{hike.get('username').upper()}}:
+      </a>
+    </h5>
+    {% endif %}
     <div class="trail-block-top content-block flex-row">
       <div class="trail-heading-block flex-col">
-          <p class="hike-date">{{hike.get('hike_date')}}</p>
-          <h3>{{hike.get('area_name')}}</h3>
-          <p>Trailhead: {{hike.get('trailhead')}}</p>
+        <p class="hike-date">{{hike.get('hike_date')}}</p>
+        <h3>{{hike.get('area_name')}}</h3>
+        <p>Trailhead: {{hike.get('trailhead')}}</p>
       </div>
       <div class="distance-block">
         <div class="distance-diamond-element">
