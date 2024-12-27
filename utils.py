@@ -251,6 +251,24 @@ def get_user_by_username(db, username):
     return user
 
 
+def get_username_from_user_id(db, user_id):
+    '''Takes db file and user_id
+        Returns dict with user name related to id.
+    '''
+    db_connection = create_connection(db)
+    try:
+        data = db_connection['cursor'].execute('SELECT id, username from users WHERE id = (?)', (user_id,))
+    except sqlite3.Error as error:
+        print(error)
+        return []
+    user = {}
+    for row in data:
+        user['id'] = row[0]
+        user['username'] = row[1]
+    db_connection['connection'].close()
+    return user
+
+
 def get_similar_usernames(db, query):
     '''Takes database file and query string.
         Returns dict of usernames
