@@ -321,6 +321,23 @@ def follow(db, username, followee, action):
     commit_close_conn(db_connection['connection'])
 
 
+def get_followees(db, username):
+    '''Takes db file and username.
+        Returns list of user ids.
+    '''
+    followees_list = []
+    db_connection = create_connection(db)
+    follower_id = get_user_by_username(db, username)['id']
+    try:
+        data = db_connection['cursor'].execute('SELECT followee_id FROM follows WHERE follower_id = (?)', (follower_id,))
+    except sqlite3.Error as error:
+        print(error)
+        return []
+    for row in data:
+        followees_list.append(row[0])
+    return followees_list
+
+
 def get_table_columns(db, table):
     '''Takes db file and table name as string
         Returns a list of provided table's column names
