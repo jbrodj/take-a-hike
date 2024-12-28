@@ -12,13 +12,16 @@
     <h2 class="template-heading">{{username.upper()}}'s recent hikes</h2>
     {% endif %}
     {% if username != session.get('username') %}
+    {% if not following %}
     <div class="btn follow-btn flex-col">
-      {% if not following %}
       <a href="/follow/{{username}}">Follow</a>
-      {%  else %}
-      <a href="/unfollow/{{username}}">Unfollow</a>
-      {% endif %}
     </div>
+    {%  else %}
+    <div class="btn follow-btn unfollow-btn flex-col">
+      <a href="/unfollow/{{username}}">Unfollow</a>
+    </div>
+      <!-- <a href="/unfollow/{{username}}">Unfollow</a> -->
+      {% endif %}
     {% endif %}
   </div>
   {% if not hikes_list %}
