@@ -1,6 +1,7 @@
 .DS_Store
 /data
 /flask_session
+/static/img
 **/node_modules
 data.txt
 *.db
