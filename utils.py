@@ -251,6 +251,24 @@ def get_user_by_username(db, username):
     return user
 
 
+def get_username_from_user_id(db, user_id):
+    '''Takes db file and user_id
+        Returns dict with user name related to id.
+    '''
+    db_connection = create_connection(db)
+    try:
+        data = db_connection['cursor'].execute('SELECT id, username from users WHERE id = (?)', (user_id,))
+    except sqlite3.Error as error:
+        print(error)
+        return []
+    user = {}
+    for row in data:
+        user['id'] = row[0]
+        user['username'] = row[1]
+    db_connection['connection'].close()
+    return user
+
+
 def get_similar_usernames(db, query):
     '''Takes database file and query string.
         Returns dict of usernames
@@ -283,6 +301,63 @@ def get_similar_usernames(db, query):
     # Source: https://www.datacamp.com/tutorial/sort-a-dictionary-by-value-python
     sorted_similar_users = dict(sorted(similar_users.items(), key=lambda item: item[1], reverse=True))
     return sorted_similar_users
+
+
+def follow(db, username, followee, action):
+    '''Takes db file, username of auth user, username of user to follow and action (follow/unfollow)'''
+    db_connection = create_connection(db)
+    follower_id = get_user_by_username(db, username)['id']
+    followee_id = get_user_by_username(db, followee)['id']
+    if action == 'follow':
+        try:
+            db_connection['cursor'].execute('INSERT OR IGNORE INTO follows (follower_id, followee_id) VALUES (?, ?)', (follower_id, followee_id,))
+        except sqlite3.Error as error:
+            print(error)
+    else:
+        try:
+            db_connection['cursor'].execute('DELETE FROM follows WHERE follower_id = (?) AND followee_id = (?)', (follower_id, followee_id,))
+        except sqlite3.Error as error:
+            print(error)
+    commit_close_conn(db_connection['connection'])
+
+
+def get_followees(db, username):
+    '''Takes db file and username.
+        Returns list of user ids.
+    '''
+    followees_list = []
+    db_connection = create_connection(db)
+    follower_id = get_user_by_username(db, username)['id']
+    try:
+        data = db_connection['cursor'].execute('SELECT followee_id FROM follows WHERE follower_id = (?)', (follower_id,))
+    except sqlite3.Error as error:
+        print(error)
+        return []
+    for row in data:
+        followees_list.append(row[0])
+    return followees_list
+
+
+def get_feed(db, username):
+    '''Takes db file and username.
+        Returns list of hikes.
+    '''
+    db_connection = create_connection(db)
+    followees_list = get_followees(db, username)
+    try:
+        data = db_connection['cursor'].execute('SELECT * FROM hikes ORDER BY hike_date DESC LIMIT 1000')
+        hikes_data = db_connection['cursor'].fetchall()
+    except sqlite3.Error as error:
+        print(error)
+        return []
+    hikes_list = format_hikes(data, hikes_data)
+    feed_list = []
+    for hike in hikes_list:
+        if int(hike['user_id']) in followees_list:
+            username = get_username_from_user_id(db, hike.get('user_id')).get('username')
+            hike['username'] = username
+            feed_list.append(hike)
+    return feed_list
 
 
 def get_table_columns(db, table):

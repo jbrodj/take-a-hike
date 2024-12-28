@@ -5,9 +5,9 @@ from flask_session import Session
 from content import hike_form_content, error_messages
 from constants import DB
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
-    get_all_usernames, get_area_id, get_hikes, get_hike_img_src, get_similar_usernames,
-    get_context_string_from_referrer, get_user_by_username, handle_error, login_required,
-    update_hike, validate_hike_form)
+    follow, get_all_usernames, get_area_id, get_feed, get_followees, get_hikes, get_hike_img_src,
+    get_similar_usernames, get_context_string_from_referrer, get_user_by_username, handle_error,
+    login_required, update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
@@ -37,6 +37,17 @@ def index():
     return render_template('index.html')
 
 
+#  == FEED ==
+
+@app.route('/users/<username>/feed')
+@login_required
+def feed(username):
+    '''Renders feed template'''
+    hikes_list = get_feed(DB, username)
+    return render_template(
+        'user.html', username=username, hikes_list=hikes_list, is_feed=True)
+
+
 #  == USERS  ==
 
 @app.route('/users/<username>', methods=['GET', 'POST'])
@@ -44,15 +55,24 @@ def user_route(username):
     '''Renders hikes for a given user'''
     # Check if user is valid
     user = get_user_by_username(DB, username)
-    is_authorized_to_edit = False
     if not bool(user):
         return handle_error(request.host_url, error_messages['user_not_found'], 403)
+    # Default params
+    is_authorized_to_edit = False
+    follow_status = False
+    context_string = ''
     # Get hikes for given user
     hikes_list = get_hikes(DB, user.get('id'))
+    # Set follow_status if auth user is not same as current user page
+    if not session.get('username') == username:
+        user_id = get_user_by_username(DB, username).get('id')
+        followees_list = get_followees(DB, session.get('username'))
+        if user_id in followees_list:
+            follow_status = True
     # Return no data template if user's hikes list is empty
     if not hikes_list:
         return render_template(
-            'user.html', username=username, hikes_list=[], auth=is_authorized_to_edit)
+            'user.html', username=username, hikes_list=[], following=follow_status)
     # Check if authenticated user is same as user page (for edit/delete context menu)
     if session.get('username') == username:
         is_authorized_to_edit = True
@@ -68,12 +88,40 @@ def user_route(username):
             # Otherwise it is an edit action
             path = '/edit-hike/' + hike_id
             return redirect(path)
+        # Otherwise check for context string
+        context_string = get_context_string_from_referrer(
+            request.referrer, request.query_string, session.get('username'))
     # Render user page with list of that user's hikes
-    context_string = get_context_string_from_referrer(
-        request.referrer, request.query_string, session['username'])
     return render_template(
         'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit,
-        context_string=context_string)
+        context_string=context_string, following=follow_status)
+
+
+#  == FOLLOW ==
+@app.route('/follow/<username>')
+@login_required
+def follow_user(username):
+    '''Performs follow operation
+        Re-renders user page
+    '''
+    # Perform follow operation
+    follow(DB, session['username'], username, 'follow')
+    path = '/users/' + username
+    return redirect(path)
+
+
+#  == UNFOLLOW ==
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow_user(username):
+    '''Performs follow operation
+        Re-renders user page
+    '''
+    # Perform unfollow operation
+    follow(DB, session['username'], username, 'unfollow')
+    path = '/users/' + username
+    return redirect(path)
 
 
 #  == USER SEARCH ==

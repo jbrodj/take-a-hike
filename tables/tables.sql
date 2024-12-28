@@ -36,3 +36,11 @@ CREATE TABLE IF NOT EXISTS hikes (
   FOREIGN KEY (area_id) REFERENCES areas(id)
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE IF NOT EXISTS follows (
+  follower_id INTEGER NOT NULL,
+  followee_id INTEGER NOT NULL,
+  PRIMARY KEY (follower_id, followee_id)
+  FOREIGN KEY (follower_id) REFERENCES users(id)
+  FOREIGN KEY (followee_id) REFERENCES users(id)
+);
