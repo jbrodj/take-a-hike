@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block main %}
+<div class="content-container">
+  <h2 class="template-heading">Upload photo</h2>
+  <div class="form-block">
+    <div class="content-block">
+      <form method="post" enctype=multipart/form-data action="{{ url_for('upload') }}">
+        <div class="form-content">
+          <label for="photo_upload" class="form-label">Upload</label>
+          <input type="file" name="photo_upload" accept="image/*" autofocus class="form-control" id="photo_upload">
+        </div>
+        <button class="btn">Upload</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
