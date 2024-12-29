@@ -38,6 +38,25 @@ def after_request(response):
     response.headers['Pragma'] = 'no-cache'
     return response
 
+@app.route('/upload', methods=['GET', 'POST'])
+@login_required
+def upload():
+    '''Renders img upload template and runs upload logic'''
+    # Source: https://pypi.org/project/Flask-Reuploaded/
+    # Legacy documentation: https://flask-uploads.readthedocs.io/en/latest/
+    if request.method == 'POST':
+        image_upload.save(request.files['photo_upload'])
+        filename = request.files["photo_upload"].filename
+        # TODO:
+        # Call cloudinary store function
+        # Store cloudinary img id in hikes table
+        return render_template('image-upload.html', filename=filename)
+
+    if 'photo' in request.files:
+        print('we have an image')
+
+    return render_template('image-upload.html')
+
 
 # == SPLASH PAGE ==
 
