@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+cloudinary = "*"
+flask = "*"
+werkzeug = "*"
+flask-reuploaded = "*"
+flask-session = "*"
+
+[dev-packages]
+
+[scripts]
+db = "sqlite3 hikes.db"
+init_sql = "python3 init_sql.py"
+start = "flask run -h localhost -p 5001"
+
+[requires]
+python_version = "3.9"
