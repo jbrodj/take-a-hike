@@ -5,7 +5,7 @@ const autofocus = () => {
     form = document.getElementsByClassName('user-input-form')
     firstInput = form[0]?.children[0]?.children[0]
     // Tree is: <form.user-input-form> --> <div.form-content> --> <label> + <input>
-    firstInput.focus()
+    firstInput?.focus()
   }, 0)
 }
 
