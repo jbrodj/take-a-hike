@@ -8,7 +8,7 @@ from cloudinary import CloudinaryImage
 from dotenv import load_dotenv
 from flask_session import Session
 from content import hike_form_content, error_messages
-from constants import DB
+from constants import DB, CLOUDINARY_URL_100, CLOUDINARY_URL_900
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
     follow, get_all_usernames, get_area_id, get_feed, get_followees, get_hikes, get_hike_img_src,
     get_similar_usernames, get_context_string_from_referrer, get_user_by_username, handle_error,
@@ -109,7 +109,7 @@ def user_route(username):
     # Render user page with list of that user's hikes
     return render_template(
         'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit,
-        context_string=context_string, following=follow_status)
+        context_string=context_string, following=follow_status, cloudinary_url=CLOUDINARY_URL_900)
 
 
 #  == FOLLOW ==
@@ -171,7 +171,8 @@ def user_search():
         return render_template(
             'user_search.html',
             query=query_param,
-            user_list=user_list
+            user_list=user_list,
+            cloudinary_url=CLOUDINARY_URL_100
             )
     # Route directly to blank users search page.
     return render_template('user_search.html')

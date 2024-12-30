@@ -55,7 +55,7 @@
     <hr class="divider no-img-divider">
     {% else %}
     <div class="img-container hike-img-container">
-      <img src="{{hike.get('image_url')}}" alt="{{hike.get('image_alt')}}" loading="lazy">
+      <img src="{{cloudinary_url + hike.get('image_url')}}" alt="{{hike.get('image_alt')}}" loading="lazy">
       <div class="hike-sub-info--details">
         <p>{{hike.get('other_info')}}</p>
       </div>
