@@ -13,6 +13,7 @@ flask-session = "*"
 python-dotenv = "*"
 
 [dev-packages]
+pylint = "*"
 
 [scripts]
 db = "sqlite3 hikes.db"
