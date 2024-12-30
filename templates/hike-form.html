@@ -5,7 +5,7 @@
   <h2 class="template-heading">Log a new hike</h2>
   <div class="form-block">
       <div class="content-block">
-      <form method="post" class="flex-col" id="new-hike-form" enctype=multipart/form-data>
+      <form method="post" class="user-input-form flex-col" id="new-hike-form" enctype=multipart/form-data>
         {% for field in form_content %}
         <div class="form-content flex-col">
           <label 
@@ -64,5 +64,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/autofocus.js"></script>
 {% endblock %}

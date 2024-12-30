@@ -1,7 +1,12 @@
-// Get first element of the log new hike form and set it to focus when page loads.
-form = document.getElementById('new-hike-form')
-firstInput = form.children[0].children[1]
+// Get first element in a form (if present) and set it to focus when page loads.
+const autofocus = () => {
 
-setTimeout(() => {
-  firstInput.focus()
-}, 0)
+  setTimeout(() => {
+    form = document.getElementsByClassName('user-input-form')
+    firstInput = form[0]?.children[0]?.children[0]
+    // Tree is: <form.user-input-form> --> <div.form-content> --> <label> + <input>
+    firstInput.focus()
+  }, 0)
+}
+
+autofocus()
