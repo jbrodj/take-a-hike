@@ -79,7 +79,8 @@ def add_hike(user_id, area_id, form_data):
     '''Takes hike data from form and area id from database.
         Creates new hike in hikes table and inserts data.
     '''
-    hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = form_data.values()
+    hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = form_data.values()
+    # `image_url` is destructured from the last index because we are inserting it manually in new_hike/edit_hike routes
     db_connection = create_connection('hikes.db')
     try:
         db_connection['cursor'].execute(
@@ -93,7 +94,7 @@ def add_hike(user_id, area_id, form_data):
 def update_hike(existing_hike_data, updated_hike_data):
     '''Takes preexisting hike data, and data from updade hike form'''
     hike_id = existing_hike_data.get('id')
-    hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = updated_hike_data.values()
+    hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = updated_hike_data.values()
     db_connection = create_connection('hikes.db')
     try:
         db_connection['cursor'].execute(
