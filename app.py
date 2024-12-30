@@ -59,7 +59,11 @@ def feed(username):
     '''Renders feed template'''
     hikes_list = get_feed(DB, username)
     return render_template(
-        'user.html', username=username, hikes_list=hikes_list, cloudinary_url=CLOUDINARY_URL_900, is_feed=True)
+        'user.html',
+        username=username,
+        hikes_list=hikes_list,
+        cloudinary_url=CLOUDINARY_URL_900,
+        is_feed=True)
 
 
 #  == USERS  ==
