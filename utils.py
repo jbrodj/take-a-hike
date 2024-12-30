@@ -328,7 +328,7 @@ def get_followees(db, username):
     '''
     followees_list = []
     db_connection = create_connection(db)
-    follower_id = get_user_by_username(db, username)['id']
+    follower_id = get_user_by_username(db, username).get('id')
     try:
         data = db_connection['cursor'].execute('SELECT followee_id FROM follows WHERE follower_id = (?)', (follower_id,))
     except sqlite3.Error as error:
