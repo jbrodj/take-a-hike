@@ -1,9 +1,7 @@
 '''Flask for rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_session import Session
-# Local imports
 from content import hike_form_content, error_messages
 from constants import DB
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
@@ -18,16 +16,6 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 Session(app)
-
-# Configuration for image upload functionality
-# -- flask-reuploaded for file handling from UI
-# Source: https://flask-reuploaded.readthedocs.io/en/latest/getting_started/
-# Set destination for image uploads
-app.config['UPLOADED_PHOTOS_DEST'] = 'static/img'
-# Instantiate upload set
-image_upload = UploadSet('photos', IMAGES)
-# Store uploadset
-configure_uploads(app, image_upload)
 
 
 @app.after_request
