@@ -407,12 +407,14 @@ def format_hike_form_data(data):
 
 # ==== CLOUDINARY FILE HANDLING ====
 
-def process_img_upload(file):
-    '''Takes file location from file input
+def process_img_upload(file, existing_file=''):
+    '''Takes file location from file input, and optional existing file from prev import
         Returns cloudinary public_id string
     '''
+    # Use existing file (or default value of '' if no file is uploaded)
+    # Editing an existing hike will keep previous image, new hike will submit with no image.
     if not file:
-        return ''
+        return existing_file
     # Create public_id from username image filename without file type extension
     filename = file.filename.split('.')[0]
     public_id = session.get('username') + filename
