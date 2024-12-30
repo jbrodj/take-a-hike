@@ -1,6 +1,11 @@
 '''Flask for rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from cloudinary import CloudinaryImage
+from dotenv import load_dotenv
 from flask_session import Session
 from content import hike_form_content, error_messages
 from constants import DB
@@ -16,6 +21,16 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 Session(app)
+
+# -- cloudinary config -- for storing and serving image content
+    # Source: https://cloudinary.com/documentation/python_quickstart
+# Load environment variables
+load_dotenv()
+# Pass cloud name to config method
+cloudinary.config(
+    cloud_name = 'take-a-hike',
+    secure = True,
+)
 
 
 @app.after_request
