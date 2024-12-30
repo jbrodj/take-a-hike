@@ -11,7 +11,8 @@
 ---- This will initialize sql database and create table schema.
 
 #### Run Flask development server 🏃‍➡️
-* Use `pipenv run start`
+* Use `pipenv run start` 
+---- Or run `export FLASK_DEBUG=1 && flask run -h localhost -p 5001` for live reloading
 * Find app running at `http://localhost:5001/`
 
 #### If you need to access the sqlite3 database 📊
