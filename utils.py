@@ -1,6 +1,7 @@
 ''' wraps copies original function's data to decorated function '''
 from functools import wraps
 import sqlite3
+import cloudinary
 from flask import render_template, session, redirect
 from content import hike_form_content
 # pylint: disable=line-too-long
@@ -402,6 +403,27 @@ def format_hike_form_data(data):
     '''
     formatted_data = convert_to_dict(data, {})
     return formatted_data
+
+
+# ==== CLOUDINARY FILE HANDLING ====
+
+def process_img_upload(file):
+    '''Takes file location from file input
+        Returns cloudinary public_id string
+    '''
+    if not file:
+        return ''
+    # Create public_id from username image filename without file type extension
+    filename = file.filename.split('.')[0]
+    public_id = session.get('username') + filename
+    # Call cloudinary store function (passing file location and public id)
+    cloudinary.uploader.upload(
+        file,
+        public_id=public_id,
+        unique_filename=False,
+        overwrite=True,
+        eager='c_lfill,w_900|q_auto:best')
+    return public_id
 
 
 #  ==== FORM VALIDATION ====
