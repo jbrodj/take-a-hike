@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from cloudinary import CloudinaryImage
 from dotenv import load_dotenv
 from flask_session import Session
 from content import hike_form_content, error_messages
@@ -12,7 +11,7 @@ from constants import DB, CLOUDINARY_URL_100, CLOUDINARY_URL_900
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
     follow, get_all_usernames, get_area_id, get_feed, get_followees, get_hikes, get_hike_img_src,
     get_similar_usernames, get_context_string_from_referrer, get_user_by_username, handle_error,
-    login_required, update_hike, validate_hike_form)
+    login_required, process_img_upload, update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
@@ -260,6 +259,13 @@ def new_hike():
             return handle_error(request.url, error_messages[form_error], 403)
         # Format form data
         hike_data = format_hike_form_data(form_data)
+        # Upload image file and set source as cloudinary public_id
+        image_id = process_img_upload(request.files.get('image_url'))
+
+        # Replace img url with cloudinary id
+        # hike_data['image_url'] = src_url
+        hike_data['image_url'] = image_id
+
         # Insert to areas, trails, and hikes tables
         area_name = hike_data.get('area_name')
         trail_list = hike_data.get('trails_cs')
@@ -291,6 +297,11 @@ def edit_hike(hike_id):
         if form_error:
             return handle_error(request.url, error_messages[form_error], 403)
         del updated_hike_data['action']
+        # Upload image file and set source as cloudinary public_id
+        image_id = process_img_upload(
+            request.files.get('image_url'), existing_hike_data.get('image_url'))
+        # Set image url with either existing or updated value
+        updated_hike_data['image_url'] = image_id
         # Insert updated data into database
         update_hike(existing_hike_data, updated_hike_data)
         # Redirect to user page
