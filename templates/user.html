@@ -7,9 +7,15 @@
 <div class="content-container">
   <div class="user-heading-container flex-row">
     {% if is_feed %}
-    <h2 class="template-heading">Recent hikes</h2>
+    <div class="template-heading">
+      <h2>Recent hikes</h2>
+      <p>In your network</p>
+    </div>
     {% else %}
-    <h2 class="template-heading">{{username.upper()}}'s recent hikes</h2>
+    <div class="template-heading">
+      <h2>{{username.upper()}}</h2>
+      <p>Recent hikes</p>
+    </div>
     {% endif %}
     {% if username != session.get('username') %}
     {% if not following %}
@@ -55,7 +61,7 @@
     <hr class="divider no-img-divider">
     {% else %}
     <div class="img-container hike-img-container">
-      <img src="{{hike.get('image_url')}}" alt="{{hike.get('image_alt')}}" loading="lazy">
+      <img src="{{cloudinary_url + hike.get('image_url')}}" alt="{{hike.get('image_alt')}}" loading="lazy">
       <div class="hike-sub-info--details">
         <p>{{hike.get('other_info')}}</p>
       </div>

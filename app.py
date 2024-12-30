@@ -1,13 +1,17 @@
 '''Flask for rendering, routing, and accessing request properties'''
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from dotenv import load_dotenv
 from flask_session import Session
 from content import hike_form_content, error_messages
-from constants import DB
+from constants import DB, CLOUDINARY_URL_100, CLOUDINARY_URL_900
 from utils import (add_area, add_hike, add_trail, add_user, delete_hike, format_hike_form_data,
     follow, get_all_usernames, get_area_id, get_feed, get_followees, get_hikes, get_hike_img_src,
     get_similar_usernames, get_context_string_from_referrer, get_user_by_username, handle_error,
-    login_required, update_hike, validate_hike_form)
+    login_required, process_img_upload, update_hike, validate_hike_form)
 
 
 # Configure app and instantiate Session
@@ -16,6 +20,16 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 Session(app)
+
+# -- cloudinary config -- for storing and serving image content
+    # Source: https://cloudinary.com/documentation/python_quickstart
+# Load environment variables
+load_dotenv()
+# Pass cloud name to config method
+cloudinary.config(
+    cloud_name = 'take-a-hike',
+    secure = True,
+)
 
 
 @app.after_request
@@ -45,7 +59,11 @@ def feed(username):
     '''Renders feed template'''
     hikes_list = get_feed(DB, username)
     return render_template(
-        'user.html', username=username, hikes_list=hikes_list, is_feed=True)
+        'user.html',
+        username=username,
+        hikes_list=hikes_list,
+        cloudinary_url=CLOUDINARY_URL_900,
+        is_feed=True)
 
 
 #  == USERS  ==
@@ -94,7 +112,7 @@ def user_route(username):
     # Render user page with list of that user's hikes
     return render_template(
         'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit,
-        context_string=context_string, following=follow_status)
+        context_string=context_string, following=follow_status, cloudinary_url=CLOUDINARY_URL_900)
 
 
 #  == FOLLOW ==
@@ -156,7 +174,8 @@ def user_search():
         return render_template(
             'user_search.html',
             query=query_param,
-            user_list=user_list
+            user_list=user_list,
+            cloudinary_url=CLOUDINARY_URL_100
             )
     # Route directly to blank users search page.
     return render_template('user_search.html')
@@ -244,6 +263,13 @@ def new_hike():
             return handle_error(request.url, error_messages[form_error], 403)
         # Format form data
         hike_data = format_hike_form_data(form_data)
+        # Upload image file and set source as cloudinary public_id
+        image_id = process_img_upload(request.files.get('image_url'))
+
+        # Replace img url with cloudinary id
+        # hike_data['image_url'] = src_url
+        hike_data['image_url'] = image_id
+
         # Insert to areas, trails, and hikes tables
         area_name = hike_data.get('area_name')
         trail_list = hike_data.get('trails_cs')
@@ -275,6 +301,11 @@ def edit_hike(hike_id):
         if form_error:
             return handle_error(request.url, error_messages[form_error], 403)
         del updated_hike_data['action']
+        # Upload image file and set source as cloudinary public_id
+        image_id = process_img_upload(
+            request.files.get('image_url'), existing_hike_data.get('image_url'))
+        # Set image url with either existing or updated value
+        updated_hike_data['image_url'] = image_id
         # Insert updated data into database
         update_hike(existing_hike_data, updated_hike_data)
         # Redirect to user page

@@ -5,7 +5,7 @@
   <h2 class="template-heading">Log a new hike</h2>
   <div class="form-block">
       <div class="content-block">
-      <form method="post" class="flex-col" id="new-hike-form">
+      <form method="post" class="user-input-form flex-col" id="new-hike-form" enctype=multipart/form-data>
         {% for field in form_content %}
         <div class="form-content flex-col">
           <label 
@@ -26,6 +26,14 @@
               value="{{selected_hike_data.get(form_content[field].get('name'), '')}}"
               class="form-control"
             >
+            {% elif form_content[field].get('inputType') == 'file' %}
+            <input
+              type="file" 
+              name="{{form_content[field].get('name')}}" 
+              accept="image/*" 
+              class="form-control" 
+              id="{{form_content[field].get('name')}}"
+              value="{{selected_hike_data.get('image_url')}}">
           {% elif form_content[field].get('required') == True %}
             <input 
               type="{{form_content[field].get('inputType')}}" 
@@ -56,5 +64,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/autofocus.js"></script>
 {% endblock %}

@@ -20,7 +20,6 @@ const closeContextMsg = () => {
   closeBtn = document.getElementById('contextCloseBtn')
 
   closeBtn?.addEventListener('click', (event) => {
-    console.log('close btn event')
     msgContainer.classList.add('hidden')
   })
 }

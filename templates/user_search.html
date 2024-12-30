@@ -2,10 +2,10 @@
 
 {% block main %}
 <div class="content-container">
-  <h2 class="template-heading">Find a user</h2>
+  <h2 class="template-heading">Find a hiker</h2>
   <div class="form-block">
     <div class="content-block">
-      <form action="/users" method="get" class="flex-col">
+      <form action="/users" method="get" class="user-input-form flex-col">
         <div class="form-content flex-col">
           <label for="user_search" class="form-label">Search by username</label>
           <input autofocus required type="search" name="user_search" id="user_search" class="form-control" maxlength="14" value="{{query}}">

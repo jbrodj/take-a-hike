@@ -15,7 +15,7 @@
         <i class="fas fa-tree user-card-img-placeholder"></i>
       </div>
       {% else %}
-      <img src="{{user.get('img_src')}}" alt="{{img_alt}}" loading="lazy">
+      <img src="{{cloudinary_url + user.get('img_src')}}" alt="{{img_alt}}" loading="lazy">
       {% endif %}
     </div>
   </div>
