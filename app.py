@@ -59,7 +59,7 @@ def feed(username):
     '''Renders feed template'''
     hikes_list = get_feed(DB, username)
     return render_template(
-        'user.html',
+        'feed.html',
         username=username,
         hikes_list=hikes_list,
         cloudinary_url=CLOUDINARY_URL_900,
@@ -90,7 +90,7 @@ def user_route(username):
     # Return no data template if user's hikes list is empty
     if not hikes_list:
         return render_template(
-            'user.html', username=username, hikes_list=[], following=follow_status)
+            'feed.html', username=username, hikes_list=[], following=follow_status)
     # Check if authenticated user is same as user page (for edit/delete context menu)
     if session.get('username') == username:
         is_authorized_to_edit = True
@@ -111,7 +111,7 @@ def user_route(username):
             request.referrer, request.query_string, session.get('username'))
     # Render user page with list of that user's hikes
     return render_template(
-        'user.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit,
+        'feed.html', username=username, hikes_list=hikes_list, auth=is_authorized_to_edit,
         context_string=context_string, following=follow_status, cloudinary_url=CLOUDINARY_URL_900)
 
 
@@ -160,7 +160,7 @@ def user_search():
         # Get similar usernames.
         similar_usernames = get_similar_usernames(DB, query_param)
         if not similar_usernames and not exact_match:
-            return render_template('user_search.html', query=query_param, user_list='no_match')
+            return render_template('user-search.html', query=query_param, user_list='no_match')
         user_list = []
         for user in similar_usernames:
             is_exact_match = False
@@ -172,13 +172,13 @@ def user_search():
             user_list.append(
                 {'username': user, 'img_src': most_recent_hike_img, 'exact_match': is_exact_match})
         return render_template(
-            'user_search.html',
+            'user-search.html',
             query=query_param,
             user_list=user_list,
             cloudinary_url=CLOUDINARY_URL_100
             )
     # Route directly to blank users search page.
-    return render_template('user_search.html')
+    return render_template('user-search.html')
 
 
 # == SIGN UP ==
