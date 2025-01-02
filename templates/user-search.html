@@ -8,7 +8,7 @@
       <form action="/users" method="get" class="user-input-form flex-col">
         <div class="form-content flex-col">
           <label for="user_search" class="form-label">Search by username</label>
-          <input autofocus required type="search" name="user_search" id="user_search" class="form-control" maxlength="14" value="{{query}}">
+          <input autofocus autocomplete="off" required type="search" name="user_search" id="user_search" class="form-control" maxlength="14" value="{{query}}">
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
@@ -16,6 +16,6 @@
   </div>
 </div>
 {% if user_list %}
-  {% include 'user_search_results.html' %}
+  {% include 'user-search-results.html' %}
 {% endif %}
 {% endblock %}

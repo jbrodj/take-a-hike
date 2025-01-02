@@ -26,7 +26,6 @@
     <div class="btn follow-btn unfollow-btn flex-col">
       <a href="/unfollow/{{username}}">Unfollow</a>
     </div>
-      <!-- <a href="/unfollow/{{username}}">Unfollow</a> -->
       {% endif %}
     {% endif %}
   </div>
@@ -38,7 +37,7 @@
     {% if hike.get('username') %}
     <h5 class="feed-user-heading">
       <a href="{{request.baseurl}}/users/{{hike.get('username')}}">
-        {{hike.get('username').upper()}}:
+        {{hike.get('username').upper()}}
       </a>
     </h5>
     {% endif %}
