@@ -1,4 +1,4 @@
-''' wraps copies original function's data to decorated function '''
+'''This module houses all utility functions used in the python server'''
 from functools import wraps
 import sqlite3
 import cloudinary
@@ -476,7 +476,7 @@ def login_required(function):
 
 def get_context_string_from_referrer(referrer, current_path, username):
     '''Takes http request referrer & path, and username from session.
-        Returns string.
+        Returns string or None.
     '''
     # If 'my-hikes' in query string, user was routed from main nav
     if 'my-hikes' in str(current_path):

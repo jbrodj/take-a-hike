@@ -1,4 +1,4 @@
-'''Input/Label info used for generating New Hike form markup
+'''This module contains content information organized into dictionaries.
 '''
 # pylint: disable=line-too-long
 hike_form_content = {
