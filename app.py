@@ -1,4 +1,4 @@
-'''Flask for rendering, routing, and accessing request properties'''
+'''This module contains app and service configuration and all routes for the application'''
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import cloudinary

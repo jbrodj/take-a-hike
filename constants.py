@@ -1,5 +1,6 @@
 '''Constants for python functions'''
 # pylint: disable=line-too-long
+
 # Database file string
 DB = 'hikes.db'
 # Cloudinary urls for limit fill specified width, and quality

@@ -31,7 +31,7 @@
 * `.quit` to exit sqlite3 prompt
 
 
-## App description 📝
+## App description & design notes 📝
 Take a Hike 🥾 is a social media application for logging and sharing information about hikes!
 
 ### App.py
