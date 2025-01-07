@@ -36,36 +36,40 @@ def convert_to_dict(tuple_list, dictionary):
     return dictionary
 
 
-def add_user(username, password_hash):
+def add_user(db, username, password_hash):
     '''Takes username string and hashed password string
     '''
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
     except sqlite3.Error as error:
         print(error)
+        return error
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def add_area(area_name):
+def add_area(db, area_name):
     '''Takes area name from form.
         Inserts area data into areas table.
     '''
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute(
             'INSERT OR IGNORE INTO areas (area_name) VALUES (?)', (area_name, ))
     except sqlite3.Error as error:
         print(error)
+        return 1
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def add_trail(area_id, trail_names):
+def add_trail(db, area_id, trail_names):
     '''Takes area name and comma-separated list of trail names from form.
         Retrieves area ID from db, and inserts trail data into db.
     '''
     trail_list = trail_names.split(', ')
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     for trail_name in trail_list:
         try:
             db_connection['cursor'].execute(
@@ -73,30 +77,34 @@ def add_trail(area_id, trail_names):
                 [area_id, trail_name])
         except sqlite3.Error as error:
             print(error)
+            return 1
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def add_hike(user_id, area_id, form_data):
+def add_hike(db, user_id, area_id, form_data):
     '''Takes hike data from form and area id from database.
         Creates new hike in hikes table and inserts data.
     '''
     hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = form_data.values()
     # `image_url` is destructured from the last index because we are inserting it manually in new_hike/edit_hike routes
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute(
             'INSERT INTO hikes (hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
     except sqlite3.Error as error:
         print(error)
+        return 1
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def update_hike(existing_hike_data, updated_hike_data):
+def update_hike(db, existing_hike_data, updated_hike_data):
     '''Takes preexisting hike data, and data from updade hike form'''
     hike_id = existing_hike_data.get('id')
     hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = updated_hike_data.values()
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute(
             'UPDATE hikes SET hike_date = (?), area_name = (?), trailhead = (?), trails_cs = (?), distance_km = (?), image_url = (?), image_alt = (?), map_link = (?), other_info = (?) WHERE id = (?)',
@@ -106,9 +114,9 @@ def update_hike(existing_hike_data, updated_hike_data):
     commit_close_conn(db_connection['connection'])
 
 
-def delete_hike(hike_id, user_id):
+def delete_hike(db, hike_id, user_id):
     '''Takes the id of selected hike and id of logged in user'''
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute(
             'DELETE FROM hikes WHERE id = (?) AND user_id = (?)',
