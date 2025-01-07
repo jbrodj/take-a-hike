@@ -12,6 +12,7 @@ flask-reuploaded = "*"
 flask-session = "*"
 pylint = "*"
 python-dotenv = "*"
+pytest = "*"
 
 [dev-packages]
 pylint = "*"
