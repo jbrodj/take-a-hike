@@ -43,9 +43,9 @@ def test_get_context_string_from_referrer():
 
 class TestAddAndRetrieveUser:
     '''Test functionality of adding and retreiving users from the users SQLite table. 
-        Must be run as a suite.
+        Must be run as a suite because the subsequent tests use the database entries that
+        `test_add_user` test sets up.
     '''
-
     # Construct mock data
     DB = 'test.db'
 
