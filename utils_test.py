@@ -7,16 +7,38 @@ from utils import  (
         convert_to_dict,
         create_connection,
         get_all_usernames,
+        get_context_string_from_referrer,
         get_similar_usernames,
         get_user_by_username,
         get_username_from_user_id,
         )
+# pylint: disable=line-too-long
 
 
 def test_convert_to_dict():
     '''Test convert_to_dict fn'''
     tuple_list = [('name', 'steve'), ('occupation', 'nozzgobbler')]
     assert convert_to_dict(tuple_list, {}) == {'name': 'steve', 'occupation': 'nozzgobbler'}
+
+
+def test_get_context_string_from_referrer():
+    '''Tests that the correct context string is returned from the given referrer, path and username'''
+    mock_referrer = 'http://takeahike.com/users/coolstuff/evencoolerstuff/wow/login/seriouslysocool/'
+    mock_current_path = 'http://takeahike.com/users/myname'
+    mock_username = 'frannie'
+
+    # Check that referrer logic produces correct string and that username is correctly displayed for login referrer.
+    assert get_context_string_from_referrer(mock_referrer ,mock_current_path, mock_username) == f'Logged in as {mock_username.upper()}.'
+    # Check that path logic produces expected string
+    mock_deleted_current_path = 'http://takeahike.com/users/myname?deleted'
+    assert get_context_string_from_referrer(mock_referrer ,mock_deleted_current_path, mock_username) == 'Hike deleted.'
+    # Check for no context string if routed from main nav
+    mock_nav_current_path = 'http://takeahike.com/users/myname?my-hikes'
+    assert get_context_string_from_referrer(mock_referrer ,mock_nav_current_path, mock_username) is None
+    # Check for no context string if referrer and path don't contain any specified strings
+    mock_null_referrer = 'https://takeahike.com/cool/stuff/wow/users/more-users/even-more-users/coolstuffwow'
+    mock_null_current_path = 'https://takeahike.com/reasons-why-this-is-the-best-app-ever/even-more-reasons-why'
+    assert get_context_string_from_referrer(mock_null_referrer ,mock_null_current_path, mock_username) is None
 
 
 class TestAddAndRetrieveUser:
