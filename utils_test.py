@@ -6,8 +6,11 @@ from utils import  (
         commit_close_conn,
         convert_to_dict,
         create_connection,
+        follow,
         get_all_usernames,
         get_context_string_from_referrer,
+        get_feed,
+        get_followees,
         get_similar_usernames,
         get_user_by_username,
         get_username_from_user_id,
@@ -142,4 +145,116 @@ class TestAddAndRetrieveUser:
         # Rm temporary db file
         db_path = f'./{db}'
         os.remove(db_path)
+        assert os.path.exists(db_path) is False
+
+
+class TestFollowUnfollowFeedFlows:
+    '''Test flow where user follows another user, '''
+
+    DB = 'test.db'
+    # Create mocked data
+    mock_users = [
+        {'username': 'Suze', 'password_hash': 'abcdefghijklmnopqrstuvwxyz123456'},
+        {'username': 'Frank', 'password_hash': '654321zyxwvutsrqponmlkjihgfedcba'},
+    ]
+
+    # Setup:
+    def setup(self):
+        '''Run setup operations for tests'''
+        # Run init_sql runner fn with test environment arg to create table schema in a temporary db file
+        runner('test')
+        # Create two users
+        db_connection = create_connection(self.DB)
+        for user in self.mock_users:
+            db_connection['cursor'].execute('INSERT OR IGNORE INTO users (username, password_hash) VALUES (?, ?)', (user['username'], user['password_hash'],))
+        commit_close_conn(db_connection['connection'])
+        # Verify users in db
+        assert len(get_all_usernames(self.DB)) == len(self.mock_users)
+
+
+    def test_follow(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username'], cleanup=True):
+        '''Test ability to follow a user and retrieve expected followees list'''
+        # Run setup
+        self.setup()
+        # Check follow for error or successful return
+        assert follow(self.DB, user_1, user_2, 'follow') == 0
+        # Check get_followees for expected followees list
+        assert len(get_followees(self.DB, user_1)) == 1
+        db_connection = create_connection(self.DB)
+        # Fetch the user id for user_2
+        id_data = db_connection['cursor'].execute('SELECT id FROM users WHERE username = (?)', (user_2,))
+        for row in id_data:
+            user_2_id = row[0]
+        db_connection['connection'].close()
+        # Check for user_2's id in followees list
+        assert user_2_id in get_followees(self.DB, user_1)
+        # Run cleanup
+        if cleanup:
+            self.cleanup()
+
+
+    def test_unfollow(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username'], cleanup=True):
+        '''Test ability to unfollow a user and retrieve expected followees list'''
+        # Set up by running the follow flow
+        self.test_follow(cleanup=False)
+        # Check unfollow action for error or successful return
+        assert follow(self.DB, user_1, user_2, 'unfollow') == 0
+        # Check get_followees again for expected empty followees list
+        assert len(get_followees(self.DB, user_1)) == 0
+        # Run cleanup
+        if cleanup:
+            self.cleanup()
+
+
+    def test_get_feed(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username']):
+        '''Test ability to generate list of hikes from user's followees list'''
+        # Set up by running the follow flow to create two users and have the first user follow the second user
+        self.test_follow(cleanup=False)
+        # Add a hike to second user
+        # Fetch the user id for user_2
+        db_connection = create_connection(self.DB)
+        id_data = db_connection['cursor'].execute('SELECT id FROM users WHERE username = (?)', (user_2,))
+        for row in id_data:
+            user_2_id = row[0]
+        db_connection['connection'].close()
+        mock_hike = {
+            'hike_date': '2025-01-01',
+            'user_id': str(user_2_id),
+            'area_id': 1,
+            'area_name': 'Kewl Place',
+            'trailhead': 'Awesome Trailhead',
+            'trails_cs': 'Rad Trail, Tubular Trail',
+            'distance_km': '4.9',
+            'image_url': 'very-kewl-image',
+            'image_alt': 'This is a very kewl image',
+            'map_link': 'https://maps.google.com',
+            'other_info': 'Woah this trail is kewl!' 
+        }
+        hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = mock_hike.values()
+        print(hike_date)
+        # Add hike to table
+        db_connection = create_connection(self.DB)
+        db_connection['cursor'].execute(
+            'INSERT INTO hikes (hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
+        commit_close_conn(db_connection['connection'])
+        # Check get_feed for the first user's expected feed list
+        feed = get_feed(self.DB, user_1)
+        assert len(feed) == 1
+        # Set up by running the unfollow flow
+        self.test_unfollow(cleanup=False)
+        # Check for expected empty feed list after unfollowing user_2
+        feed = get_feed(self.DB, user_1)
+        assert len(feed) == 0
+        # Run cleanup
+        self.cleanup()
+
+
+    # Cleanup
+    def cleanup(self):
+        '''Run cleanup operations for tests'''
+        # Rm temporary db file
+        db_path = f'./{self.DB}'
+        os.remove(db_path)
+        # Verify file is removed
         assert os.path.exists(db_path) is False
