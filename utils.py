@@ -323,12 +323,15 @@ def follow(db, username, followee, action):
             db_connection['cursor'].execute('INSERT OR IGNORE INTO follows (follower_id, followee_id) VALUES (?, ?)', (follower_id, followee_id,))
         except sqlite3.Error as error:
             print(error)
+            return error
     else:
         try:
             db_connection['cursor'].execute('DELETE FROM follows WHERE follower_id = (?) AND followee_id = (?)', (follower_id, followee_id,))
         except sqlite3.Error as error:
             print(error)
+            return error
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
 def get_followees(db, username):
