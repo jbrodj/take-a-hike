@@ -206,6 +206,7 @@ class TestFollowUnfollowFeedFlows:
             self.cleanup()
 
 
+# pylint: disable=too-many-locals
     def test_get_feed(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username']):
         '''Test ability to generate list of hikes from user's followees list'''
         # Set up by running the follow flow to create two users and have the first user follow the second user
