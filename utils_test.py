@@ -44,6 +44,16 @@ def test_get_context_string_from_referrer():
     assert get_context_string_from_referrer(mock_null_referrer ,mock_null_current_path, mock_username) is None
 
 
+# Cleanup
+def cleanup(self):
+    '''Runs cleanup operations for tests that use the sqlite database'''
+    # Rm temporary db file
+    db_path = f'./{self.DB}'
+    os.remove(db_path)
+    # Verify file is removed
+    assert os.path.exists(db_path) is False
+
+
 class TestAddAndRetrieveUser:
     '''Test functionality of adding and retreiving users from the users SQLite table. 
         Must be run as a suite because the subsequent tests use the database entries that
@@ -72,7 +82,7 @@ class TestAddAndRetrieveUser:
             db=DB,
             user_1=mock_users[0],
             user_2=mock_users[1],
-            cleanup=True
+            run_cleanup=True
             ):
         '''Test add_user util. Takes username string, pw hash string and db file'''
         # Run setup
@@ -85,8 +95,9 @@ class TestAddAndRetrieveUser:
         # Add a second valid username to table
         assert add_user(db, user_2['username'], user_2['password_hash']) == 0
         # Run cleanup if running this test on its own
-        if cleanup:
-            self.cleanup()
+        if run_cleanup:
+            # self.cleanup()
+            cleanup(self)
 
 
     def test_get_all_usernames(
@@ -98,12 +109,12 @@ class TestAddAndRetrieveUser:
             ):
         '''Test get_all_usernames util.'''
         # Run test_add_user to setup users
-        self.test_add_user(cleanup=False)
+        self.test_add_user(run_cleanup=False)
         # Check list of usernames for expected values
         assert len(get_all_usernames(db)) == num_of_users
         assert (username_1,) and (username_2,) in get_all_usernames(db)
         # Cleanup
-        self.cleanup()
+        cleanup(self)
 
 
     def test_get_user_by_username(
@@ -115,12 +126,12 @@ class TestAddAndRetrieveUser:
         '''Test get_user_by_username util. Takes username string, pw hash string and db file'''
         # Retrieve user by username and check dict structure and values
         # Run test_add_user to setup database and add users
-        self.test_add_user(cleanup=False)
+        self.test_add_user(run_cleanup=False)
         expected_user_structure = {'id': 1, 'username': username, 'password_hash': password_hash}
         # Check for expected user structure
         assert get_user_by_username(db, username) == expected_user_structure
         # Cleanup
-        self.cleanup()
+        cleanup(self)
 
 
     def test_get_username_from_user_id(
@@ -130,7 +141,7 @@ class TestAddAndRetrieveUser:
             ):
         '''Test get_username_from_user_id util.'''
         # Run test_add_user to setup database and add users
-        self.test_add_user(cleanup=False)
+        self.test_add_user(run_cleanup=False)
         # Call get username from user id and assert correct username returned.
         # User ID is created sequentially by the database when a user is stored
         #   - so user 0 will have an id of 1.
@@ -139,7 +150,7 @@ class TestAddAndRetrieveUser:
         # Check for expected value when user isn't found
         assert get_username_from_user_id(db, 9) == {}
         # Cleanup
-        self.cleanup()
+        cleanup(self)
 
 
     def test_get_similar_usernames(
@@ -150,7 +161,7 @@ class TestAddAndRetrieveUser:
             ):
         '''Test get_similar_usernames util.'''
         # Run test_add_user to setup database and add users
-        self.test_add_user(cleanup=False)
+        self.test_add_user(run_cleanup=False)
         # Queries where num of chars matching is >=50% of query length,
         #   or where >=3 total chars match should return result.
         assert username_1 in get_similar_usernames(db, 'Sus')
@@ -167,17 +178,7 @@ class TestAddAndRetrieveUser:
         ordered_matches = get_similar_usernames(db, 'SuzFra')
         assert ordered_matches[username_1] > ordered_matches[username_2]
         # Cleanup
-        self.cleanup()
-
-
-    # Cleanup
-    def cleanup(self):
-        '''Run cleanup operations for tests'''
-        # Rm temporary db file
-        db_path = f'./{self.DB}'
-        os.remove(db_path)
-        # Verify file is removed
-        assert os.path.exists(db_path) is False
+        cleanup(self)
 
 
 class TestFollowUnfollowFeedFlows:
@@ -204,7 +205,7 @@ class TestFollowUnfollowFeedFlows:
         assert len(get_all_usernames(self.DB)) == len(self.mock_users)
 
 
-    def test_follow(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username'], cleanup=True):
+    def test_follow(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username'], run_cleanup=True):
         '''Test ability to follow a user and retrieve expected followees list'''
         # Run setup
         self.setup()
@@ -221,28 +222,28 @@ class TestFollowUnfollowFeedFlows:
         # Check for user_2's id in followees list
         assert user_2_id in get_followees(self.DB, user_1)
         # Run cleanup
-        if cleanup:
-            self.cleanup()
+        if run_cleanup:
+            cleanup(self)
 
 
-    def test_unfollow(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username'], cleanup=True):
+    def test_unfollow(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username'], run_cleanup=True):
         '''Test ability to unfollow a user and retrieve expected followees list'''
         # Set up by running the follow flow
-        self.test_follow(cleanup=False)
+        self.test_follow(run_cleanup=False)
         # Check unfollow action for error or successful return
         assert follow(self.DB, user_1, user_2, 'unfollow') == 0
         # Check get_followees again for expected empty followees list
         assert len(get_followees(self.DB, user_1)) == 0
         # Run cleanup
-        if cleanup:
-            self.cleanup()
+        if run_cleanup:
+            cleanup(self)
 
 
 # pylint: disable=too-many-locals
     def test_get_feed(self, user_1=mock_users[0]['username'], user_2=mock_users[1]['username']):
         '''Test ability to generate list of hikes from user's followees list'''
         # Set up by running the follow flow to create two users and have the first user follow the second user
-        self.test_follow(cleanup=False)
+        self.test_follow(run_cleanup=False)
         # Add a hike to second user
         # Fetch the user id for user_2
         db_connection = create_connection(self.DB)
@@ -274,19 +275,10 @@ class TestFollowUnfollowFeedFlows:
         feed = get_feed(self.DB, user_1)
         assert len(feed) == 1
         # Set up by running the unfollow flow
-        self.test_unfollow(cleanup=False)
+        self.test_unfollow(run_cleanup=False)
         # Check for expected empty feed list after unfollowing user_2
         feed = get_feed(self.DB, user_1)
         assert len(feed) == 0
         # Run cleanup
-        self.cleanup()
+        cleanup(self)
 
-
-    # Cleanup
-    def cleanup(self):
-        '''Run cleanup operations for tests'''
-        # Rm temporary db file
-        db_path = f'./{self.DB}'
-        os.remove(db_path)
-        # Verify file is removed
-        assert os.path.exists(db_path) is False
