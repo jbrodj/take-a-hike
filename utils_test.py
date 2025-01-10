@@ -57,19 +57,26 @@ class TestAddAndRetrieveUser:
         {'username': 'Frank', 'password_hash': '654321zyxwvutsrqponmlkjihgfedcba'},
     ]
 
-    def test_add_user(
-            self,
-            db=DB,
-            user_1=mock_users[0],
-            user_2=mock_users[1]
-            ):
-        '''Test add_user util. Takes username string, pw hash string and db file'''
+    def setup(self, db=DB):
+        '''Creates database table schema. Clears users table if any data exists.'''
         # Run init_sql with test environment arg to create table schema in a temporary db file
         runner('test')
         # Clear users from table
         db_connection = create_connection(db)
         db_connection['cursor'].execute('DELETE FROM users')
         commit_close_conn(db_connection['connection'])
+
+
+    def test_add_user(
+            self,
+            db=DB,
+            user_1=mock_users[0],
+            user_2=mock_users[1],
+            cleanup=True
+            ):
+        '''Test add_user util. Takes username string, pw hash string and db file'''
+        # Run setup
+        self.setup()
         # Add a user to table with valid args and check success (ie. 0 return value)
         assert add_user(db, user_1['username'], user_1['password_hash']) == 0
         # Add a user to table with duplicate username and check failure
@@ -77,6 +84,9 @@ class TestAddAndRetrieveUser:
         assert add_user(db, user_1['username'], 'differentpasswordhash123') != 0
         # Add a second valid username to table
         assert add_user(db, user_2['username'], user_2['password_hash']) == 0
+        # Run cleanup if running this test on its own
+        if cleanup:
+            self.cleanup()
 
 
     def test_get_all_usernames(
@@ -87,9 +97,13 @@ class TestAddAndRetrieveUser:
             username_2=mock_users[1]['username']
             ):
         '''Test get_all_usernames util.'''
+        # Run test_add_user to setup users
+        self.test_add_user(cleanup=False)
+        # Check list of usernames for expected values
         assert len(get_all_usernames(db)) == num_of_users
         assert (username_1,) and (username_2,) in get_all_usernames(db)
-        assert (username_2,) in get_all_usernames(db)
+        # Cleanup
+        self.cleanup()
 
 
     def test_get_user_by_username(
@@ -100,9 +114,14 @@ class TestAddAndRetrieveUser:
             ):
         '''Test get_user_by_username util. Takes username string, pw hash string and db file'''
         # Retrieve user by username and check dict structure and values
+        # Run test_add_user to setup database and add users
+        self.test_add_user(cleanup=False)
         expected_user_structure = {'id': 1, 'username': username, 'password_hash': password_hash}
+        # Check for expected user structure
         assert get_user_by_username(db, username) == expected_user_structure
-        # Call get user by username
+        # Cleanup
+        self.cleanup()
+
 
     def test_get_username_from_user_id(
             self,
@@ -110,12 +129,17 @@ class TestAddAndRetrieveUser:
             username=mock_users[0]['username']
             ):
         '''Test get_username_from_user_id util.'''
+        # Run test_add_user to setup database and add users
+        self.test_add_user(cleanup=False)
         # Call get username from user id and assert correct username returned.
         # User ID is created sequentially by the database when a user is stored
-            # - so user 0 will have an id of 1.
+        #   - so user 0 will have an id of 1.
         expected_structure = {'id': 1, 'username': username}
         assert get_username_from_user_id(db, 1) == expected_structure
-        # Maybe also assert what happens when the user isn't found in both id and username scenarios
+        # Check for expected value when user isn't found
+        assert get_username_from_user_id(db, 9) == {}
+        # Cleanup
+        self.cleanup()
 
 
     def test_get_similar_usernames(
@@ -125,6 +149,8 @@ class TestAddAndRetrieveUser:
             username_2=mock_users[1]['username']
             ):
         '''Test get_similar_usernames util.'''
+        # Run test_add_user to setup database and add users
+        self.test_add_user(cleanup=False)
         # Queries where num of chars matching is >=50% of query length,
         #   or where >=3 total chars match should return result.
         assert username_1 in get_similar_usernames(db, 'Sus')
@@ -140,11 +166,17 @@ class TestAddAndRetrieveUser:
         assert ordered_matches[username_2] > ordered_matches[username_1]
         ordered_matches = get_similar_usernames(db, 'SuzFra')
         assert ordered_matches[username_1] > ordered_matches[username_2]
-
         # Cleanup
+        self.cleanup()
+
+
+    # Cleanup
+    def cleanup(self):
+        '''Run cleanup operations for tests'''
         # Rm temporary db file
-        db_path = f'./{db}'
+        db_path = f'./{self.DB}'
         os.remove(db_path)
+        # Verify file is removed
         assert os.path.exists(db_path) is False
 
 
