@@ -232,7 +232,6 @@ class TestFollowUnfollowFeedFlows:
             'other_info': 'Woah this trail is kewl!' 
         }
         hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info = mock_hike.values()
-        print(hike_date)
         # Add hike to table
         db_connection = create_connection(self.DB)
         db_connection['cursor'].execute(
