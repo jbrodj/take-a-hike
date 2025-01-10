@@ -281,4 +281,3 @@ class TestFollowUnfollowFeedFlows:
         assert len(feed) == 0
         # Run cleanup
         cleanup(self)
-
