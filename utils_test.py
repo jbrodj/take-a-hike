@@ -2,6 +2,7 @@
 import os
 from init_sql import runner
 from utils import  (
+        add_hike,
         add_user,
         commit_close_conn,
         convert_to_dict,
@@ -11,6 +12,7 @@ from utils import  (
         get_context_string_from_referrer,
         get_feed,
         get_followees,
+        get_hikes,
         get_similar_usernames,
         get_user_by_username,
         get_username_from_user_id,
@@ -281,3 +283,36 @@ class TestFollowUnfollowFeedFlows:
         assert len(feed) == 0
         # Run cleanup
         cleanup(self)
+
+
+class TestAddUpdateDeleteRetreiveHike:
+    '''Tests user adding, updating, deleting hikes and accessing their hikes list.'''
+    DB = 'test.db'
+    user = {'username': 'frannie', 'password_hash': 'abcdefghijklmnopqrstuvwxyz123456'}
+    mock_hike = {
+        'hike_date': '2025-01-01',
+        'area_name': 'Neat Place',
+        'trailhead': 'Awesome Trailhead',
+        'trails_cs': 'Rad Trail, Tubular Trail',
+        'distance_km': '4.9',
+        'image_alt': 'This is a very kewl image',
+        'other_info': 'Woah this trail is kewl!',
+        'map_link': 'https://maps.google.com/',
+        'image_url': 'very-kewl-image'
+    }
+
+    # Setup database table schema
+    def setup(self, db=DB):
+        '''Creates database table schema. Adds one user to a clean user table.'''
+        # Run init_sql with test environment arg to create table schema in a temporary db file
+        runner('test')
+        # Clear users from table
+        db_connection = create_connection(db)
+        db_connection['cursor'].execute('DELETE FROM users')
+        commit_close_conn(db_connection['connection'])
+        # Add a user - user id will be 1
+        db_connection = create_connection(db)
+        add_user(db, self.user['username'], self.user['password_hash'])
+        commit_close_conn(db_connection['connection'])
+        #
+
