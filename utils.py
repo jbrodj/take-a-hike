@@ -86,16 +86,22 @@ def add_hike(db, user_id, area_id, form_data):
     '''Takes hike data from form and area id from database.
         Creates new hike in hikes table and inserts data.
     '''
-    hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = form_data.values()
-    # `image_url` is destructured from the last index because we are inserting it manually in new_hike/edit_hike routes
+    # Get list of keys from form data and append additional keys for user id and area id args
+    keys_list = list(form_data.keys()) + ['user_id', 'area_id']
+    # Convert list to comma-separated string
+    keys_string = ", ".join(keys_list)
+    # Get list of values from form data and append user_id and area_id
+    values_list = list(form_data.values()) + [user_id, area_id]
+    placeholders_string = '?, ' * (len(values_list))
+    # Create command string with list of keys and corresponding number of placeholder values
+    insert_cmd_string = f'INSERT INTO hikes ({keys_string}) VALUES ({placeholders_string.strip(" ,")})'
+
     db_connection = create_connection(db)
     try:
-        db_connection['cursor'].execute(
-            'INSERT INTO hikes (hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
+        db_connection['cursor'].execute(insert_cmd_string, values_list)
     except sqlite3.Error as error:
         print(error)
-        return 1
+        return error
     commit_close_conn(db_connection['connection'])
     return 0
 
