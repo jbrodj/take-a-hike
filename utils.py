@@ -220,6 +220,10 @@ def format_hikes(sql_data_object, fetched_hikes_values):
             # Ensure max of 1 decimal place for distance (UI spacing only supports 1 dp)
             if key == 'distance_km':
                 this_entry[key] = round(entry[index], 1)
+            # For some reason, user_id is being returned from db as string, even though
+            # It is stored there as an int 🤔 Convert back to int.
+            if key == 'user_id':
+                this_entry[key] = int(entry[index])
             else:
                 this_entry[key] = entry[index]
         # Add key/value pair containing list of trail strings
