@@ -316,3 +316,14 @@ class TestAddUpdateDeleteRetreiveHike:
         commit_close_conn(db_connection['connection'])
         #
 
+
+    def test_add_hike(self, db=DB, run_cleanup=True):
+        '''Test adding hike to database from data dict'''
+        # Run setup to add user to database
+        self.setup()
+        # Check success adding a hike to database
+        # User id and area id will both be 1 because we have only created one area and one user
+        assert add_hike(db, 1, 1, self.mock_hike) == 0
+        # Run cleanup
+        if run_cleanup:
+            cleanup(self)
