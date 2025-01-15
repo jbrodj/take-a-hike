@@ -352,3 +352,33 @@ class TestAddUpdateDeleteRetreiveHike:
         # Run cleanup
         if run_cleanup:
             cleanup(self)
+
+
+    def test_get_hikes(self, db=DB):
+        '''Test retreiving hikes with correct values and structure'''
+        expected_hike_structure = {
+            'id': 1,
+            'hike_date': '2025-01-01',
+            'user_id': 1,
+            'area_id': 1,
+            'area_name': 'Neat Place',
+            'trailhead': 'Awesome Trailhead',
+            'trails_cs': 'Rad Trail, Tubular Trail',
+            'distance_km': 4.9,
+            'image_url': 'very-kewl-image',
+            'image_alt': 'This is a very kewl image',
+            'map_link': 'https://maps.google.com/',
+            'other_info': 'Woah this trail is kewl!',
+            'trails_list': ['Rad Trail', 'Tubular Trail']
+            }
+        # Run test_add_hike to setup and add a hike to user's list
+        self.test_add_hike(run_cleanup=False)
+        # Verify expected hike content and structure
+        hike_data = get_hikes(db, 1)
+        hikes_list = []
+        for row in hike_data:
+            hikes_list.append(row)
+        assert len(hikes_list) == 1
+        assert hikes_list[0] == expected_hike_structure
+        # Run cleanup
+        cleanup(self)
