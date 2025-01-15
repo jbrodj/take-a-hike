@@ -109,15 +109,18 @@ def add_hike(db, user_id, area_id, form_data):
 def update_hike(db, existing_hike_data, updated_hike_data):
     '''Takes preexisting hike data, and data from updade hike form'''
     hike_id = existing_hike_data.get('id')
-    hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = updated_hike_data.values()
+    # Get keys from hike form data and create string of keys & placeholders for SET command
+    keys_string = ' = (?), '.join(updated_hike_data.keys()) + ' = (?)'
+    # Construct tuple of updated values plus the hike id to pass as second arg.
+    values_tuple = tuple(updated_hike_data.values()) + (hike_id,)
     db_connection = create_connection(db)
     try:
-        db_connection['cursor'].execute(
-            'UPDATE hikes SET hike_date = (?), area_name = (?), trailhead = (?), trails_cs = (?), distance_km = (?), image_url = (?), image_alt = (?), map_link = (?), other_info = (?) WHERE id = (?)',
-            (hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info, hike_id,))
+        db_connection['cursor'].execute(f'UPDATE hikes SET {keys_string} WHERE id = (?)', values_tuple)
     except sqlite3.Error as error:
         print(error)
+        return error
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
 def delete_hike(db, hike_id, user_id):
