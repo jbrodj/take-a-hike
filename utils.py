@@ -36,36 +36,40 @@ def convert_to_dict(tuple_list, dictionary):
     return dictionary
 
 
-def add_user(username, password_hash):
+def add_user(db, username, password_hash):
     '''Takes username string and hashed password string
     '''
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
     except sqlite3.Error as error:
         print(error)
+        return error
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def add_area(area_name):
+def add_area(db, area_name):
     '''Takes area name from form.
         Inserts area data into areas table.
     '''
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute(
             'INSERT OR IGNORE INTO areas (area_name) VALUES (?)', (area_name, ))
     except sqlite3.Error as error:
         print(error)
+        return 1
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def add_trail(area_id, trail_names):
+def add_trail(db, area_id, trail_names):
     '''Takes area name and comma-separated list of trail names from form.
         Retrieves area ID from db, and inserts trail data into db.
     '''
     trail_list = trail_names.split(', ')
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     for trail_name in trail_list:
         try:
             db_connection['cursor'].execute(
@@ -73,42 +77,55 @@ def add_trail(area_id, trail_names):
                 [area_id, trail_name])
         except sqlite3.Error as error:
             print(error)
+            return 1
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def add_hike(user_id, area_id, form_data):
+def add_hike(db, user_id, area_id, form_data):
     '''Takes hike data from form and area id from database.
         Creates new hike in hikes table and inserts data.
     '''
-    hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = form_data.values()
-    # `image_url` is destructured from the last index because we are inserting it manually in new_hike/edit_hike routes
-    db_connection = create_connection('hikes.db')
+    # Get list of keys from form data and append additional keys for user id and area id args
+    keys_list = list(form_data.keys()) + ['user_id', 'area_id']
+    # Convert list to comma-separated string
+    keys_string = ", ".join(keys_list)
+    # Get list of values from form data and append user_id and area_id
+    values_list = list(form_data.values()) + [user_id, area_id]
+    placeholders_string = '?, ' * (len(values_list))
+    # Create command string with list of keys and corresponding number of placeholder values
+    insert_cmd_string = f'INSERT INTO hikes ({keys_string}) VALUES ({placeholders_string.strip(" ,")})'
+
+    db_connection = create_connection(db)
     try:
-        db_connection['cursor'].execute(
-            'INSERT INTO hikes (hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [hike_date, user_id, area_id, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info])
+        db_connection['cursor'].execute(insert_cmd_string, values_list)
     except sqlite3.Error as error:
         print(error)
+        return error
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def update_hike(existing_hike_data, updated_hike_data):
+def update_hike(db, existing_hike_data, updated_hike_data):
     '''Takes preexisting hike data, and data from updade hike form'''
     hike_id = existing_hike_data.get('id')
-    hike_date, area_name, trailhead, trails_cs, distance_km, image_alt, other_info, map_link, image_url = updated_hike_data.values()
-    db_connection = create_connection('hikes.db')
+    # Get keys from hike form data and create string of keys & placeholders for SET command
+    keys_string = ' = (?), '.join(updated_hike_data.keys()) + ' = (?)'
+    # Construct tuple of updated values plus the hike id to pass as second arg.
+    values_tuple = tuple(updated_hike_data.values()) + (hike_id,)
+    db_connection = create_connection(db)
     try:
-        db_connection['cursor'].execute(
-            'UPDATE hikes SET hike_date = (?), area_name = (?), trailhead = (?), trails_cs = (?), distance_km = (?), image_url = (?), image_alt = (?), map_link = (?), other_info = (?) WHERE id = (?)',
-            (hike_date, area_name, trailhead, trails_cs, distance_km, image_url, image_alt, map_link, other_info, hike_id,))
+        db_connection['cursor'].execute(f'UPDATE hikes SET {keys_string} WHERE id = (?)', values_tuple)
     except sqlite3.Error as error:
         print(error)
+        return error
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
-def delete_hike(hike_id, user_id):
+def delete_hike(db, hike_id, user_id):
     '''Takes the id of selected hike and id of logged in user'''
-    db_connection = create_connection('hikes.db')
+    db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute(
             'DELETE FROM hikes WHERE id = (?) AND user_id = (?)',
@@ -206,6 +223,10 @@ def format_hikes(sql_data_object, fetched_hikes_values):
             # Ensure max of 1 decimal place for distance (UI spacing only supports 1 dp)
             if key == 'distance_km':
                 this_entry[key] = round(entry[index], 1)
+            # For some reason, user_id is being returned from db as string, even though
+            # It is stored there as an int 🤔 Convert back to int.
+            if key == 'user_id':
+                this_entry[key] = int(entry[index])
             else:
                 this_entry[key] = entry[index]
         # Add key/value pair containing list of trail strings
@@ -315,12 +336,15 @@ def follow(db, username, followee, action):
             db_connection['cursor'].execute('INSERT OR IGNORE INTO follows (follower_id, followee_id) VALUES (?, ?)', (follower_id, followee_id,))
         except sqlite3.Error as error:
             print(error)
+            return error
     else:
         try:
             db_connection['cursor'].execute('DELETE FROM follows WHERE follower_id = (?) AND followee_id = (?)', (follower_id, followee_id,))
         except sqlite3.Error as error:
             print(error)
+            return error
     commit_close_conn(db_connection['connection'])
+    return 0
 
 
 def get_followees(db, username):

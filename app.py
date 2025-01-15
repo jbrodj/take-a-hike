@@ -100,7 +100,7 @@ def user_route(username):
             hike_id = request.form.get('edit_hike').split('_')[1]
             # Check if it is a delete action
             if action == 'del':
-                delete_hike(hike_id, session.get('user_id'))
+                delete_hike(DB, hike_id, session.get('user_id'))
                 path = username + '?delete' + hike_id
                 return redirect(path)
             # Otherwise it is an edit action
@@ -207,7 +207,7 @@ def sign_up():
         for existing_name in existing_usernames:
             if username == existing_name[0]:
                 return handle_error(request.url, error_messages['username_taken'], 403)
-        add_user(username, password_hash)
+        add_user(DB, username, password_hash)
         return redirect('/login')
     # Render signup form
     return render_template('signup.html')
@@ -273,10 +273,10 @@ def new_hike():
         # Insert to areas, trails, and hikes tables
         area_name = hike_data.get('area_name')
         trail_list = hike_data.get('trails_cs')
-        add_area(area_name)
+        add_area(DB, area_name)
         area_id = get_area_id(area_name, DB)
-        add_trail(area_id, trail_list)
-        add_hike(session.get('user_id'), area_id, hike_data)
+        add_trail(DB, area_id, trail_list)
+        add_hike(DB, session.get('user_id'), area_id, hike_data)
         return redirect('/')
     # Route to new hike form
     return render_template('hike-form.html', form_content=hike_form_content, selected_hike_data={})
@@ -307,7 +307,7 @@ def edit_hike(hike_id):
         # Set image url with either existing or updated value
         updated_hike_data['image_url'] = image_id
         # Insert updated data into database
-        update_hike(existing_hike_data, updated_hike_data)
+        update_hike(DB, existing_hike_data, updated_hike_data)
         # Redirect to user page
         path = '/users/' + username
         return redirect(path)
