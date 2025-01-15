@@ -382,3 +382,30 @@ class TestAddUpdateDeleteRetreiveHike:
         assert hikes_list[0] == expected_hike_structure
         # Run cleanup
         cleanup(self)
+
+
+    def test_updated_get_hikes(self, db=DB):
+        '''Test retreiving hikes that have had values updated'''
+        # Retrieve values for an updated hike to check for correct values and structure
+        # Run test_update_hike to update the values of the existing hike
+        self.test_update_hike(run_cleanup=False)
+        expected_updated_structure = {
+            'id': 1,
+            'hike_date': '2025-01-02',
+            'user_id': 1,
+            'area_id': 1,
+            'area_name': 'Another Neat Place',
+            'trailhead': 'Kewl Trailhead',
+            'trails_cs': 'Awesome Trail, Really Neat Trail',
+            'distance_km': 12.1,
+            'image_alt': 'A particularly neat image',
+            'other_info': 'What a stupendous trail!',
+            'map_link': 'https://maps.google.com/map123',
+            'image_url': 'image-that-is-also-quite-kewl',
+            'trails_list': ['Awesome Trail', 'Really Neat Trail']
+        }
+        updated_hike_data = get_hikes(db, 1)
+        updated_hikes_list = []
+        for row in updated_hike_data:
+            updated_hikes_list.append(row)
+        assert updated_hikes_list[0] == expected_updated_structure
