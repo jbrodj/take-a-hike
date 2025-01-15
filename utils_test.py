@@ -16,6 +16,7 @@ from utils import  (
         get_similar_usernames,
         get_user_by_username,
         get_username_from_user_id,
+        update_hike,
         )
 # pylint: disable=line-too-long
 
@@ -324,6 +325,30 @@ class TestAddUpdateDeleteRetreiveHike:
         # Check success adding a hike to database
         # User id and area id will both be 1 because we have only created one area and one user
         assert add_hike(db, 1, 1, self.mock_hike) == 0
+        # Run cleanup
+        if run_cleanup:
+            cleanup(self)
+
+
+    def test_update_hike(self, db=DB, run_cleanup=True):
+        '''Test updating the content of an existing hike'''
+        # Run test_add_hike to setup db, add user, and add a hike to database.
+        self.test_add_hike(run_cleanup=False)
+        # Mocked data
+        mock_existing_hike_data = {'id': 1}
+        mock_updated_hike_data = {
+        'hike_date': '2025-01-02',
+        'area_name': 'Another Neat Place',
+        'trailhead': 'Kewl Trailhead',
+        'trails_cs': 'Awesome Trail, Really Neat Trail',
+        'distance_km': '12.1',
+        'image_alt': 'A particularly neat image',
+        'other_info': 'What a stupendous trail!',
+        'map_link': 'https://maps.google.com/map123',
+        'image_url': 'image-that-is-also-quite-kewl'
+        }
+        # Change some values in existing hike and check for success
+        assert update_hike(db, mock_existing_hike_data, mock_updated_hike_data) == 0
         # Run cleanup
         if run_cleanup:
             cleanup(self)
