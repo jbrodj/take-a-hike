@@ -183,11 +183,12 @@ def get_hikes(db, user_id, hike_id=None, most_recent=False):
         try:
             data = db_connection['cursor'].execute(
                 'SELECT * FROM hikes WHERE user_id = ? ORDER BY hike_date DESC LIMIT 1', (user_id,))
+            hikes_data = db_connection['cursor'].fetchall()
         except sqlite3.Error as error:
             print(error)
             return []
     # If hike_id is passed, we wish to fetch a single hike
-    if hike_id:
+    elif hike_id:
         try:
             data = db_connection['cursor'].execute(
                 'SELECT * FROM hikes WHERE id = ? AND user_id = ?', (hike_id, user_id,))
