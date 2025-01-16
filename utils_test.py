@@ -408,7 +408,7 @@ class TestAddUpdateDeleteRetreiveHike:
             'image_url': 'image-that-is-also-quite-kewl',
             'trails_list': ['Awesome Trail', 'Really Neat Trail']
         }
-        updated_hike_data = get_hikes(db, 1)
+        updated_hike_data = get_hikes(db, expected_updated_structure['user_id'])
         updated_hikes_list = []
         for row in updated_hike_data:
             updated_hikes_list.append(row)
