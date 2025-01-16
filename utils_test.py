@@ -379,10 +379,7 @@ class TestAddUpdateDeleteRetreiveHike:
         # Run test_add_hike to setup and add a hike to user's list
         self.test_add_hike(run_cleanup=False)
         # Verify expected hike content and structure
-        hike_data = get_hikes(db, expected_hike_structure['user_id'])
-        hikes_list = []
-        for row in hike_data:
-            hikes_list.append(row)
+        hikes_list = get_hikes(db, expected_hike_structure['user_id'])
         assert len(hikes_list) == 1
         assert hikes_list[0] == expected_hike_structure
         # Run cleanup
@@ -409,10 +406,7 @@ class TestAddUpdateDeleteRetreiveHike:
             'image_url': 'image-that-is-also-quite-kewl',
             'trails_list': ['Awesome Trail', 'Really Neat Trail']
         }
-        updated_hike_data = get_hikes(db, expected_updated_structure['user_id'])
-        updated_hikes_list = []
-        for row in updated_hike_data:
-            updated_hikes_list.append(row)
+        updated_hikes_list = get_hikes(db, expected_updated_structure['user_id'])
         assert updated_hikes_list[0] == expected_updated_structure
 
 
