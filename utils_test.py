@@ -428,6 +428,30 @@ class TestAddUpdateDeleteRetreiveHike:
         assert updated_hikes_list[0] == expected_updated_structure
 
 
+    def test_get_specific_hike(self, db=DB):
+        '''Test `get_hikes` fn -- retrieving single hike by hike id'''
+        expected_hike_structure = {
+            'id': 2,
+            'hike_date': '2025-01-02',
+            'user_id': 1,
+            'area_id': 1,
+            'area_name': 'Neat Place',
+            'trailhead': 'Neat Trailhead',
+            'trails_cs': 'Incredible Trail, Wowzers Trail',
+            'distance_km': 6.3,
+            'image_url': 'very-kewl-image2',
+            'image_alt': 'This is a great image!',
+            'map_link': 'https://maps.google.com/map2',
+            'other_info': 'Woah this trail is very nice!',
+            'trails_list': ['Incredible Trail', 'Wowzers Trail']
+            }
+        # Run test_add_hike to setup and add a hike to user's list
+        self.test_add_hike(run_cleanup=False)
+        # Verify expected hike content and structure
+        hikes_list = get_hikes(db, expected_hike_structure['user_id'], expected_hike_structure['id'])
+        assert hikes_list[0] == expected_hike_structure
+
+
     def test_delete_hike(self, db=DB):
         '''Test deleting an existing hike'''
         # Run test_add_hike to setup test database, create user and add a hike.
