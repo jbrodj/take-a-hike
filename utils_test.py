@@ -318,16 +318,17 @@ class TestAddUpdateDeleteRetreiveHike:
         db_connection = create_connection(db)
         add_user(db, self.user['username'], self.user['password_hash'])
         commit_close_conn(db_connection['connection'])
-        #
 
 
     def test_add_hike(self, db=DB, run_cleanup=True):
         '''Test adding hike to database from data dict'''
         # Run setup to add user to database
         self.setup()
-        # Check success adding a hike to database
         # User id and area id will both be 1 because we have only created one area and one user
-        assert add_hike(db, 1, 1, self.mock_hike) == 0
+        user_id = 1
+        area_id = 1
+        # Check success adding a hike to database
+        assert add_hike(db, user_id, area_id, self.mock_hike) == 0
         # Run cleanup
         if run_cleanup:
             cleanup(self)
@@ -377,7 +378,7 @@ class TestAddUpdateDeleteRetreiveHike:
         # Run test_add_hike to setup and add a hike to user's list
         self.test_add_hike(run_cleanup=False)
         # Verify expected hike content and structure
-        hike_data = get_hikes(db, 1)
+        hike_data = get_hikes(db, expected_hike_structure['user_id'])
         hikes_list = []
         for row in hike_data:
             hikes_list.append(row)
