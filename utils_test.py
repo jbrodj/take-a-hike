@@ -451,6 +451,19 @@ class TestAddUpdateDeleteRetreiveHike:
         assert hikes_list[0] == expected_hike_structure
 
 
+    def test_get_most_recent_hike(self, db=DB):
+        '''Test `get_hikes` fn -- retrieving single most recent hike by user id'''
+        # Run test_add_hike to setup db and add hikes to user's list
+        self.test_add_hike(run_cleanup=False)
+        # Verify that a single hike is returned, and that it is the mocked hike with the most recent date
+        expected_date = self.mock_hikes[1]['hike_date']
+        hikes_list = get_hikes(db, 1, hike_id=None, most_recent=True)
+        assert len(hikes_list) == 1
+        assert hikes_list[0]['hike_date'] == expected_date
+        # Run cleanup
+        cleanup(self)
+
+
     def test_delete_hike(self, db=DB):
         '''Test deleting an existing hike'''
         # Run test_add_hike to setup test database, create user and add a hike.
