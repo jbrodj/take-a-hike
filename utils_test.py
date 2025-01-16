@@ -7,6 +7,7 @@ from utils import  (
         commit_close_conn,
         convert_to_dict,
         create_connection,
+        delete_hike,
         follow,
         get_all_usernames,
         get_context_string_from_referrer,
@@ -413,3 +414,18 @@ class TestAddUpdateDeleteRetreiveHike:
         for row in updated_hike_data:
             updated_hikes_list.append(row)
         assert updated_hikes_list[0] == expected_updated_structure
+
+
+    def test_delete_hike(self, db=DB):
+        '''Test deleting an existing hike'''
+        # Run test_add_hike to setup test database, create user and add a hike.
+        self.test_add_hike(run_cleanup=False)
+        # Hike id and user id will both be 1 because we are only creating one user and one hike
+        user_id = 1
+        hike_id = 1
+        # Delete hike and check success
+        assert delete_hike(db, hike_id, user_id) == 0
+        # Check get_hikes to see expected empty hikes list
+        assert not get_hikes(db, user_id)
+        # Run cleanup
+        cleanup(self)
