@@ -395,7 +395,6 @@ class TestAddUpdateDeleteRetreiveHike:
         self.test_add_hike(run_cleanup=False)
         # Verify expected hike content and structure
         hikes_list = get_hikes(db, expected_hike_structure['user_id'])
-        print(f'hikes list {hikes_list}')
         assert len(hikes_list) == 2
         assert hikes_list[1] == expected_hike_structure
         # Verify list is sorted by date in descending order
