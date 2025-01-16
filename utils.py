@@ -134,6 +134,8 @@ def delete_hike(db, hike_id, user_id):
         commit_close_conn(db_connection['connection'])
     except sqlite3.Error as error:
         print(error)
+        return error
+    return 0
 
 
 # ==== RETRIEVE DATA FROM DATABASE ====
