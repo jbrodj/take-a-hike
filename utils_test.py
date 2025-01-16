@@ -306,6 +306,8 @@ class TestAddUpdateDeleteRetreiveHike:
     # Setup database table schema
     def setup(self, db=DB):
         '''Creates database table schema. Adds one user to a clean user table.'''
+        # Cleanup before running
+        cleanup(self)
         # Run init_sql with test environment arg to create table schema in a temporary db file
         runner('test')
         # Clear users from table
