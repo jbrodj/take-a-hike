@@ -292,17 +292,30 @@ class TestAddUpdateDeleteRetreiveHike:
     '''Tests user adding, updating, deleting hikes and accessing their hikes list.'''
     DB = 'test.db'
     user = {'username': 'frannie', 'password_hash': 'abcdefghijklmnopqrstuvwxyz123456'}
-    mock_hike = {
-        'hike_date': '2025-01-01',
-        'area_name': 'Neat Place',
-        'trailhead': 'Awesome Trailhead',
-        'trails_cs': 'Rad Trail, Tubular Trail',
-        'distance_km': '4.9',
-        'image_alt': 'This is a very kewl image',
-        'other_info': 'Woah this trail is kewl!',
-        'map_link': 'https://maps.google.com/',
-        'image_url': 'very-kewl-image'
-    }
+    mock_hikes = [
+        {
+            'hike_date': '2025-01-01',
+            'area_name': 'Neat Place',
+            'trailhead': 'Awesome Trailhead',
+            'trails_cs': 'Rad Trail, Tubular Trail',
+            'distance_km': '4.9',
+            'image_alt': 'This is a very kewl image',
+            'other_info': 'Woah this trail is kewl!',
+            'map_link': 'https://maps.google.com/map1',
+            'image_url': 'very-kewl-image1'
+        },
+        {
+            'hike_date': '2025-01-02',
+            'area_name': 'Neat Place',
+            'trailhead': 'Neat Trailhead',
+            'trails_cs': 'Incredible Trail, Wowzers Trail',
+            'distance_km': '6.3',
+            'image_alt': 'This is a great image!',
+            'other_info': 'Woah this trail is very nice!',
+            'map_link': 'https://maps.google.com/map2',
+            'image_url': 'very-kewl-image2'
+        }
+    ]
 
     # Setup database table schema
     def setup(self, db=DB):
@@ -329,7 +342,9 @@ class TestAddUpdateDeleteRetreiveHike:
         user_id = 1
         area_id = 1
         # Check success adding a hike to database
-        assert add_hike(db, user_id, area_id, self.mock_hike) == 0
+        assert add_hike(db, user_id, area_id, self.mock_hikes[0]) == 0
+        # Add second hike to same user
+        assert add_hike(db, user_id, area_id, self.mock_hikes[1]) == 0
         # Run cleanup
         if run_cleanup:
             cleanup(self)
@@ -342,7 +357,7 @@ class TestAddUpdateDeleteRetreiveHike:
         # Mocked data
         mock_existing_hike_data = {'id': 1}
         mock_updated_hike_data = {
-        'hike_date': '2025-01-02',
+        'hike_date': '2025-01-03',
         'area_name': 'Another Neat Place',
         'trailhead': 'Kewl Trailhead',
         'trails_cs': 'Awesome Trail, Really Neat Trail',
@@ -359,8 +374,8 @@ class TestAddUpdateDeleteRetreiveHike:
             cleanup(self)
 
 
-    def test_get_hikes(self, db=DB):
-        '''Test retreiving hikes with correct values and structure'''
+    def test_get_all_hikes(self, db=DB):
+        '''Test `get_hikes` fn -- retreiving list of all hikes with correct values and structure'''
         expected_hike_structure = {
             'id': 1,
             'hike_date': '2025-01-01',
@@ -370,30 +385,33 @@ class TestAddUpdateDeleteRetreiveHike:
             'trailhead': 'Awesome Trailhead',
             'trails_cs': 'Rad Trail, Tubular Trail',
             'distance_km': 4.9,
-            'image_url': 'very-kewl-image',
+            'image_url': 'very-kewl-image1',
             'image_alt': 'This is a very kewl image',
-            'map_link': 'https://maps.google.com/',
+            'map_link': 'https://maps.google.com/map1',
             'other_info': 'Woah this trail is kewl!',
             'trails_list': ['Rad Trail', 'Tubular Trail']
             }
-        # Run test_add_hike to setup and add a hike to user's list
+        # Run test_add_hike to setup and add two hikes to user's list
         self.test_add_hike(run_cleanup=False)
         # Verify expected hike content and structure
         hikes_list = get_hikes(db, expected_hike_structure['user_id'])
-        assert len(hikes_list) == 1
-        assert hikes_list[0] == expected_hike_structure
+        print(f'hikes list {hikes_list}')
+        assert len(hikes_list) == 2
+        assert hikes_list[1] == expected_hike_structure
+        # Verify list is sorted by date in descending order
+        assert hikes_list[0]['hike_date'] > hikes_list[1]['hike_date']
         # Run cleanup
         cleanup(self)
 
 
     def test_updated_get_hikes(self, db=DB):
-        '''Test retreiving hikes that have had values updated'''
+        '''Test `get_hikes` fn -- retreiving hikes that have had values updated'''
         # Retrieve values for an updated hike to check for correct values and structure
         # Run test_update_hike to update the values of the existing hike
         self.test_update_hike(run_cleanup=False)
         expected_updated_structure = {
             'id': 1,
-            'hike_date': '2025-01-02',
+            'hike_date': '2025-01-03',
             'user_id': 1,
             'area_id': 1,
             'area_name': 'Another Neat Place',
@@ -419,7 +437,7 @@ class TestAddUpdateDeleteRetreiveHike:
         hike_id = 1
         # Delete hike and check success
         assert delete_hike(db, hike_id, user_id) == 0
-        # Check get_hikes to see expected empty hikes list
-        assert not get_hikes(db, user_id)
+        # Check get_hikes to see expected length of 1 for hikes list
+        assert len(get_hikes(db, user_id)) == 1
         # Run cleanup
         cleanup(self)
