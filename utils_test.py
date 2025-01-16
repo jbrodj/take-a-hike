@@ -50,9 +50,10 @@ def test_get_context_string_from_referrer():
 # Cleanup
 def cleanup(self):
     '''Runs cleanup operations for tests that use the sqlite database'''
-    # Rm temporary db file
+    # Rm temporary db file if it exists
     db_path = f'./{self.DB}'
-    os.remove(db_path)
+    if os.path.exists(db_path):
+        os.remove(db_path)
     # Verify file is removed
     assert os.path.exists(db_path) is False
 
