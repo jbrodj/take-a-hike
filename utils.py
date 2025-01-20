@@ -1,5 +1,6 @@
 '''This module houses all utility functions used in the python server'''
 from functools import wraps
+import re
 import sqlite3
 import cloudinary
 from flask import render_template, session, redirect
@@ -457,10 +458,12 @@ def process_img_upload(file, existing_file=''):
 
 #  ==== FORM VALIDATION ====
 
+# pylint: disable=too-many-return-statements
 def validate_hike_form(form_data):
     '''Takes form data
         Returns error type (string) or None
     '''
+    # Validate that required fields have values
     for field in form_data:
         if form_data.get(field) == '' and hike_form_content[field]['required'] is True:
             return 'missing_values'
@@ -468,11 +471,27 @@ def validate_hike_form(form_data):
     for char in form_data.get('distance_km'):
         if not char.isnumeric() and not char == '.':
             return 'invalid_number'
+    # Validate that numeric string can be converted to float
+    try:
+        float(form_data.get('distance_km'))
+    except ValueError:
+        return 'invalid_number'
     # Validate that distance value is between 0 and 100
     distance = float(form_data.get('distance_km'))
     if distance < 0 or distance > 99.9:
         return 'out_of_range'
+    # Check for url in form values to eliminate unexpected urls and validate expected ones
+    for field in form_data:
+        url_regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+        urls_list = re.findall(url_regex, form_data.get(field))
+        # Reject form if non-url field contains url
+        if not field == 'map_link' and urls_list:
+            return 'unaccepted_url'
+        # Validate that map_link field contains valid url if any value is present
+        if field == 'map_link' and form_data.get(field) and not urls_list:
+            return 'invalid_url'
     return None
+# pylint: enable=too-many-return-statements
 
 
 #  ==== ERROR HANDLING ====
