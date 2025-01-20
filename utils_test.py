@@ -18,6 +18,7 @@ from utils import  (
         get_user_by_username,
         get_username_from_user_id,
         update_hike,
+        validate_hike_form,
         )
 # pylint: disable=line-too-long
 
@@ -477,3 +478,67 @@ class TestAddUpdateDeleteRetreiveHike:
         assert len(get_hikes(db, user_id)) == 1
         # Run cleanup
         cleanup(self)
+
+
+class TestValidateHikeForm:
+    '''Tests `validate_hike_form` to check validation of new/edit hike form'''
+
+    def setup(self):
+        '''Create mock form data dictionary with valid values for all fields'''
+        mock_form_data = {
+            'hike_date': '2025-01-03',
+            'area_name': 'Another Neat Place',
+            'trailhead': 'Kewl Trailhead',
+            'trails_cs': 'Awesome Trail, Really Neat Trail',
+            'distance_km': '12.1',
+            'image_alt': 'A particularly neat image',
+            'other_info': 'What a stupendous trail!',
+            'map_link': 'https://maps.google.com/map123',
+            'image_url': 'image-that-is-also-quite-kewl'
+            }
+        return mock_form_data
+
+
+    def test_validate_required_fields(self):
+        '''Tests for missing values in required fields'''
+        # Run setup to create valid form data dict
+        form_data = self.setup()
+        # Empty non-required field and check for no error message
+        form_data['image_url'] = ''
+        assert not validate_hike_form(form_data)
+        # Empty required field and check for correct error message
+        form_data['area_name'] = ''
+        assert validate_hike_form(form_data) == 'missing_values'
+
+    def test_validate_numeric_distance(self):
+        '''Tests validation of `distance_km` value'''
+        # Run setup to create valid form data dict
+        form_data = self.setup()
+        # Assert that valid distance value returns no error
+        assert not validate_hike_form(form_data)
+        # Add non-numeric char to distance field
+        form_data['distance_km'] += 'abc'
+        assert validate_hike_form(form_data) == 'invalid_number'
+        form_data['distance_km'] = '-1'
+        assert validate_hike_form(form_data) == 'invalid_number'
+        # Add too many decimal characters to make float conversion impossible
+        form_data['distance_km'] = '12.1.1'
+        assert validate_hike_form(form_data) == 'invalid_number'
+        # Add out of range numeric value
+        form_data['distance_km'] = '101.1'
+        assert validate_hike_form(form_data) == 'out_of_range'
+
+
+    def test_urls(self):
+        '''Tests validation of expected and unexpected url strings'''
+        # Run setup to create valid form data dict
+        form_data = self.setup()
+        # Assert that valid urls return no error
+        assert not validate_hike_form(form_data)
+        # Add unexpected url to a non-url field and check for correct error
+        form_data['area_name'] = 'https://scary-website-you-shouldnt-visit.net/'
+        assert validate_hike_form(form_data) == 'unaccepted_url'
+        form_data = self.setup()
+        # Add invalid url to map_link field and check for correct error
+        form_data['map_link'] = '38927y6ifuhw 9348yrh39fuh3 908f4h98hfsrf~~'
+        assert validate_hike_form(form_data) == 'invalid_url'
