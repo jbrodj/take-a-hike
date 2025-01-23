@@ -2,6 +2,7 @@
 import os
 from init_sql import runner
 from utils import  (
+        add_area,
         add_hike,
         add_user,
         commit_close_conn,
@@ -10,6 +11,7 @@ from utils import  (
         delete_hike,
         follow,
         get_all_usernames,
+        get_area_id,
         get_context_string_from_referrer,
         get_feed,
         get_followees,
@@ -547,3 +549,40 @@ class TestValidateHikeForm:
         # Add invalid url to map_link field and check for correct error
         form_data['map_link'] = '38927y6ifuhw 9348yrh39fuh3 908f4h98hfsrf~~'
         assert validate_hike_form(form_data) == 'invalid_url'
+
+
+class TestAddRetrieveArea:
+    '''Test area table utility functions'''
+    DB = 'test.db'
+    mock_area_name = 'Kewl Area'
+
+    def setup(self):
+        '''Set up sql database'''
+        # Execute init_sql with test arg to create test database.
+        runner('test')
+
+
+    def test_add_area(self, db=DB, run_cleanup=True):
+        '''Test adding area to areas table'''
+        # Run setup
+        self.setup()
+        # Run add_area and check for success
+        assert add_area(db, self.mock_area_name) == 0
+        # Add duplicate area and check for no error
+        assert add_area(db, self.mock_area_name) == 0
+        # Add empty area name and check for expected error
+        assert add_area(db, '') == 'Error: Required value not provided'
+        if run_cleanup:
+            cleanup(self)
+
+
+    def test_get_area_id(self, db=DB):
+        '''Test retreiving area id from areas table'''
+        # Run test_add_area to setup database and add an area
+        self.test_add_area(run_cleanup=False)
+        # Query for area id by valid area name and check for expected value
+        assert get_area_id(self.mock_area_name, db) == 1
+        # Query nonexistant area name and check for expected response
+        assert not get_area_id('fake area name', db)
+        # Run cleanup
+        cleanup(self)
