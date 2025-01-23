@@ -75,6 +75,7 @@ class TestAddAndRetrieveUser:
 
     def setup(self, db=DB):
         '''Creates database table schema. Clears users table if any data exists.'''
+        cleanup(self)
         # Run init_sql with test environment arg to create table schema in a temporary db file
         runner('test')
         # Clear users from table
@@ -200,6 +201,7 @@ class TestFollowUnfollowFeedFlows:
     # Setup:
     def setup(self):
         '''Run setup operations for tests'''
+        cleanup(self)
         # Run init_sql runner fn with test environment arg to create table schema in a temporary db file
         runner('test')
         # Create two users
