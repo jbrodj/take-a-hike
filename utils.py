@@ -161,8 +161,8 @@ def get_area_id(area_name, db):
     arr = []
     for row in area_id_data:
         arr.append(row)
-    area_id = arr[0][0]
-    area_id = int(area_id)
+    area_id = arr[0][0] if arr and arr[0] else None
+    area_id = int(area_id) if area_id else None
     db_connection['connection'].close()
     return area_id
 
