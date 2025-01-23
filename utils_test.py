@@ -96,6 +96,9 @@ class TestAddAndRetrieveUser:
         self.setup()
         # Add a user to table with valid args and check success (ie. 0 return value)
         assert add_user(db, user_1['username'], user_1['password_hash']) == 0
+        # Add a uuser with blank username/pw and check failure
+        assert add_user(db, '', user_1['password_hash']) == 'Error: Required value not provided'
+        assert add_user(db, user_1['username'], '') == 'Error: Required value not provided'
         # Add a user to table with duplicate username and check failure
         #   (ie. there is return value from sqlite error)
         assert add_user(db, user_1['username'], 'differentpasswordhash123') != 0
