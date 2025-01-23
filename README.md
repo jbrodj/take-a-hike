@@ -30,6 +30,9 @@
 * Verify schema with `.schema`
 * `.quit` to exit sqlite3 prompt
 
+### To run unit tests on Python files 🧪
+* Use `pytest -s <filename>` (ie. `pytest -s utils_test.py`)
+
 
 ## App description & design notes 📝
 Take a Hike 🥾 is a social media application for logging and sharing information about hikes!
