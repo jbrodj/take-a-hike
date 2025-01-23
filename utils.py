@@ -40,6 +40,9 @@ def convert_to_dict(tuple_list, dictionary):
 def add_user(db, username, password_hash):
     '''Takes username string and hashed password string
     '''
+    # Break out for nonexistent string arg
+    if not username or not password_hash:
+        return 'Error: Required value not provided'
     db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute('INSERT INTO users (username, password_hash) VALUES (?, ?)', (username, password_hash))
@@ -54,6 +57,9 @@ def add_area(db, area_name):
     '''Takes area name from form.
         Inserts area data into areas table.
     '''
+    # Break out for nonexistent area name string
+    if not area_name:
+        return 'Error: Required value not provided'
     db_connection = create_connection(db)
     try:
         db_connection['cursor'].execute(
