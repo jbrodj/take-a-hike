@@ -118,4 +118,3 @@ Originally the plan for each hike's map link would be a visual element showing t
 
 #### User metrics feature
 Data visualization for each user. Could be its own route with information such as distance traveled, number of hikes/locations/etc. Or could be a sub-template with a small amount of info on the users page.
-
